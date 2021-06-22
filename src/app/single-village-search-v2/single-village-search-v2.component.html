@@ -1,0 +1,46 @@
+<!--<p>single-village-search-v2 works!</p>-->
+<div class="flex-container-single-village">
+  <div class="backgroundImagePlaceHolder"></div>
+  <h1>Contemporary Chinese Village Gazetteer Data</h1>
+  <div class="chinese-container">
+    <h1>数 字 村 庄 </h1>
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;數 字 村 莊</h1>
+  </div>
+  <div>
+    <h2>查询单个村庄数据</h2>
+    <h2>Search Single Village</h2>
+  </div>
+
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input type="text"
+             (input)="filter($event.target.value)"
+             matInput
+             [matAutocomplete]=auto
+             [formControl]="myControl"
+             matAutocompletePosition="below"
+             [placeholder]="value"/>
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="search($event.option.value)">
+        <mat-option *ngFor="let option of filteredOptions" [value]="option"  >
+          {{option.name}} {{option.province}} {{option.city}} {{option.county}}
+        </mat-option>
+      </mat-autocomplete>
+
+    </mat-form-field>
+  </form>
+</div>
+<!--<h2>single village search result v2</h2>-->
+<!--<div class="searchResult" *ngIf="searchResult">-->
+<!--  <button (click)="goToComponentB()">Go to B</button>-->
+<!--</div>-->
+
+
+
+
+
+
+
+
+
+

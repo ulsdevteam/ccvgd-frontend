@@ -1,0 +1,148 @@
+<div class="flexcontainer">
+  <div class="container1">Select Villages-选择村庄
+    <div class="geologyDropdownList">
+      <mat-form-field>
+        <mat-label>Province</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let province of provinceList" [value]="province">
+            {{province}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-button [matMenuTriggerFor]="city">City-市&nbsp;<i class="arrowdown"></i></button>
+      <mat-menu #city="matMenu">
+        <button mat-menu-item>许昌市</button>
+        <button mat-menu-item>唐山市</button>
+        <button mat-menu-item>安阳市</button>
+      </mat-menu>
+
+      <button mat-button [matMenuTriggerFor]="county">County-县&nbsp;<i class="arrowdown"></i></button>
+      <mat-menu #county="matMenu">
+        <button mat-menu-item>长葛市</button>
+        <button mat-menu-item>丰南区</button>
+        <button mat-menu-item>林州区</button>
+      </mat-menu>
+
+    </div>
+    <div class="searchinput">
+      <button class="nssx" mat-button [matMenuTriggerFor]="nssx">按村名筛选&nbsp;<i class="arrowdown"></i></button>
+      <mat-menu #nssx="matMenu">
+        <button mat-menu-item>按市筛选</button>
+        <button mat-menu-item>按省筛选</button>
+        <button mat-menu-item>按县筛选</button>
+      </mat-menu>
+      <input type="text" class="userinputtext">
+    </div>
+    <div class="title">
+      <label>选择</label>
+      <label>村庄名字</label>
+      <label>省</label>
+      <label>市</label>
+      <label>县</label>
+    </div>
+    <div><mat-checkbox class="selectall">选择所有-Select All</mat-checkbox></div>
+    <div class="villageselectionlist">
+      <table class = "villagetable" mat-table [dataSource]="options" >
+
+        <!--  checkbox column  -->
+        <ng-container matColumnDef="checked">
+          <th mat-header-cell *matHeaderCellDef>选择</th>
+          <mat-cell *matCellDef="let element">
+            <mat-checkbox [(ngModel)]="element.checked"></mat-checkbox>
+          </mat-cell>
+        </ng-container>
+      <!-- Provice Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>村庄名字</th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="province">
+        <th mat-header-cell *matHeaderCellDef>省</th>
+        <td mat-cell *matCellDef="let element"> {{element.province}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="city">
+        <th mat-header-cell *matHeaderCellDef>市</th>
+        <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="county">
+        <th mat-header-cell *matHeaderCellDef>县</th>
+        <td mat-cell *matCellDef="let element"> {{element.county}} </td>
+      </ng-container>
+
+<!--      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    </div>
+    <div class="villageselected">已选村庄-Selected Villages</div>
+    <div class="villageselectedlist"></div>
+  </div>
+
+  <div class="container2">选择主题-Select Topics
+    <div class="topics">
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="经济">
+          <div class="economy">
+            <div class="category">
+              <div class="left">类别1-Category1
+<!--                <mat-checkbox (change)="log($event)">选择所有</mat-checkbox>-->
+                <mat-checkbox>总产值</mat-checkbox>
+                <mat-checkbox>集体经济</mat-checkbox>
+              </div>
+              <div class="middle">类别2-Category2</div>
+              <div class="right">类别3-Category3</div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="第一次购买或拥有年份">第一次购买或拥有年份</mat-tab>
+        <mat-tab label="人口">人口</mat-tab>
+        <mat-tab label="军事">军事</mat-tab>
+        <mat-tab label="计划生育">计划生育</mat-tab>
+        <mat-tab label="教育">教育</mat-tab>
+        <mat-tab label="政治">政治</mat-tab>
+        <mat-tab label="姓氏">姓氏</mat-tab>
+        <mat-tab label="自然环境">自然环境</mat-tab>
+        <mat-tab label="自然灾害">自然灾害</mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <div class="topicselectedlist">已选主题-Selected Topics</div>
+  </div>
+
+  <div class="container3">选择时间-Select Time
+
+    <div class="yearselect">年份-Year</div>
+    <div class="singleyear">
+      <div class="yearselectionlist">
+        <mat-checkbox>全选</mat-checkbox>
+        <mat-checkbox>1949</mat-checkbox>
+        <mat-checkbox>1950</mat-checkbox>
+        <mat-checkbox>1951</mat-checkbox>
+        <mat-checkbox>1952</mat-checkbox>
+        <mat-checkbox>1953</mat-checkbox>
+        <mat-checkbox>1954</mat-checkbox>
+        <mat-checkbox>1955</mat-checkbox>
+        <mat-checkbox>1956</mat-checkbox>
+        <mat-checkbox>1957</mat-checkbox>
+      </div>
+      <div class="yearselectedlist">已选年份-Selected Single Year</div>
+    </div>
+
+    <div class="yearrangeselect">年段-Year Range</div>
+    <div class="yearrange">
+      <input type="text" class="text">至
+      <input type="text" class="text">
+      <div class="yearselectedlist">已选年段-Selected Year Range</div>
+    </div>
+  </div>
+</div>
+<br>
+
+<button type="submit">重置 reset</button>
+<button type="submit">搜索 search</button>

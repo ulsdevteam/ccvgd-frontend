@@ -1,0 +1,29 @@
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <input type="text"
+           (input)="filter($event.target.value)"
+           matInput
+           [matAutocomplete]=auto
+           [formControl]="myControl"
+           />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="search($event.option.value)">
+      <mat-option *ngFor="let option of filteredOptions" [value]="option"  >
+          {{option.name}} {{option.province}} {{option.city}} {{option.county}}
+      </mat-option>
+    </mat-autocomplete>
+
+  </mat-form-field>
+</form>
+
+
+<div *ngFor="let table of searchResult">
+  <div *ngIf="table.treeFilter">
+    <app-table-display-V2 [tabledata]="table"></app-table-display-V2>
+  </div>
+  <div *ngIf="table.multiselectFilter">
+    <app-table-display-v22 [tabledata]="table"></app-table-display-v22>
+  </div>
+  <div *ngIf="table.lastnameFilter">
+    <app-table-display-v23 [tabledata]="table"></app-table-display-v23>
+  </div>
+</div>
