@@ -405,10 +405,21 @@ export class SearchMultiVillagesComponent implements OnInit {
       year: [],
       year_range: [parseInt(this.startYearInput), parseInt(this.endYearInput)],
     };
-    console.log(
-      "add  button click",
-      await this.multiVillageFilterService.postYearMultiVillages(postYearData)
-    );
+    let x = this.postVillagesTopics.villageid;
+    this.multiVillageFilterService
+      .postYearMultiVillages(postYearData)
+      .then((result) => {
+        console.log("year res", result[2].year[0]);
+        result[2].year.map((villageData) => {
+          // console.log(villageYear[42]);
+          villageData[parseInt(this.postVillagesTopics.villageid[0])].map(
+            (allYearData) => {
+              console.log(allYearData.year_range);
+            }
+          );
+        });
+        // console.log("result ");
+      });
   }
 
   //TODO
