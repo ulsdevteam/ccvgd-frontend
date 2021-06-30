@@ -1,32 +1,32 @@
 import {
   VillageNameService,
   TableData,
-} from './../services/village-name.service';
+} from "./../services/village-name.service";
 import {
   Component,
   ElementRef,
   OnInit,
   Renderer2,
   ViewChild,
-} from '@angular/core';
-import { ProvinceCityCountyService } from '../services/province-city-county.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Router } from '@angular/router';
-import { MultiVillageFilterService } from '../services/multi-village-filter.service';
-import { HttpClient } from '@angular/common/http';
-import { Input, Output, EventEmitter } from '@angular/core';
-import { MatTabGroup } from '@angular/material/tabs';
-import { Category } from './modals/formatData';
+} from "@angular/core";
+import { ProvinceCityCountyService } from "../services/province-city-county.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { Router } from "@angular/router";
+import { MultiVillageFilterService } from "../services/multi-village-filter.service";
+import { HttpClient } from "@angular/common/http";
+import { Input, Output, EventEmitter } from "@angular/core";
+import { MatTabGroup } from "@angular/material/tabs";
+import { Category } from "./modals/formatData";
 
 @Component({
-  selector: 'app-search-multi-villages',
-  templateUrl: './search-multi-villages.component.html',
-  styleUrls: ['./search-multi-villages.component.css'],
+  selector: "app-search-multi-villages",
+  templateUrl: "./search-multi-villages.component.html",
+  styleUrls: ["./search-multi-villages.component.css"],
 })
 export class SearchMultiVillagesComponent implements OnInit {
-  @ViewChild('myYearDiv', { static: false }) myYearDiv: ElementRef;
-  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  @ViewChild("myYearDiv", { static: false }) myYearDiv: ElementRef;
+  @ViewChild("tabGroup") tabGroup: MatTabGroup;
   options;
   //TODO this is fake data for province, need change later
   provinceList: string[] = [];
@@ -34,24 +34,24 @@ export class SearchMultiVillagesComponent implements OnInit {
   cityList: string[] = [];
   countyList: string[] = [];
   displayedColumns: string[] = [
-    'checked',
-    'name',
-    'province',
-    'city',
-    'county',
+    "checked",
+    "name",
+    "province",
+    "city",
+    "county",
   ];
 
   displayedMiddleTabs: string[] = [
-    '经济',
-    '第一次购买或拥有年份',
-    '人口',
-    '军事',
-    '计划生育',
-    '教育',
-    '政治',
-    '姓氏',
-    '自然环境',
-    '自然灾害',
+    "经济",
+    "第一次购买或拥有年份",
+    "人口",
+    "军事",
+    "计划生育",
+    "教育",
+    "政治",
+    "姓氏",
+    "自然环境",
+    "自然灾害",
   ];
 
   dataSource;
@@ -80,11 +80,17 @@ export class SearchMultiVillagesComponent implements OnInit {
   category1Map = new Map();
   cat1Cat2Map = new Map();
   middleTabsMap = new Map([
-    ['经济', 'economy'],
-    ['第一次购买或拥有年份', 'firstavailabilityorpurchase'],
-    ['人口', 'population'],
+    ["经济", "economy"],
+    ["第一次购买或拥有年份", "firstavailabilityorpurchase"],
+    ["人口", "population"],
   ]);
 
+  postVillagesTopics = {
+    villageid: [""],
+    topic: [""],
+    //TODO
+    // topic: ['economy'],
+  };
   categoryResult: any = {};
 
   constructor(
@@ -141,14 +147,14 @@ export class SearchMultiVillagesComponent implements OnInit {
     // console.log('current check box element', element);
     // console.log(element.id);
 
-    console.log(this.middleTabsMap.get(this.selectedTabLabel));
+    // console.log(this.middleTabsMap.get(this.selectedTabLabel));
     let getTopic = this.middleTabsMap.get(this.selectedTabLabel);
     if (getTopic === undefined) {
-      getTopic = 'economy';
+      getTopic = "economy";
     }
 
-    let postDataCheckBox = {
-      villageid: element.id,
+    this.postVillagesTopics = {
+      villageid: [element.id],
       topic: [getTopic],
       //TODO
       // topic: ['economy'],
@@ -160,20 +166,20 @@ export class SearchMultiVillagesComponent implements OnInit {
 
       const currentServiceData =
         await this.multiVillageFilterService.onPostMultiVillages(
-          postDataCheckBox
+          this.postVillagesTopics
         );
 
       console.log(currentServiceData);
 
       //TODO
       // this.getCheckBoxLanguageChinese(currentServiceData[2].data[0].category1);
-      console.log('postDataCheckBox', postDataCheckBox);
+      console.log("post Villages and Topics 😵‍💫", this.postVillagesTopics);
       this.multiVillageFilterService
-        .onPostMultiVillages(postDataCheckBox)
+        .onPostMultiVillages(this.postVillagesTopics)
         .then((result) => {
           console.log(result);
           // console.log(typeof result);
-          console.log('size', Object.keys(result).length);
+          console.log("size", Object.keys(result).length);
           console.log(result[2].tableNameChinese);
 
           let rawCategories = result[2].data;
@@ -182,7 +188,7 @@ export class SearchMultiVillagesComponent implements OnInit {
           // console.log(this.middleTabsMap.get(result[2].tableNameChinese));
 
           if (
-            this.middleTabsMap.get(result[2].tableNameChinese) === 'economy'
+            this.middleTabsMap.get(result[2].tableNameChinese) === "economy"
           ) {
             this.middleBoxCategory1 = [];
             // console.log('choose!!');
@@ -207,7 +213,7 @@ export class SearchMultiVillagesComponent implements OnInit {
               this.middleBoxCategory1.push(i);
               // console.log(result[i].childCategories);
             }
-            console.log('result', this.categoryResult);
+            console.log("result", this.categoryResult);
 
             // if(this.categoryResult)
           }
@@ -249,7 +255,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
 
     if (this.selectedTabLabel === undefined) {
-      this.selectedTabLabel = '经济';
+      this.selectedTabLabel = "经济";
     }
     // console.log(
     //   'diff',
@@ -260,8 +266,12 @@ export class SearchMultiVillagesComponent implements OnInit {
   tabChanged(event) {
     //TODO this is a change event
     this.selectedTabLabel = event.tab.textLabel;
-    console.log(event.tab.textLabel);
+    // console.log(event.tab.textLabel);
     console.log(this.middleTabsMap.get(this.selectedTabLabel));
+    this.postVillagesTopics.topic[0] = this.middleTabsMap.get(
+      this.selectedTabLabel
+    );
+    // console.log(this.postVillagesTopics.topic);
   }
 
   getCheckboxValuesMiddle() {}
@@ -270,9 +280,9 @@ export class SearchMultiVillagesComponent implements OnInit {
   onCreatePost(postData: { villageid: any; topic: any }) {
     // Send Http request
     this.http
-      .post('http://ngrok.luozm.me:8395/ccvg/advancesearch', postData)
+      .post("http://ngrok.luozm.me:8395/ccvg/advancesearch", postData)
       .subscribe((responseData) => {
-        console.log('responseData', responseData);
+        console.log("responseData", responseData);
       });
   }
 
@@ -290,7 +300,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
       this.tempcheckItems.push(selectedText);
 
-      if (this.categoryResult[selectedText].childCategories[0] !== 'null') {
+      if (this.categoryResult[selectedText].childCategories[0] !== "null") {
         this.middleBoxCategory2.push(category2Text);
       }
       // this.tempcheckItems.push(event.source.name);
@@ -383,33 +393,52 @@ export class SearchMultiVillagesComponent implements OnInit {
     console.log(event.target.value);
   }
 
-  addInputYears() {
-    console.log('input year called');
-    // console.log(this.startYearInput + ' - ' + this.endYearInput);
-
-    const div = this.renderer.createElement('p');
-    const text = this.renderer.createText(
-      `${this.startYearInput} - ${this.endYearInput}`
+  async onPostInputYear() {
+    //TODO single selection first
+    // let convertYearFormat = {
+    //   villageid: [this.getUserList.villageid],
+    //   topic: this.getUserList.topic,
+    // };
+    const postYearData = {
+      villageid: this.postVillagesTopics.villageid,
+      topic: this.postVillagesTopics.topic,
+      year: [],
+      year_range: [parseInt(this.startYearInput), parseInt(this.endYearInput)],
+    };
+    console.log(
+      "add  button click",
+      await this.multiVillageFilterService.postYearMultiVillages(postYearData)
     );
-    this.renderer.appendChild(div, text);
-    // console.log(this.myYearDiv.nativeElement);
-    this.renderer.appendChild(this.myYearDiv.nativeElement, div);
   }
 
+  //TODO
+  // addInputYears() {
+  //   console.log('input year called');
+  //   // console.log(this.startYearInput + ' - ' + this.endYearInput);
+
+  //   const div = this.renderer.createElement('p');
+  //   const text = this.renderer.createText(
+  //     `${this.startYearInput} - ${this.endYearInput}`
+  //   );
+  //   this.renderer.appendChild(div, text);
+  //   // console.log(this.myYearDiv.nativeElement);
+  //   this.renderer.appendChild(this.myYearDiv.nativeElement, div);
+  // }
+
   resetAll() {
-    console.log('reset');
+    console.log("reset");
     this.checkItems.clear();
     this.tempcheckItems = [];
     this.rightToptempcheckItems = [];
     // const div =
 
     const childElements = this.myYearDiv.nativeElement.children;
-    console.log('childElements', childElements);
+    console.log("childElements", childElements);
     for (let child of childElements) {
       this.renderer.removeChild(this.myYearDiv.nativeElement, child);
     }
 
-    this.searchCollectorInput = '';
+    this.searchCollectorInput = "";
     // this.startYearInput = '';
   }
 
@@ -420,21 +449,22 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     const postData = {
       villageid: this.villageidList,
-      topic: ['economy', 'population'],
+      //BUG
+      topic: ["economy", "population"],
     };
 
     // this.searchResult =
     //   await this.multiVillageFilterService.onPostMultiVillages(postData);
     console.log(
-      'this is the searchResult from service',
+      "this is the searchResult from service",
       await this.multiVillageFilterService.onPostMultiVillages(postData)
     );
     // this.onCreatePost(postData);
 
     window.localStorage.setItem(
-      'choose',
+      "choose",
       JSON.stringify(this.multiSearchResult)
     );
-    this.router.navigate(['/multi-village-search-result']);
+    this.router.navigate(["/multi-village-search-result"]);
   }
 }
