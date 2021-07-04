@@ -65,87 +65,102 @@
 
 <h2>村志基本信息</h2>
 
-<table mat-table [dataSource]="dataSource2" class="mat-elevation-z8">
-  <!--- Note that these columns can be defined in any order.
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource2">
+    <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="villageName">
-    <th mat-header-cell *matHeaderCellDef>村名汉字</th>
-    <td mat-cell *matCellDef="let element">{{ element.villageName }}</td>
-  </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="villageName">
+      <th mat-header-cell *matHeaderCellDef>村名汉字</th>
+      <td mat-cell *matCellDef="let element">{{ element.villageName }}</td>
+    </ng-container>
 
-  <!-- Symbol Column -->
-  <ng-container matColumnDef="gazetteerName">
-    <th mat-header-cell *matHeaderCellDef>村志书名</th>
-    <td mat-cell *matCellDef="let element">{{ element.gazetteerName }}</td>
-  </ng-container>
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="gazetteerName">
+      <th mat-header-cell *matHeaderCellDef>村志书名</th>
+      <td mat-cell *matCellDef="let element">{{ element.gazetteerName }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="publishYear">
-    <th mat-header-cell *matHeaderCellDef>出版年</th>
-    <td mat-cell *matCellDef="let element">{{ element.publishYear }}</td>
-  </ng-container>
+    <ng-container matColumnDef="publishYear">
+      <th mat-header-cell *matHeaderCellDef>出版年</th>
+      <td mat-cell *matCellDef="let element">{{ element.publishYear }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="publishType">
-    <th mat-header-cell *matHeaderCellDef>出版类型</th>
-    <td mat-cell *matCellDef="let element">{{ element.publishType }}</td>
-  </ng-container>
+    <ng-container matColumnDef="publishType">
+      <th mat-header-cell *matHeaderCellDef>出版类型</th>
+      <td mat-cell *matCellDef="let element">{{ element.publishType }}</td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
+  </table>
 
-<h2>经济</h2>
+  <!-- <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator> -->
+</div>
 
-<table mat-table [dataSource]="dataSource3" class="mat-elevation-z8">
-  <!--- Note that these columns can be defined in any order.
+<!-- TODO -->
+
+<div class="mat-elevation-z8">
+  <h2>经济</h2>
+  <table mat-table [dataSource]="dataSource3" class="mat-elevation-z8">
+    <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
-  <!-- Position Column -->
-  <ng-container matColumnDef="gazetteerName">
-    <th mat-header-cell *matHeaderCellDef>村志名称</th>
-    <td mat-cell *matCellDef="let element">{{ element.gazetteerName }}</td>
-  </ng-container>
+    <!-- Position Column -->
+    <ng-container matColumnDef="gazetteerName">
+      <th mat-header-cell *matHeaderCellDef>村志名称</th>
+      <td mat-cell *matCellDef="let element">{{ element.gazetteerName }}</td>
+    </ng-container>
 
-  <!-- Weight Column -->
-  <ng-container matColumnDef="category1">
-    <th mat-header-cell *matHeaderCellDef>类别1</th>
-    <td mat-cell *matCellDef="let element">{{ element.category1 }}</td>
-  </ng-container>
+    <!-- Weight Column -->
+    <ng-container matColumnDef="category1">
+      <th mat-header-cell *matHeaderCellDef>类别1</th>
+      <td mat-cell *matCellDef="let element">{{ element.category1 }}</td>
+    </ng-container>
 
-  <!-- Symbol Column -->
-  <ng-container matColumnDef="category2">
-    <th mat-header-cell *matHeaderCellDef>类别2</th>
-    <td mat-cell *matCellDef="let element">{{ element.category2 }}</td>
-  </ng-container>
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="category2">
+      <th mat-header-cell *matHeaderCellDef>类别2</th>
+      <td mat-cell *matCellDef="let element">{{ element.category2 }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="category3">
-    <th mat-header-cell *matHeaderCellDef>类别3</th>
-    <td mat-cell *matCellDef="let element">{{ element.category3 }}</td>
-  </ng-container>
+    <ng-container matColumnDef="category3">
+      <th mat-header-cell *matHeaderCellDef>类别3</th>
+      <td mat-cell *matCellDef="let element">{{ element.category3 }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="startYear">
-    <th mat-header-cell *matHeaderCellDef>开始年</th>
-    <td mat-cell *matCellDef="let element">{{ element.startYear }}</td>
-  </ng-container>
+    <ng-container matColumnDef="startYear">
+      <th mat-header-cell *matHeaderCellDef>开始年</th>
+      <td mat-cell *matCellDef="let element">{{ element.startYear }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="endYear">
-    <th mat-header-cell *matHeaderCellDef>结束年</th>
-    <td mat-cell *matCellDef="let element">{{ element.endYear }}</td>
-  </ng-container>
+    <ng-container matColumnDef="endYear">
+      <th mat-header-cell *matHeaderCellDef>结束年</th>
+      <td mat-cell *matCellDef="let element">{{ element.endYear }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="data">
-    <th mat-header-cell *matHeaderCellDef>数据</th>
-    <td mat-cell *matCellDef="let element">{{ element.data }}</td>
-  </ng-container>
+    <ng-container matColumnDef="data">
+      <th mat-header-cell *matHeaderCellDef>数据</th>
+      <td mat-cell *matCellDef="let element">{{ element.data }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="unit">
-    <th mat-header-cell *matHeaderCellDef>单位</th>
-    <td mat-cell *matCellDef="let element">{{ element.unit }}</td>
-  </ng-container>
+    <ng-container matColumnDef="unit">
+      <th mat-header-cell *matHeaderCellDef>单位</th>
+      <td mat-cell *matCellDef="let element">{{ element.unit }}</td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns3"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns3"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>
 
 <!-- <h2>第一次购买或拥有年份</h2> -->
