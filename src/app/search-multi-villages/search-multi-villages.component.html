@@ -173,34 +173,22 @@
     <div class="yearselect">年份-Year</div>
     <div class="singleyear">
       <div class="yearselectionlist">
-        <mat-checkbox>全选</mat-checkbox>
-        <mat-checkbox name="1949" (change)="middleCheckBox($event)"
+        <mat-checkbox (change)="rightTopYearCheckBox($event)"
+          >全选</mat-checkbox
+        >
+        <li
+          *ngFor="let eachYear of singleYearList"
+          [ngStyle]="{
+            'list-style-type': 'none'
+          }"
+        >
+          <mat-checkbox (change)="rightTopYearCheckBox($event)">
+            {{ eachYear }}
+          </mat-checkbox>
+        </li>
+        <!-- <mat-checkbox name="1949" (change)="middleCheckBox($event)"
           >1949</mat-checkbox
-        >
-        <mat-checkbox name="1950" (change)="middleCheckBox($event)"
-          >1950</mat-checkbox
-        >
-        <mat-checkbox name="1951" (change)="middleCheckBox($event)"
-          >1951</mat-checkbox
-        >
-        <mat-checkbox name="1952" (change)="middleCheckBox($event)"
-          >1952</mat-checkbox
-        >
-        <mat-checkbox name="1953" (change)="middleCheckBox($event)"
-          >1953</mat-checkbox
-        >
-        <mat-checkbox name="1954" (change)="middleCheckBox($event)"
-          >1954</mat-checkbox
-        >
-        <mat-checkbox name="1955" (change)="middleCheckBox($event)"
-          >1955</mat-checkbox
-        >
-        <mat-checkbox name="1956" (change)="middleCheckBox($event)"
-          >1956</mat-checkbox
-        >
-        <mat-checkbox name="1957" (change)="middleCheckBox($event)"
-          >1957</mat-checkbox
-        >
+        > -->
       </div>
       <div class="yearselectedlist">
         已选年份-Selected Single Year
