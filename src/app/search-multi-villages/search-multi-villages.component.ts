@@ -169,7 +169,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     if (getTopic.length === 0 || getTopic[0] === undefined) {
       // getTopic = "economy";
-      getTopic.push("economy", "population");
+      getTopic.push("economy", "population", "military");
     }
 
     this.postVillagesTopics = {
