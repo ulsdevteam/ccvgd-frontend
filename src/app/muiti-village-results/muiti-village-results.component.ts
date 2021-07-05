@@ -142,11 +142,6 @@ export class MuitiVillageResultsComponent implements OnInit {
         //   this.dataSource.paginator = this.paginator;
         // }
 
-        // console.log("this.dataSource4", this.dataSource4);
-        // for (let i of this.dataSource4.filteredData) {
-        //   console.log(i);
-        // }
-
         this.dataSource1.paginator = this.firstPaginator;
         this.dataSource2.paginator = this.secondPaginator;
         this.dataSource3.paginator = this.economyPaginator3;
