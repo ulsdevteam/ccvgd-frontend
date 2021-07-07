@@ -42,10 +42,10 @@ export class SearchMultiVillagesComponent implements OnInit {
   ];
 
   displayedMiddleTabs: string[] = [
-    "经济",
     "第一次购买或拥有年份",
     "人口",
     "军事政治",
+    "经济",
     "计划生育",
     "教育",
     "姓氏",
@@ -91,8 +91,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   ]);
 
   postVillagesTopics = {
-    villageid: [""],
-    topic: [""],
+    villageid: [],
+    topic: [],
     //TODO
     // topic: ['economy'],
   };
@@ -108,6 +108,8 @@ export class SearchMultiVillagesComponent implements OnInit {
     year_range: [],
   };
 
+  toggleValue: boolean;
+  displayLanguage: string;
   constructor(
     private villageNameService: VillageNameService,
     private provinceCityCountyService: ProvinceCityCountyService,
@@ -121,8 +123,9 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.displayLanguage = ""
     this.villageNameService.getVillages().then((result) => {
-      console.log(result);
+      // console.log(result);
       this.totalList = result.data;
       result.data.map((item) => {
         if (this.cityList.includes(item.city) === false) {
@@ -141,7 +144,7 @@ export class SearchMultiVillagesComponent implements OnInit {
         // item.isSelected = false;
       });
       // console.log(result.data[0].city);
-      console.log(result.data);
+      // console.log(result.data);
 
       // console.log(this.countyList);
       this.options = new MatTableDataSource(result.data);
@@ -157,45 +160,88 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   async checkBoxValue(event: MatCheckboxChange, element) {
     // const isChecked = (<HTMLInputElement>event).checked;
-    // console.log('check box event', event.checked);
-    this.multiSearchResult = element;
-    // console.log('current check box element', element);
-    // console.log(element.id);
-    let getTopic = [];
 
-    // console.log(this.middleTabsMap.get(this.selectedTabLabel));
-    // getTopic.push(this.middleTabsMap.get(this.selectedTabLabel));
-    // console.log(this.middleTabsMap.get(this.selectedTabLabel));
+    if (event.checked) {
+      console.log("check box event", event.checked);
+      this.multiSearchResult = element;
+      console.log("current check box element", element);
+      console.log(element.id);
+    } else {
+      this.singleYearList = [];
+    }
+
+    let getTopic = [];
 
     if (getTopic.length === 0 || getTopic[0] === undefined) {
       // getTopic = "economy";
       getTopic.push("economy", "population", "military");
+      // getTopic.push("population");
     }
 
-    this.postVillagesTopics = {
-      villageid: [element.id],
-      topic: getTopic,
-      //TODO
-      // topic: ['economy'],
-    };
+    // this.postVillagesTopics = {
+    //   villageid: [element.id],
+    //   topic: getTopic,
+    //   //TODO
+    //   // topic: ['economy'],
+    // };
+
+    if (
+      this.postVillagesTopics.villageid.indexOf(element.id) === -1 &&
+      event.checked
+    ) {
+      this.postVillagesTopics.villageid.push(element.id);
+    } else {
+      // let index =
+      // this.postVillagesTopics.villageid.splice(
+      //   this.postVillagesTopics.villageid.indexOf(element.id),
+      //   1
+      // );
+    }
+
+    console.log("this.postVillagesTopics", this.postVillagesTopics);
+
+    this.postVillagesTopics.topic = getTopic;
+
+    this.singleYearList = [];
+
+    this.postYearData.villageid = this.postVillagesTopics.villageid;
+    // this.postYearData.topic = this.postVillagesTopics.topic;
+    //BUG
+    this.postYearData.topic = ["population"];
+
+    // this.postYearData.year_range = [1800, 2000];
+
+    this.startYearInput = "1800";
+    this.endYearInput = "2000";
+
+    //get year field base case
+    // if (this.startYearInput === undefined && this.endYearInput === undefined) {
+    //   this.postYearData.year_range = [
+    //     1800, 2000,
+    //     // //BUG
+    //     // parseInt(1800),
+    //     // parseInt("2000"),
+    //   ];
+
+    this.onPostInputYear();
+    // }
+
     this.getVillageDataWithTopics();
 
-    console.log("getTopic🧸 ", getTopic);
+    // console.log("getTopic🧸 ", getTopic);
+    // console.log("this.postYearData", this.postYearData);
 
     if (getTopic[0] === undefined) {
       console.log("true");
     }
-    if (element.id) {
-      this.villageidList.push(element.id);
 
-      const currentServiceData =
-        await this.multiVillageFilterService.onPostMultiVillages(
-          this.postVillagesTopics
-        );
+    const currentServiceData =
+      await this.multiVillageFilterService.onPostMultiVillages(
+        this.postVillagesTopics
+      );
 
-      console.log(currentServiceData);
-    }
-    console.log(await this.cat1Cat2Map);
+    console.log("currentServiceData", currentServiceData);
+    // console.log(await this.cat1Cat2Map);
 
     if (event.checked) {
       this.checkItems.set(element.id, element);
@@ -218,7 +264,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     //TODO this is a change event
     this.selectedTabLabel = event.tab.textLabel;
     // console.log(event.tab.textLabel);
-    console.log(this.middleTabsMap.get(this.selectedTabLabel));
+    // console.log(this.middleTabsMap.get(this.selectedTabLabel));
     const newTopic = this.middleTabsMap.get(this.selectedTabLabel);
     //clear
     this.middleBoxCategory1 = [];
@@ -230,24 +276,31 @@ export class SearchMultiVillagesComponent implements OnInit {
     if (this.postVillagesTopics.topic.indexOf(newTopic) === -1) {
       this.postVillagesTopics.topic.push(newTopic);
     }
+    // console.log("newTopic", newTopic);
     //
     this.getVillageDataWithTopics();
+
+    //get year field base case
+    // if (this.startYearInput === undefined && this.endYearInput === undefined) {
+    // }
+
+    // console.log("startYearInput", this.startYearInput);
   }
 
   async getVillageDataWithTopics() {
     //TODO
     // this.getCheckBoxLanguageChinese(currentServiceData[2].data[0].category1);
-    console.log("post Villages and Topics 😵‍💫", this.postVillagesTopics);
+    // console.log("post Villages and Topics 😵‍💫", this.postVillagesTopics);
     this.multiVillageFilterService
       .onPostMultiVillages(this.postVillagesTopics)
       .then((result) => {
-        console.log("post topics and village id result", result);
+        // console.log("post topics and village id result", result);
         // console.log(typeof result);
-        console.log("size", Object.keys(result).length);
-        console.log(result[2].tableNameChinese);
+        // console.log("size", Object.keys(result).length);
+        // console.log(result[2].tableNameChinese);
 
         let rawCategories = result[2].data;
-        console.log("rawCategories", rawCategories);
+        // console.log("rawCategories", rawCategories);
 
         //clear
         this.middleBoxCategory1 = [];
@@ -266,14 +319,14 @@ export class SearchMultiVillagesComponent implements OnInit {
             }
           }
         }
-        console.log(this.categoryResult);
+        // console.log(this.categoryResult);
 
         for (let i in this.categoryResult) {
           // console.log(i);
           this.middleBoxCategory1.push(i);
           // console.log(result[i].childCategories);
         }
-        console.log("result", this.categoryResult);
+        // console.log("result", this.categoryResult);
 
         // if(this.categoryResult)
         // }
@@ -427,40 +480,39 @@ export class SearchMultiVillagesComponent implements OnInit {
     // };
 
     this.postYearData.villageid = this.postVillagesTopics.villageid;
-    this.postYearData.topic = this.postVillagesTopics.topic;
+    // this.postYearData.topic = this.postVillagesTopics.topic;
+    //BUG
+    this.postYearData.topic = ["population"];
     this.postYearData.year_range = [
       parseInt(this.startYearInput),
       parseInt(this.endYearInput),
     ];
-    console.log("this postYearData", this.postYearData);
+    // console.log("this postYearData", this.postYearData);
 
     let x = this.postVillagesTopics.villageid;
     this.multiVillageFilterService
       .postYearMultiVillages(this.postYearData)
       .then((result) => {
-        console.log("year res", result[2].year[0]);
+        // console.log("result", result);
+        // console.log("year res", result[2].year[0]);
         result[2].year.map((villageData) => {
-          // console.log(villageYear[42]);
-          villageData[parseInt(this.postVillagesTopics.villageid[0])].map(
-            (allYearData) => {
-              // for
-              for (let i = 0; i < allYearData.year_range.length; i++) {
-                const singleYear = allYearData.year_range[i][0];
-                //TODO use hashmap later
-                // this.singleYearMap.set(
-                //   this.postVillagesTopics.villageid,
-                //   allYearData.year_range[i][0]
-                // );
-                if (this.singleYearList.indexOf(singleYear) === -1) {
-                  this.singleYearList.push(singleYear);
-                } else {
-                  console.log("dup value 😈", singleYear);
-                }
+          Object.keys(villageData).forEach((element) => {
+            villageData[element][0].year_range.map((item) => {
+              const eachYear = item[0];
+
+              if (this.singleYearList.indexOf(eachYear) === -1) {
+                this.singleYearList.push(eachYear);
+                this.singleYearList.sort();
               }
-              // console.log(this.singleYearMap);
-              // console.log(allYearData.year_range.length);
-            }
-          );
+            });
+          });
+
+          //TODO
+          //TODO use hashmap later
+          // this.singleYearMap.set(
+          //   this.postVillagesTopics.villageid,
+          //   allYearData.year_range[i][0]
+          // );
         });
         // console.log("result ");
       });
@@ -514,7 +566,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     // const div =
 
     const childElements = this.myYearDiv.nativeElement.children;
-    console.log("childElements", childElements);
+    // console.log("childElements", childElements);
     for (let child of childElements) {
       this.renderer.removeChild(this.myYearDiv.nativeElement, child);
     }
@@ -524,16 +576,16 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   async goToPage() {
-    console.log(this.villageidList);
-    console.log(this.checkItems);
-    console.log(this.multiSearchResult);
+    // console.log(this.villageidList);
+    // console.log(this.checkItems);
+    // console.log(this.multiSearchResult);
 
-    console.log(
-      "this is the searchResult ",
-      await this.multiVillageFilterService.onPostMultiVillages(
-        this.postVillagesTopics
-      )
-    );
+    // console.log(
+    //   "this is the searchResult ",
+    //   await this.multiVillageFilterService.onPostMultiVillages(
+    //     this.postVillagesTopics
+    //   )
+    // );
     // this.onCreatePost(postData);
 
     window.localStorage.setItem(

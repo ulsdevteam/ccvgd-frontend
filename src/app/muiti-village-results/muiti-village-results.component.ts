@@ -58,10 +58,10 @@ export class MuitiVillageResultsComponent implements OnInit {
   dataSource1;
 
   middleTabsMap = new Map([
-    ["经济", "economy"],
     ["第一次购买或拥有年份", "firstavailabilityorpurchase"],
     ["人口", "population"],
     ["军事政治", "military"],
+    ["经济", "economy"],
     ["计划生育", "familyplanning"],
     ["教育", "education"],
     ["姓氏", "fourthlastNames"],
