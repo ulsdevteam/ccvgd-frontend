@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  API_ROOT: "http://ngrok.luozm.me:8395/",
 };
