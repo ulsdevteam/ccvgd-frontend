@@ -2,6 +2,18 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.5.
 
+## Production server
+
+This application is a web front end for the [Flask backend API](https://github.com/ulsdevteam/ccvgd-backend/), which interfaces to the [CCVGD Database](https://github.com/ulsdevteam/ccvgd-database/)
+
+To build the production server, first [build the database via the instructions](https://github.com/ulsdevteam/ccvgd-database/tree/master/pythonScript)
+
+Then, [deploy the Flask backend API](https://github.com/ulsdevteam/ccvgd-backend/) as a daemon.
+
+Configure [src/environments/environment.prod.ts](https://github.com/ulsdevteam/ccvgd-frontend/blob/frontend_master/src/environments/environment.prod.ts) to point to the Flask backend API, and then build the Angular application with `ng build --prod`.  Deploy the resulting build from dist/CCVGproject to your public application root.
+
+## Development server
+
 ### Prereqs
 
 - Install Angular Packages:
@@ -21,8 +33,6 @@ ng serve
 ````
 http://localhost:4200/
 ````
-
-## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
