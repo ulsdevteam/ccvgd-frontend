@@ -24,11 +24,11 @@ export interface BasicVillageInformation {
 }
 
 @Component({
-  selector: "app-muiti-village-results",
-  templateUrl: "./muiti-village-results.component.html",
-  styleUrls: ["./muiti-village-results.component.css"],
+  selector: "app-search-multi-villages-results",
+  templateUrl: "./search-multi-villages-results.component.html",
+  styleUrls: ["./search-multi-villages-results.component.css"],
 })
-export class MuitiVillageResultsComponent implements OnInit {
+export class SearchMultiVillagesResultsComponent implements OnInit {
   // @ViewChild("economyPaginator3") economyPaginator3: MatPaginator;
   @ViewChild("firstPaginator") firstPaginator: MatPaginator;
   @ViewChild("secondPaginator") secondPaginator: MatPaginator;
