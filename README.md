@@ -16,7 +16,10 @@ Since this application expects to be deployed in the webroot, which will referen
 
 ### Angular use of `base-href` and `deploy-url` for building options :
 
-if using `/ccvgd/` as the application base for the router, do this command line with `ng build --prod --base-href /ccvgd/`
+if using `/ccvgd/` as the application base for the router, do this command line with 
+```
+ng build --prod --base-href /ccvgd/
+```
 go to `dist/CCVGproject/index.html` on line #6 will updated with the webroot: `<base href="/ccvgd/">`
 
 for updating base of assets:
