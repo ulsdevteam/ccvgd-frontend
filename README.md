@@ -10,7 +10,20 @@ To build the production server, first [build the database via the instructions](
 
 Then, [deploy the Flask backend API](https://github.com/ulsdevteam/ccvgd-backend/) as a daemon.
 
-Configure [src/environments/environment.prod.ts](https://github.com/ulsdevteam/ccvgd-frontend/blob/frontend_master/src/environments/environment.prod.ts) to point to the Flask backend API, and then build the Angular application with `ng build --prod`.  Deploy the resulting build from dist/CCVGproject to your public application root.
+Configure [src/environments/environment.prod.ts](https://github.com/ulsdevteam/ccvgd-frontend/blob/frontend_master/src/environments/environment.prod.ts) to point to the Flask backend API, and then build the Angular application with `ng build --prod`. Deploy the resulting build from dist/CCVGproject to your public application root.
+
+Since this application expects to be deployed in the webroot, which will reference a path, e,g: [http://localhost/ccvgd/]
+
+### Angular use of `base-href` and `deploy-url` for building options :
+
+if using `/ccvgd/` as the application base for the router, do this command line with `ng build --prod --base-href /ccvgd/`
+go to `dist/CCVGproject/index.html` on line #6 will updated with the webroot: `<base href="/ccvgd/">`
+
+for updating base of assets:
+
+```
+ng build -prod --base-href <href value for router> --deploy-url <href value for assets>
+```
 
 ## Development server
 
@@ -18,21 +31,21 @@ Configure [src/environments/environment.prod.ts](https://github.com/ulsdevteam/c
 
 - Install Angular Packages:
 
-````
+```
 npm install
-````
+```
 
 - Run Server:
 
-````
+```
 ng serve
-````
+```
 
 - Navigate to:
 
-````
+```
 http://localhost:4200/
-````
+```
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
