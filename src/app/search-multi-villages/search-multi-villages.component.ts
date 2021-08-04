@@ -18,6 +18,7 @@ import { HttpClient } from "@angular/common/http";
 import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
 import { Category } from "./modals/formatData";
+// import myData from '../../assets/data.json';
 
 @Component({
   selector: "app-search-multi-villages",
@@ -108,6 +109,82 @@ export class SearchMultiVillagesComponent implements OnInit {
     year_range: [],
   };
 
+  rawData: any[] = {
+    tables:[
+        {
+            tableNameChinese: '村庄基本信息', // 这个地方我不确定，因为数据库里面没有这个东西，我在想有什么方法可以区别table们
+            field: ['gazetteerId','gazetteerName','villageId','villageName','province','city','county','category1','data','unit'],
+            data: [
+                {gazetteerId: 2, gazetteerName: '叶店村志', villageId: '420116403201', villageName: '叶店村', province: '湖北省', city: '武汉市', county: '黄陂区', category: 'TotalArea_村庄总面积', data: '7.5', unit: '平方千米 / 平方公里 square kilometers'},
+                {gazetteerId: 2, gazetteerName: '叶店村志', villageId: '420116403201', villageName: '叶店村', province: '湖北省', city: '武汉市', county: '黄陂区', category: 'Distance TO Affiliated TO the county town_距隶属县城距离', data: '5', unit: '公里/千米 kilometer'},
+                {gazetteerId: 2, gazetteerName: '叶店村志', villageId: '420116403201', villageName: '叶店村', province: '湖北省', city: '武汉市', county: '黄陂区', category: '\n' +
+                'Longitude_经度', data: '114°11′E', unit: '度分秒 DMS (degrees-minutes-seconds)'},
+                {gazetteerId: 2, gazetteerName: '叶店村志', villageId: '420116403201', villageName: '叶店村', province: '湖北省', city: '武汉市', county: '黄陂区', category: '\n' +
+                'Latitude_纬度', data: '30°47′N', unit: '度分秒 DMS (degrees-minutes-seconds)'},
+                // 注：id为1，2，3的村庄的table数据，这里我就放了一个的，偷懒。。。大概是这个意思
+            ],   
+        }, // end of table 1
+        {
+            tableNameChinese: '村志基本信息',
+             field: ['villageId', 'villageName', 'gazetteerId', 'gazetteerName', 'publishYear', 'publishType'],
+            data: [
+                {villageId: '420116403201', villageName: '叶店村', gazetteerId: 2, gazetteerName: '叶店村', publishYear: 2008, publishType: '非正式出版 Informal'}, //同理，应该包含3个村庄的所有村志的信息
+            ],
+        }, // end of table 2
+        {
+            tableNameChinese: '经济',
+            field: ['gazetteerName', 'gazetteerId', 'category1', 'category2', 'category3', 'startYear', 'endYear', 'data', 'unit'],
+            data: [
+            {
+              gazetteerName: '叶店村志',
+              gazetteerId: 2,
+              category1: '水价 Water Price',
+              category2: 'General',
+              category3: 'null',
+              startYear: 1950,
+              endYear: 1950,
+              data: 69.51,
+              unit: '万斤 10K jin'
+            },
+            {
+              gazetteerName: '叶店村志',
+              gazetteerId: 2,
+              category1: '水价 Water Price',
+              category2: '生活 Household',
+              category3: 'null',
+              startYear: 1949,
+              endYear: 1949,
+              data: 69.51,
+              unit: '万斤 10K jin'
+            },
+            {
+              gazetteerName: '叶店村志',
+              gazetteerId: 2,
+              category1: '用电量 Electricity Consumption',
+              category2: '生活 Household',
+              category3: '每户 per household',
+              startYear: 1950,
+              endYear: 1950,
+              data: 69.51,
+              unit: '万斤 10K jin'
+            },
+            {
+              gazetteerName: '叶店村志',
+              gazetteerId: 2,
+              category1: '用电量 Electricity Consumption',
+              category2: '生活 Household',
+              category3: '每人 per person',
+              startYear: 1949,
+              endYear: 1949,
+              data: 69.51,
+              unit: '万斤 10K jin'
+            },//同理 3个村庄的所有记录
+          ],
+        } 
+    ]
+}
+  
+
   constructor(
     private villageNameService: VillageNameService,
     private provinceCityCountyService: ProvinceCityCountyService,
@@ -121,6 +198,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("data", rawData);
     this.villageNameService.getVillages().then((result) => {
       console.log(result);
       this.totalList = result.data;
