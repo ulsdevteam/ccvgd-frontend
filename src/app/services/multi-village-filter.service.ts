@@ -30,7 +30,7 @@ export class MultiVillageFilterService {
       topic: ["economy", "population"],
     };
     let response = await this.httpService
-      .post("ccvg/advancesearch", {
+      .post("advancesearch", {
         myObj,
         // villageid: choose.id,
         // topic: selectedTopic,
@@ -49,7 +49,7 @@ export class MultiVillageFilterService {
     this.getUserList = postData;
     // this.getYearBySelectedVillagesAndTopics(postData);
     let response = await this.httpService
-      .post("ccvg/advancesearch", postData)
+      .post("advancesearch", postData)
       .catch((err: HttpErrorResponse) => {
         console.log("error for request", err);
         return { data: [] };
@@ -78,7 +78,7 @@ export class MultiVillageFilterService {
     // console.log(test);
     // console.log("😦", convertYearFormat);
     let yearResponse = await this.httpService
-      .post("ccvg/advancesearch/yearsearch", postYearData)
+      .post("advancesearch", postYearData)
       .catch((err: HttpErrorResponse) => {
         console.log("cannot get response data from year filter", err);
         return { data: [] };
