@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_ROOT: 'http://ngrok.luozm.me:8395/',
+  API_ROOT: 'http://ngrok.luozm.me:8395/ccvg/',
 };
 
 /*

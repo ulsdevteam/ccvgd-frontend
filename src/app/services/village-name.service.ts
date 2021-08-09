@@ -11,7 +11,7 @@ export class VillageNameService {
   // auto-complete dropdown: only retrieve 100 village
   async getVillages(): Promise<VillageNameDisplay> {
     //Village[]{
-    return this.httpService.get('ccvg/namesearch');
+    return this.httpService.get('namesearch');
   }
 
   // async getMultiVillages(): Promise<BasicVillageInformation> {
@@ -20,7 +20,7 @@ export class VillageNameService {
 
   // village name filter: by user input into post request
   async filterVillages(searchName: string): Promise<VillageNameDisplay> {
-    return this.httpService.post('ccvg/namesearch', { namefilter: searchName });
+    return this.httpService.post('namesearch', { namefilter: searchName });
   }
 }
 

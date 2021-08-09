@@ -14,6 +14,7 @@ import {
 import { SelectionModel } from '@angular/cdk/collections';
 import { TableData } from '../services/village-name.service';
 import { debounceTime } from 'rxjs/operators';
+import { environment } from "../../environments/environment";
 
 @Component({
   selector: 'app-table-detail',
@@ -59,13 +60,15 @@ export class TableDetailComponent implements OnInit {
     this.downloadVillageId = table?.id;
     this.downloadTopic = table?.topic;
     console.log('this.downloadVillageId', this.downloadVillageId);
-    this.downloadLink =
-      'http://ngrok.luozm.me:8395/ccvg/download' +
-      '/' +
-      this.downloadVillageId +
-      '_' +
-      this.downloadTopic +
-      '.csv';
+    //BUG 
+    // this.downloadLink =
+    //   'http://ngrok.luozm.me:8395/ccvg/download' +
+    //   '/' +
+    //   this.downloadVillageId +
+    //   '_' +
+    //   this.downloadTopic +
+    //   '.csv';
+    this.downloadLink = `${environment.API_ROOT}/download/${this.downloadVillageId.id}_${this.downloadTopic}.csv`;
   } //note: @Input property 必须要使用在OnInit里面才可以,constructor里面会报错
 
   _table: TableData;

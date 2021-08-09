@@ -18,6 +18,7 @@ import { HttpClient } from "@angular/common/http";
 import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
 import { Category } from "./modals/formatData";
+import { HttpServiceService } from '../services/http-service.service';
 
 @Component({
   selector: "app-search-multi-villages",
@@ -115,7 +116,8 @@ export class SearchMultiVillagesComponent implements OnInit {
     private el: ElementRef,
     private router: Router, // private multiVillageFilterService: MultiVillageFilterService,
     private http: HttpClient,
-    private multiVillageFilterService: MultiVillageFilterService
+    private multiVillageFilterService: MultiVillageFilterService,
+    private httpService : HttpServiceService
   ) {
     // this.provinceList = this.provinceCityCountyService.getProvince();
   }
@@ -311,9 +313,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   //TODO
   onCreatePost(postData: { villageid: any; topic: any }) {
     // Send Http request
-    this.http
-      .post("http://ngrok.luozm.me:8395/ccvg/advancesearch", postData)
-      .subscribe((responseData) => {
+    this.httpService.post("advancesearch", postData).then((responseData) => {
         console.log("responseData", responseData);
       });
   }

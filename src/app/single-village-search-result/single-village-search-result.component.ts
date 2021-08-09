@@ -16,6 +16,8 @@ import { StateServiceService } from '../services/state-service.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SingleVillageSearchResultService } from '../services/single-village-search-result.service';
 import { ActivatedRoute } from '@angular/router';
+import { HttpServiceService } from "../services/http-service.service";
+import { environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-single-village-search-result',
@@ -670,7 +672,8 @@ export class SingleVillageSearchResultComponent implements OnInit {
   constructor(
     private stateService: StateServiceService,
     private villageSearchResultService: SingleVillageSearchResultService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private httpService: HttpServiceService
   ) {}
   // ngOnDestroy(): void {
   //   console.log('destroy');
@@ -715,13 +718,23 @@ export class SingleVillageSearchResultComponent implements OnInit {
   onSelect(table: TableData) {
     this.selectedTable = table;
     console.log('selected table: ', this.selectedTable);
-    this.downloadLink =
-      'http://ngrok.luozm.me:8395/ccvg/download' +
-      '/' +
-      this.selectedTable.id +
-      '_' +
-      this.selectedTable.topic +
-      '.csv';
+    //past code
+    // this.downloadLink =
+    //   'http://ngrok.luozm.me:8395/ccvg/download' +
+    //   '/' +
+    //   this.selectedTable.id +
+    //   '_' +
+    //   this.selectedTable.topic +
+    //   '.csv';
+
+    // for deploy
+    this.downloadLink = `${environment.API_ROOT}/download/${this.selectedTable.id}_${this.selectedTable.topic}.csv`;
+
+
+    //future improve
+    // this.httpService.get(`download/${this.selectedTable.id}_${this.selectedTable.topic}.csv`);
+
+
   }
 
   checktables(topic: string, checked: MatCheckboxChange) {
