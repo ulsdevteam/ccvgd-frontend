@@ -17,7 +17,7 @@ import { MultiVillageFilterService } from "../services/multi-village-filter.serv
 import { HttpClient } from "@angular/common/http";
 import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
-import { Category } from "./modals/formatData";
+import { Category, CheckList } from "./modals/formatData";
 import { HttpServiceService } from '../services/http-service.service';
 
 @Component({
@@ -35,8 +35,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   cityList: string[] = [];
   countyList: string[] = [];
   displayedColumns: string[] = [
-    "checked",
-    "name",
+    "isSelected",
+    "village_name",
     "province",
     "city",
     "county",
@@ -109,6 +109,12 @@ export class SearchMultiVillagesComponent implements OnInit {
     year_range: [],
   };
 
+  //TODO
+  masterSelected: boolean;
+  multiVillages_checkList: CheckList[] = [];
+  multiVillages_checkedList: CheckList[] = [];
+
+
   constructor(
     private villageNameService: VillageNameService,
     private provinceCityCountyService: ProvinceCityCountyService,
@@ -119,6 +125,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     private multiVillageFilterService: MultiVillageFilterService,
     private httpService : HttpServiceService
   ) {
+    this.masterSelected = false;
     // this.provinceList = this.provinceCityCountyService.getProvince();
   }
 
@@ -140,14 +147,17 @@ export class SearchMultiVillagesComponent implements OnInit {
             this.countyList.push(item.county);
           }
         }
-        // item.isSelected = false;
+        // console.log(item);
+        this.multiVillages_checkList.push({
+          village_id: item.id,
+          village_name: item.name,
+          province: item.province,
+          city: item.city,
+          county: item.county,
+          isSelected: false
+        })
       });
-      // console.log(result.data[0].city);
-      console.log(result.data);
-
-      // console.log(this.countyList);
       this.options = new MatTableDataSource(result.data);
-      // console.log(this.options);
     });
   }
 
@@ -157,9 +167,33 @@ export class SearchMultiVillagesComponent implements OnInit {
     // console.log(this.options.filter);
   }
 
+  // The master checkbox will check/ uncheck all items
+  checkUncheckAll() {
+    for(let i = 0; i < this.multiVillages_checkList.length; i++) {
+      this.multiVillages_checkList[i].isSelected = this.masterSelected;
+    }
+    console.log("render", this.masterSelected)
+    // this.getCheckedItemList();
+  }
+
+  //check if all the checkbox selected
+  isAllCheckBoxSelected(event: MatCheckboxChange, element) {
+    let checkedItemID = this.multiVillages_checkList.findIndex((obj => obj.village_id === element.id));
+    this.multiVillages_checkList[checkedItemID].isSelected = event.checked ? true : false;
+    console.log(element);
+  }
+
+  // getCheckedItemList() {
+  //   this.multiVillages_checkedList = [];
+  //   for(let i = 0; i < this.multiVillages_checkList.length; i++) {
+  //     if(this.multiVillages_checkList[i].isSelected)
+  //     this.multiVillages_checkedList.push(this.multiVillages_checkList[i]);
+  //   }
+  // }
+
   async checkBoxValue(event: MatCheckboxChange, element) {
     // const isChecked = (<HTMLInputElement>event).checked;
-    // console.log('check box event', event.checked);
+    console.log('check box event', event.checked);
     this.multiSearchResult = element;
     // console.log('current check box element', element);
     // console.log(element.id);
@@ -401,6 +435,7 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.countyList.push(item.county);
       }
     });
+    console.log(this.options)
   }
 
   changeCounty(data) {
