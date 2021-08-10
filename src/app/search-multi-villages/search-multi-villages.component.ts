@@ -166,30 +166,34 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.options.filter = filterValue.trim().toLowerCase();
     // console.log(this.options.filter);
   }
+   //********************* for checkbox field ************************************* */
 
   // The master checkbox will check/ uncheck all items
   checkUncheckAll() {
     for(let i = 0; i < this.multiVillages_checkList.length; i++) {
       this.multiVillages_checkList[i].isSelected = this.masterSelected;
     }
-    console.log("render", this.masterSelected)
-    // this.getCheckedItemList();
+    this.getCheckedItemList();
   }
 
   //check if all the checkbox selected
   isAllCheckBoxSelected(event: MatCheckboxChange, element) {
     let checkedItemID = this.multiVillages_checkList.findIndex((obj => obj.village_id === element.id));
     this.multiVillages_checkList[checkedItemID].isSelected = event.checked ? true : false;
-    console.log(element);
+    this.getCheckedItemList();
   }
 
-  // getCheckedItemList() {
-  //   this.multiVillages_checkedList = [];
-  //   for(let i = 0; i < this.multiVillages_checkList.length; i++) {
-  //     if(this.multiVillages_checkList[i].isSelected)
-  //     this.multiVillages_checkedList.push(this.multiVillages_checkList[i]);
-  //   }
-  // }
+  //here all the items are checked 
+  getCheckedItemList() {
+    this.multiVillages_checkedList = [];
+    for(let i = 0; i < this.multiVillages_checkList.length; i++) {
+      if(this.multiVillages_checkList[i].isSelected)
+      this.multiVillages_checkedList.push(this.multiVillages_checkList[i]);
+    }
+    console.log(this.multiVillages_checkedList);
+  }
+
+  //*************************** post and get data ******************************* */
 
   async checkBoxValue(event: MatCheckboxChange, element) {
     // const isChecked = (<HTMLInputElement>event).checked;
