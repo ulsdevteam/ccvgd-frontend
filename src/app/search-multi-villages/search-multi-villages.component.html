@@ -47,7 +47,7 @@
             <label>县</label>
         </div>
         <div>
-            <mat-checkbox class="selectall" (change)="checkUncheckAll()">选择所有-Select All</mat-checkbox>
+            <mat-checkbox class="selectall" (change)="checkUncheckAll()" [(ngModel)]="masterSelected">选择所有-Select All</mat-checkbox>
         </div>
         <div class="villageselectionlist">
             <table class="villagetable" mat-table [dataSource]="options">
@@ -55,7 +55,7 @@
                 <ng-container matColumnDef="isSelected">
                     <th mat-header-cell *matHeaderCellDef>选择</th>
                     <mat-cell *matCellDef="let element">
-                        <mat-checkbox (change)="isAllCheckBoxSelected($event,element)"></mat-checkbox>
+                        <mat-checkbox (change)="isAllCheckBoxSelected($event,element)" [checked]="masterSelected"></mat-checkbox>
                     </mat-cell>
                 </ng-container>
                 <!-- Provice Column -->

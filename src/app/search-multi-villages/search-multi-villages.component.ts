@@ -178,12 +178,9 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   //check if all the checkbox selected
   isAllCheckBoxSelected(event: MatCheckboxChange, element) {
-    this.masterSelected === false;
-    this.checkUncheckAll();
     let checkedItemID = this.multiVillages_checkList.findIndex((obj => obj.village_id === element.id));
     this.multiVillages_checkList[checkedItemID].isSelected = event.checked ? true : false;
-    console.log(element)
-    console.log(event.checked)
+    console.log(element);
   }
 
   // getCheckedItemList() {
