@@ -1,3 +1,8 @@
 table {
-  width: 100%;
+    width: 100%;
+}
+
+.advanceFilter {
+    font-size: 14px;
+    width: 100%;
 }

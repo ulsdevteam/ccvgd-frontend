@@ -126,4 +126,37 @@ export class MuitiVillageResultsComponent implements OnInit {
         this.dataSource5.paginator = this.militaryPaginator;
       });
   }
+
+
+
+  //for advance filter functions input
+  filterDataSource1(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource1.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource1.paginator) this.dataSource1.paginator.firstPage();
+  }
+
+  filterDataSource2(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource2.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource2.paginator) this.dataSource2.paginator.firstPage();
+  }
+
+  filterDataSource3(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource3.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource3.paginator) this.dataSource3.paginator.firstPage();
+  }
+
+  filterDataSource4(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource4.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource4.paginator) this.dataSource4.paginator.firstPage();
+  }
+
+  filterDataSource5(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource5.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource5.paginator) this.dataSource5.paginator.firstPage();
+  }
 }
