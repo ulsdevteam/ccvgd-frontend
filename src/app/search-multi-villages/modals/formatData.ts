@@ -27,3 +27,10 @@ export interface PostDataToSearch {
   year?:any,
   year_range?:any
 }
+
+
+export interface Year {
+  currentTopic: string,
+  total_year_only?: [],
+  total_year_range?: []
+}

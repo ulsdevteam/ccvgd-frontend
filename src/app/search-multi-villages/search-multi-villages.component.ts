@@ -17,7 +17,7 @@ import { MultiVillageFilterService } from "../services/multi-village-filter.serv
 import { HttpClient } from "@angular/common/http";
 import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
-import { Category, CheckList, PostDataToSearch } from "./modals/formatData";
+import { Category, CheckList, PostDataToSearch, Year } from "./modals/formatData";
 import { HttpServiceService } from '../services/http-service.service';
 @Component({
   selector: "app-search-multi-villages",
@@ -138,6 +138,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   currentSelectedTopic: string;
   //data
   responseData: any;
+  //year -left top
+  topicYear: Year[] = [];
 
 
   constructor(
@@ -243,6 +245,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     );
     this.responseData = response;
     this.getTopicWithCategories();
+    this. getYearWithTopic();
   }
 
   //if search button is clicked, go to results page
@@ -254,12 +257,10 @@ export class SearchMultiVillagesComponent implements OnInit {
   getTopicWithCategories() {
     //by default - hard coded
     this.topicCategory = [];
-    let newArray = [];
     if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
-    console.log(this.responseData);
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
-        console.log(this.responseData[index]);
+        // console.log(this.responseData[index]);
         for(let item in this.responseData[index].data){
           // if(this.topicCategory.indexOf(this.responseData[index].data[item].category1))
           // array1 = array1.filter(val => !array2.includes(val));
@@ -292,9 +293,44 @@ export class SearchMultiVillagesComponent implements OnInit {
   tabChanged(event) {
     this.currentSelectedTopic = event.tab.textLabel;
     this.getTopicWithCategories();
+    this.getYearWithTopic();
   }
 
-    //TODO  use dynamic db data
+  getYearWithTopic() {
+    for(let index in this.responseData) {
+      if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
+        // console.log(this.responseData[index]);
+        if(this.responseData[index].year !== undefined){
+          if(this.responseData[index].year.length > 0) {
+            for(let villageIndex in this.responseData[index].year) {
+              // console.log("item" , this.responseData[index].year[villageIndex]);
+              for(let villageID in this.checkedVillagesID) {
+                // console.log(this.checkedVillagesID[villageID]);
+                let getEachVillageYear = this.responseData[index].year[villageIndex][this.checkedVillagesID[villageID]];
+                if(getEachVillageYear !== undefined) {
+                  for(let item in getEachVillageYear) {
+                    // console.log("currentitem", getEachVillageYear[item][0]);
+                    // console.log("curren topic", this.middleTabsMap.get(this.currentSelectedTopic));
+                    let yearResults = getEachVillageYear[item][0][this.middleTabsMap.get(this.currentSelectedTopic)];
+                    if(yearResults !== undefined) {
+                      if(yearResults["year_only"].length > 0)
+                      console.log(yearResults);
+                      //use remove duplicate method
+                    }
+                  }
+                }
+                // console.log("item" , getEachVillageYear);
+              }
+            }
+          }
+        }
+      }
+
+    }
+
+  }
+
+    //TODO  use dynamic db data - Later
     middleCheckBox(event: MatCheckboxChange) {
       const selectedText = event.source._elementRef.nativeElement.innerText;
       console.log(selectedText)
