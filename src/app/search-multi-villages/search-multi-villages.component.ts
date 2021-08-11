@@ -19,8 +19,6 @@ import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
 import { Category, CheckList, PostDataToSearch } from "./modals/formatData";
 import { HttpServiceService } from '../services/http-service.service';
-import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
-
 @Component({
   selector: "app-search-multi-villages",
   templateUrl: "./search-multi-villages.component.html",
@@ -43,16 +41,31 @@ export class SearchMultiVillagesComponent implements OnInit {
     "county",
   ];
 
+//   1. 村志信息 Gazetteer Information
+// 2. 村庄信息 Village Information —> ? 
+// 3. 自然环境 Natural Environment
+// 4. 自然灾害 Natural Disasters
+// 5. 姓氏 Last Names
+// 6. 首次拥有年份 Year of First Availability/Purchase
+// 7. 民族 Ethnic Groups
+// 8. 人口与人口迁移 Population and Migration
+// 9. 军事, 政治, 管理 Military, Politics and Management
+// 10. 经济 Economy
+// 11. 计划生育 Family Planning
+// 12. 教育 Education
+
   displayedMiddleTabs: string[] = [
-    "经济",
-    "第一次购买或拥有年份",
-    "人口",
-    "军事政治",
-    "计划生育",
-    "教育",
-    "姓氏",
+    "村庄基本信息",
     "自然环境",
     "自然灾害",
+    // "姓氏", BUG
+    "第一次拥有或购买年份",
+    "民族",
+    "人口",
+    "军事政治",
+    "经济",
+    "计划生育",
+    "教育",
   ];
 
   dataSource;
@@ -80,16 +93,18 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   category1Map = new Map();
   cat1Cat2Map = new Map();
+
   middleTabsMap = new Map([
-    ["经济", "economy"],
-    ["第一次购买或拥有年份", "firstavailabilityorpurchase"],
-    ["人口", "population"],
-    ["军事政治", "military"],
-    ["计划生育", "familyplanning"],
-    ["教育", "education"],
-    ["姓氏", "fourthlastNames"],
+    ["村庄基本信息", "gazetteerinformation"],
     ["自然环境", "naturalenvironment"],
     ["自然灾害", "naturaldisasters"],
+    ["第一次拥有或购买年份", "firstavailabilityorpurchase"],
+    ["民族", "ethnicgroups"],
+    ["人口", "population"],
+    ["军事政治", "military"],
+    ["经济", "economy"],
+    ["计划生育", "familyplanning"],
+    ["教育", "education"]
   ]);
 
   postVillagesTopics = {
@@ -117,6 +132,11 @@ export class SearchMultiVillagesComponent implements OnInit {
   checkedVillagesID: any[];
   //search
   postDataToSearch: PostDataToSearch[] = [];
+  //middle - category
+  topicCategory: Category[] = [];
+  currentSelectedTopic: string;
+  //data
+  responseData: any;
 
 
   constructor(
@@ -215,37 +235,62 @@ export class SearchMultiVillagesComponent implements OnInit {
       {
         villageid: this.checkedVillagesID,
         //BUG 1.checkedall 2. fourthlastNames -- ask backend
-        topic: ["gazetteerinformation","naturaldisasters","naturalenvironment", 
-        "military","education","economy", "familyplanning", "population", 
-        "ethnicgroups", "firstavailabilityorpurchase"]
+        topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", 
+        "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
+        "familyplanning", "education"]
       }
     );
-    console.log(response);
+    this.responseData = response;
+    this.getTopicWithCategories();
   }
-  
+
+  //if search button is clicked, go to results page
   async goToPage() {
     this.processRequest();
     this.router.navigate(["/multi-village-search-result"]);
   }
 
-  tabChanged(event) {
-    //TODO this is a change event
-    this.selectedTabLabel = event.tab.textLabel;
-    // console.log(event.tab.textLabel);
-    console.log(this.middleTabsMap.get(this.selectedTabLabel));
-    const newTopic = this.middleTabsMap.get(this.selectedTabLabel);
-    //clear
-    this.middleBoxCategory1 = [];
-    this.middleBoxCategory2 = [];
-    this.categoryResult = {};
-
-    // this.postVillagesTopics.topic[0] = newTopic;
-    // BUG;
-    if (this.postVillagesTopics.topic.indexOf(newTopic) === -1) {
-      this.postVillagesTopics.topic.push(newTopic);
+  getTopicWithCategories() {
+    //by default - hard coded
+    this.topicCategory = [];
+    let newArray = [];
+    if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
+    console.log(this.responseData);
+    for(let index in this.responseData) {
+      if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
+        console.log(this.responseData[index]);
+        for(let item in this.responseData[index].data){
+          // if(this.topicCategory.indexOf(this.responseData[index].data[item].category1))
+          // array1 = array1.filter(val => !array2.includes(val));
+          this.topicCategory.push({
+            category1: this.responseData[index].data[item].category1,
+            category2:this.responseData[index].data[item].category2 ? this.responseData[index].data[item].category2 : null,
+            category3: this.responseData[index].data[item].category3 ? this.responseData[index].data[item].category3 : null,
+          });
+        }
+      }
     }
-    //
-    this.getVillageDataWithTopics();
+    this.removeDuplicates(this.topicCategory, "category1");
+    console.log(this.topicCategory);
+  }
+
+  removeDuplicates(originalArray, prop) {
+    var newArray = [];
+    var lookupObject  = [];
+    this.topicCategory = [];
+    for(var i in originalArray) {
+       lookupObject[originalArray[i][prop]] = originalArray[i];
+    }
+    for(i in lookupObject) {
+        newArray.push(lookupObject[i]);
+        this.topicCategory.push(lookupObject[i]);
+    }
+     return newArray;
+    }
+
+  tabChanged(event) {
+    this.currentSelectedTopic = event.tab.textLabel;
+    this.getTopicWithCategories();
   }
 
   async getVillageDataWithTopics() {

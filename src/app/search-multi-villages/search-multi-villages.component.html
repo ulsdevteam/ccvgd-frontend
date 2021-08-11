@@ -106,13 +106,13 @@
                                 <p>{{ item }} 下类别</p>
                                 <mat-checkbox (change)="middleCheckBox($event)">选择所有</mat-checkbox>
                                 <ul class="category1" [ngStyle]="{
-                    'list-style-type': 'none',
-                    margin: '0',
-                    padding: '0'
-                  }">
-                                    <li *ngFor="let item of middleBoxCategory1">
+                                'list-style-type': 'none',
+                                margin: '0',
+                                padding: '0'
+                                }">
+                                    <li *ngFor="let item of topicCategory">
                                         <mat-checkbox (change)="middleCheckBox($event)">
-                                            {{ item }}
+                                            {{ item.category1 }}
                                         </mat-checkbox>
                                     </li>
                                 </ul>
