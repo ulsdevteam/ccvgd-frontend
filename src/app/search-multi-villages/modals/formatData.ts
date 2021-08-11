@@ -11,3 +11,10 @@ export interface CheckList {
   county: any,
   isSelected: boolean
 }
+
+export interface PostDataToSearch {
+  villageid: any,
+  topic:any,
+  year?:any,
+  year_range?:any
+}

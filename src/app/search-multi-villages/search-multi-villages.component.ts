@@ -17,8 +17,9 @@ import { MultiVillageFilterService } from "../services/multi-village-filter.serv
 import { HttpClient } from "@angular/common/http";
 import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
-import { Category, CheckList } from "./modals/formatData";
+import { Category, CheckList, PostDataToSearch } from "./modals/formatData";
 import { HttpServiceService } from '../services/http-service.service';
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 
 @Component({
   selector: "app-search-multi-villages",
@@ -113,6 +114,9 @@ export class SearchMultiVillagesComponent implements OnInit {
   masterSelected: boolean;
   multiVillages_checkList: CheckList[] = [];
   multiVillages_checkedList: CheckList[] = [];
+  checkedVillagesID: any[];
+  //search
+  postDataToSearch: PostDataToSearch[] = [];
 
 
   constructor(
@@ -131,7 +135,6 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.villageNameService.getVillages().then((result) => {
-      console.log(result);
       this.totalList = result.data;
       result.data.map((item) => {
         if (this.cityList.includes(item.city) === false) {
@@ -166,88 +169,63 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.options.filter = filterValue.trim().toLowerCase();
     // console.log(this.options.filter);
   }
+   //********************* for checkbox field ************************************* */
 
   // The master checkbox will check/ uncheck all items
   checkUncheckAll() {
     for(let i = 0; i < this.multiVillages_checkList.length; i++) {
       this.multiVillages_checkList[i].isSelected = this.masterSelected;
     }
-    console.log("render", this.masterSelected)
-    // this.getCheckedItemList();
+    this.getCheckedItemList();
   }
 
   //check if all the checkbox selected
-  isAllCheckBoxSelected(event: MatCheckboxChange, element) {
+  async isAllCheckBoxSelected(event: MatCheckboxChange, element) {
     let checkedItemID = this.multiVillages_checkList.findIndex((obj => obj.village_id === element.id));
     this.multiVillages_checkList[checkedItemID].isSelected = event.checked ? true : false;
-    console.log(element);
+    this.getCheckedItemList();
   }
 
-  // getCheckedItemList() {
-  //   this.multiVillages_checkedList = [];
-  //   for(let i = 0; i < this.multiVillages_checkList.length; i++) {
-  //     if(this.multiVillages_checkList[i].isSelected)
-  //     this.multiVillages_checkedList.push(this.multiVillages_checkList[i]);
-  //   }
-  // }
-
-  async checkBoxValue(event: MatCheckboxChange, element) {
-    // const isChecked = (<HTMLInputElement>event).checked;
-    console.log('check box event', event.checked);
-    this.multiSearchResult = element;
-    // console.log('current check box element', element);
-    // console.log(element.id);
-    let getTopic = [];
-
-    // console.log(this.middleTabsMap.get(this.selectedTabLabel));
-    // getTopic.push(this.middleTabsMap.get(this.selectedTabLabel));
-    // console.log(this.middleTabsMap.get(this.selectedTabLabel));
-
-    if (getTopic.length === 0 || getTopic[0] === undefined) {
-      // getTopic = "economy";
-      getTopic.push("economy", "population", "military");
+  //here all the items are checked 
+  getCheckedItemList() {
+    this.multiVillages_checkedList = [];
+    for(let i = 0; i < this.multiVillages_checkList.length; i++) {
+      if(this.multiVillages_checkList[i].isSelected)
+      this.multiVillages_checkedList.push(this.multiVillages_checkList[i]);
     }
+     this.getListOfchecked_VillagesID();
+  }
 
-    this.postVillagesTopics = {
-      villageid: [element.id],
-      topic: getTopic,
-      //TODO
-      // topic: ['economy'],
-    };
-    this.getVillageDataWithTopics();
+  //*************************** post and get data ******************************* */
+  //1. get list of village id and post request with all the topic -- as default
 
-    console.log("getTopic🧸 ", getTopic);
-
-    if (getTopic[0] === undefined) {
-      console.log("true");
+  getListOfchecked_VillagesID() {
+    this.checkedVillagesID = [];
+    for(let i in this.multiVillages_checkedList) {
+      this.checkedVillagesID.push(this.multiVillages_checkedList[i].village_id);
     }
-    if (element.id) {
-      this.villageidList.push(element.id);
+    if(this.checkedVillagesID.length > 0) this.processRequest();
+  }
 
-      const currentServiceData =
-        await this.multiVillageFilterService.onPostMultiVillages(
-          this.postVillagesTopics
-        );
+  // getDefaultTopics() 
 
-      console.log(currentServiceData);
-    }
-    console.log(await this.cat1Cat2Map);
-
-    if (event.checked) {
-      this.checkItems.set(element.id, element);
-    } else {
-      this.checkItems.delete(element.id);
-      // this.category1Map.delete(element.id);
-    }
-
-    //BUG default value?
-    if (this.selectedTabLabel === undefined) {
-      this.selectedTabLabel = "经济";
-    }
-    // console.log(
-    //   'diff',
-    //   this.arr_diff(['人均居住面积', 'b'], ['b', '耕地面积'])
-    // );
+  async processRequest() {
+    const response =
+    await this.multiVillageFilterService.onPostMultiVillages(
+      {
+        villageid: this.checkedVillagesID,
+        //BUG 1.checkedall 2. fourthlastNames -- ask backend
+        topic: ["gazetteerinformation","naturaldisasters","naturalenvironment", 
+        "military","education","economy", "familyplanning", "population", 
+        "ethnicgroups", "firstavailabilityorpurchase"]
+      }
+    );
+    console.log(response);
+  }
+  
+  async goToPage() {
+    this.processRequest();
+    this.router.navigate(["/multi-village-search-result"]);
   }
 
   tabChanged(event) {
@@ -556,25 +534,5 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     this.searchCollectorInput = "";
     // this.startYearInput = '';
-  }
-
-  async goToPage() {
-    console.log(this.villageidList);
-    console.log(this.checkItems);
-    console.log(this.multiSearchResult);
-
-    console.log(
-      "this is the searchResult ",
-      await this.multiVillageFilterService.onPostMultiVillages(
-        this.postVillagesTopics
-      )
-    );
-    // this.onCreatePost(postData);
-
-    window.localStorage.setItem(
-      "choose",
-      JSON.stringify(this.multiSearchResult)
-    );
-    this.router.navigate(["/multi-village-search-result"]);
   }
 }
