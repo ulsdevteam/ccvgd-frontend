@@ -58,7 +58,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     "村庄基本信息",
     "自然环境",
     "自然灾害",
-    // "姓氏", BUG
+    "姓氏",
     "第一次拥有或购买年份",
     "民族",
     "人口",
@@ -98,6 +98,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     ["村庄基本信息", "gazetteerinformation"],
     ["自然环境", "naturalenvironment"],
     ["自然灾害", "naturaldisasters"],
+    ["姓氏", "fourthlastNames"],
     ["第一次拥有或购买年份", "firstavailabilityorpurchase"],
     ["民族", "ethnicgroups"],
     ["人口", "population"],
@@ -235,7 +236,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       {
         villageid: this.checkedVillagesID,
         //BUG 1.checkedall 2. fourthlastNames -- ask backend
-        topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", 
+        topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
         "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
         "familyplanning", "education"]
       }
@@ -293,79 +294,113 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.getTopicWithCategories();
   }
 
-  async getVillageDataWithTopics() {
-    //TODO
-    // this.getCheckBoxLanguageChinese(currentServiceData[2].data[0].category1);
-    console.log("post Villages and Topics 😵‍💫", this.postVillagesTopics);
-    this.multiVillageFilterService
-      .onPostMultiVillages(this.postVillagesTopics)
-      .then((result) => {
-        console.log("post topics and village id result", result);
-        // console.log(typeof result);
-        console.log("size", Object.keys(result).length);
-        console.log(result[2].tableNameChinese);
+    //TODO  use dynamic db data
+    middleCheckBox(event: MatCheckboxChange) {
+      const selectedText = event.source._elementRef.nativeElement.innerText;
+      console.log(selectedText)
+  
+      // console.log(this.categoryResult[selectedText].childCategories[0]);
+  
+      // let category2Text = "";
+      // if (this.categoryResult[selectedText].childCategories) {
+      //   category2Text = this.categoryResult[selectedText].childCategories[0];
+      // }
+  
+      // // console.log(selectedText);
+      // if (event.checked) {
+      //   // console.log(event.source._elementRef.nativeElement.innerText);
+  
+      //   this.tempcheckItems.push(selectedText);
+  
+      //   if (this.categoryResult[selectedText].childCategories[0] !== "null") {
+      //     this.middleBoxCategory2.push(category2Text);
+      //   }
+      //   // this.tempcheckItems.push(event.source.name);
+      // } else {
+      //   // var index = this.tempcheckItems.indexOf(event.source.name);
+      //   var index = this.tempcheckItems.indexOf(selectedText);
+      //   if (index > -1) {
+      //     this.tempcheckItems.splice(index, 1);
+      //   }
+  
+      //   // category2Text == 'null';
+      //   this.middleBoxCategory2 = [];
+  
+        // this.checkItems.delete(element.id);
+      
+    }
 
-        let rawCategories = result[2].data;
-        console.log("rawCategories", rawCategories);
+  // async getVillageDataWithTopics() {
+  //   //TODO
+  //   // this.getCheckBoxLanguageChinese(currentServiceData[2].data[0].category1);
+  //   console.log("post Villages and Topics 😵‍💫", this.postVillagesTopics);
+  //   this.multiVillageFilterService
+  //     .onPostMultiVillages(this.postVillagesTopics)
+  //     .then((result) => {
+  //       console.log("post topics and village id result", result);
+  //       // console.log(typeof result);
+  //       console.log("size", Object.keys(result).length);
+  //       console.log(result[2].tableNameChinese);
 
-        //clear
-        this.middleBoxCategory1 = [];
-        this.categoryResult = {};
+  //       let rawCategories = result[2].data;
+  //       console.log("rawCategories", rawCategories);
 
-        for (let c of rawCategories) {
-          if (!(c.category1 in this.categoryResult)) {
-            this.categoryResult[c.category1] = {
-              name: c.category1,
-              childCategories: [],
-            };
-            if (!(c.category2 in this.categoryResult)) {
-              this.categoryResult[c.category1].childCategories.push(
-                c.category2
-              );
-            }
-          }
-        }
-        console.log(this.categoryResult);
+  //       //clear
+  //       this.middleBoxCategory1 = [];
+  //       this.categoryResult = {};
 
-        for (let i in this.categoryResult) {
-          // console.log(i);
-          this.middleBoxCategory1.push(i);
-          // console.log(result[i].childCategories);
-        }
-        console.log("result", this.categoryResult);
+  //       for (let c of rawCategories) {
+  //         if (!(c.category1 in this.categoryResult)) {
+  //           this.categoryResult[c.category1] = {
+  //             name: c.category1,
+  //             childCategories: [],
+  //           };
+  //           if (!(c.category2 in this.categoryResult)) {
+  //             this.categoryResult[c.category1].childCategories.push(
+  //               c.category2
+  //             );
+  //           }
+  //         }
+  //       }
+  //       console.log(this.categoryResult);
 
-        // if(this.categoryResult)
-        // }
+  //       for (let i in this.categoryResult) {
+  //         // console.log(i);
+  //         this.middleBoxCategory1.push(i);
+  //         // console.log(result[i].childCategories);
+  //       }
+  //       console.log("result", this.categoryResult);
 
-        // for(let i = 0; i < Object.keys(result).length; i++) {
+  //       // if(this.categoryResult)
+  //       // }
 
-        // }
+  //       // for(let i = 0; i < Object.keys(result).length; i++) {
 
-        // result[2].data.map((item) => {
+  //       // }
 
-        //   // console.log(item);
-        //TODO
-        //   const getChineseWordCategory1 = item.category1
-        //     .split('')
-        //     .filter((char) => /\p{Script=Han}/u.test(char))
-        //     .join('');
-        //   if (
-        //     this.middleBoxCategory1.indexOf(getChineseWordCategory1) == -1
-        //   ) {
-        //     this.middleBoxCategory1.push(getChineseWordCategory1);
-        //     this.cat1Cat2Map.set(item.category1, item.category2);
-        //     // console.log('trigger');
-        //     // this.category1Map.set(element.id, this.middleBoxCategory1);
-        //   }
-        // });
-        // console.log('filter category 1 result ', this.middleBoxCategory1);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+  //       // result[2].data.map((item) => {
 
-  getCheckboxValuesMiddle() {}
+  //       //   // console.log(item);
+  //       //TODO
+  //       //   const getChineseWordCategory1 = item.category1
+  //       //     .split('')
+  //       //     .filter((char) => /\p{Script=Han}/u.test(char))
+  //       //     .join('');
+  //       //   if (
+  //       //     this.middleBoxCategory1.indexOf(getChineseWordCategory1) == -1
+  //       //   ) {
+  //       //     this.middleBoxCategory1.push(getChineseWordCategory1);
+  //       //     this.cat1Cat2Map.set(item.category1, item.category2);
+  //       //     // console.log('trigger');
+  //       //     // this.category1Map.set(element.id, this.middleBoxCategory1);
+  //       //   }
+  //       // });
+  //       // console.log('filter category 1 result ', this.middleBoxCategory1);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }
 
   //TODO
   onCreatePost(postData: { villageid: any; topic: any }) {
@@ -375,40 +410,6 @@ export class SearchMultiVillagesComponent implements OnInit {
       });
   }
 
-  //TODO  use dynamic db data
-  middleCheckBox(event: MatCheckboxChange) {
-    const selectedText = event.source._elementRef.nativeElement.innerText;
-
-    // console.log(this.categoryResult[selectedText].childCategories[0]);
-
-    let category2Text = "";
-    if (this.categoryResult[selectedText].childCategories) {
-      category2Text = this.categoryResult[selectedText].childCategories[0];
-    }
-
-    // console.log(selectedText);
-    if (event.checked) {
-      // console.log(event.source._elementRef.nativeElement.innerText);
-
-      this.tempcheckItems.push(selectedText);
-
-      if (this.categoryResult[selectedText].childCategories[0] !== "null") {
-        this.middleBoxCategory2.push(category2Text);
-      }
-      // this.tempcheckItems.push(event.source.name);
-    } else {
-      // var index = this.tempcheckItems.indexOf(event.source.name);
-      var index = this.tempcheckItems.indexOf(selectedText);
-      if (index > -1) {
-        this.tempcheckItems.splice(index, 1);
-      }
-
-      // category2Text == 'null';
-      this.middleBoxCategory2 = [];
-
-      // this.checkItems.delete(element.id);
-    }
-  }
 
   arr_diff(a1, a2) {
     var a = [],
