@@ -47,6 +47,7 @@ export class MultiVillageFilterService {
 
   async onPostMultiVillages(postData: { villageid: any; topic: any }) {
     this.getUserList = postData;
+    console.log("post", postData);
     // this.getYearBySelectedVillagesAndTopics(postData);
     let response = await this.httpService
       .post("advancesearch", postData)
