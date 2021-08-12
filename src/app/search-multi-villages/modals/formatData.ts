@@ -1,15 +1,5 @@
 export interface Category {
-  topic?: string,
-  // subCategories?: any[]
-  category1?: string;
-  category2? : string,
-  category3? : string
-  // subCategories?: {
-  //   category2? : string,
-  //   subCategories?: {
-  //     category3? : string
-  //   }
-  // };
+  category? : string
 }
 
 export interface CheckList {

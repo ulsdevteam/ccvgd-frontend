@@ -126,7 +126,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     year_range: [],
   };
 
-  //TODO
+  //TODO *****************************
   masterSelected: boolean;
   multiVillages_checkList: CheckList[] = [];
   multiVillages_checkedList: CheckList[] = [];
@@ -134,8 +134,11 @@ export class SearchMultiVillagesComponent implements OnInit {
   //search
   postDataToSearch: PostDataToSearch[] = [];
   //middle - category
-  topicCategory: Category[] = [];
+  topicCategory: any[];
+
+  //
   currentSelectedTopic: string;
+  displayCategory2: string;
   //data
   responseData: any;
   //year -left top
@@ -257,24 +260,29 @@ export class SearchMultiVillagesComponent implements OnInit {
   getTopicWithCategories() {
     //by default - hard coded
     this.topicCategory = [];
+    let totalResults = [];
     if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
         // console.log(this.responseData[index]);
         for(let item in this.responseData[index].data){
-          // if(this.topicCategory.indexOf(this.responseData[index].data[item].category1))
-          // array1 = array1.filter(val => !array2.includes(val));
-          this.topicCategory.push({
+          let storeCategoriesData = {
             category1: this.responseData[index].data[item].category1,
-            category2:this.responseData[index].data[item].category2 ? this.responseData[index].data[item].category2 : null,
-            category3: this.responseData[index].data[item].category3 ? this.responseData[index].data[item].category3 : null,
-          });
+            subCategories: {
+              category2: this.responseData[index].data[item].category2,
+              subCategories: {
+                category3: this.responseData[index].data[item].category3
+              }
+            }
         }
+        totalResults.push(storeCategoriesData);
       }
     }
-    this.removeDuplicates(this.topicCategory, "category1");
-    console.log(this.topicCategory);
   }
+  console.log("totalResults",totalResults)
+  this.topicCategory = this.removeDuplicates(totalResults, "category1");
+  console.log(this.topicCategory);
+}
 
   removeDuplicates(originalArray, prop) {
     var newArray = [];
@@ -285,7 +293,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
     for(i in lookupObject) {
         newArray.push(lookupObject[i]);
-        this.topicCategory.push(lookupObject[i]);
     }
      return newArray;
     }
@@ -313,8 +320,8 @@ export class SearchMultiVillagesComponent implements OnInit {
                     // console.log("curren topic", this.middleTabsMap.get(this.currentSelectedTopic));
                     let yearResults = getEachVillageYear[item][0][this.middleTabsMap.get(this.currentSelectedTopic)];
                     if(yearResults !== undefined) {
-                      if(yearResults["year_only"].length > 0)
-                      console.log(yearResults);
+                      // if(yearResults["year_only"].length > 0)
+                      // console.log(yearResults);
                       //use remove duplicate method
                     }
                   }
@@ -333,7 +340,18 @@ export class SearchMultiVillagesComponent implements OnInit {
     //TODO  use dynamic db data - Later
     middleCheckBox(event: MatCheckboxChange) {
       const selectedText = event.source._elementRef.nativeElement.innerText;
-      console.log(selectedText)
+      console.log("selectedText", selectedText);
+      // console.log(this.responseData);
+
+      //TODO - BUG
+      // const getCheckedIndex = this.topicCategory.findIndex((element) => element.category1 === selectedText);
+      // console.log(this.topicCategory[getCheckedIndex].category2);
+      // this.displayCategory2 = this.topicCategory[getCheckedIndex].category2;
+
+      // for(let categoriesIndex in this.topicCategory) {
+      //   const getCheckedIndex = this.topicCategory.findIndex((element) => element.category1 === selectedText);
+      //   console.log(this.topicCategory[getCheckedIndex]);
+      // }
   
       // console.log(this.categoryResult[selectedText].childCategories[0]);
   
