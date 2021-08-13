@@ -19,6 +19,8 @@ import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
 import { Category, CheckList, PostDataToSearch, Year } from "./modals/formatData";
 import { HttpServiceService } from '../services/http-service.service';
+// import { MatSelectionList } from "@angular/material/list";
+import { MatListOption, MatSelectionListChange } from '@angular/material/list'
 @Component({
   selector: "app-search-multi-villages",
   templateUrl: "./search-multi-villages.component.html",
@@ -135,6 +137,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   postDataToSearch: PostDataToSearch[] = [];
   //middle - category
   topicCategory: any[];
+
+  checkedList: any[]
 
   //
   currentSelectedTopic: string;
@@ -268,6 +272,7 @@ export class SearchMultiVillagesComponent implements OnInit {
         for(let item in this.responseData[index].data){
           let storeCategoriesData = {
             category1: this.responseData[index].data[item].category1,
+            isSelected: false,
             subCategories: {
               category2: this.responseData[index].data[item].category2,
               subCategories: {
@@ -279,7 +284,6 @@ export class SearchMultiVillagesComponent implements OnInit {
       }
     }
   }
-  console.log("totalResults",totalResults)
   this.topicCategory = this.removeDuplicates(totalResults, "category1");
   console.log(this.topicCategory);
 }
@@ -336,7 +340,18 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
 
   }
+  // options: MatListOption[]
+  categorySelection(event) {
 
+    for(let index in this.topicCategory) {
+      for(let item in event) {
+        event[item].isSelected = true;
+      }
+      this.checkedList = event;
+    }
+
+    console.log( this.checkedList);
+  }
     //TODO  use dynamic db data - Later
     middleCheckBox(event: MatCheckboxChange) {
       const selectedText = event.source._elementRef.nativeElement.innerText;

@@ -101,10 +101,47 @@
                 <mat-tab label="{{ item }}" *ngFor="let item of displayedMiddleTabs">
                     <div class="economy">
                         <div class="category">
-                            <div class="left">
+                            <div class="left"> 类别
+                                <p>{{ item }} 下类别</p>
+                                <mat-selection-list #list [(ngModel)]="selectedOptionCurrent" (ngModelChange)="categorySelection($event)">
+                                    <!-- hidden="true" -->
+                                    <mat-list-option *ngFor="let item of topicCategory" checkboxPosition="before" style="font-size: 14px;" [selection]="item.isSelected" [value]="item">
+                                        {{item.category1}}
+                                    </mat-list-option>
+                                </mat-selection-list>
+                            </div>
+
+                            <!-- <p>
+                                Options selected: {{list.selectedOptions.selected.length}}
+                            </p>
+
+                            <p>
+                                Option selected: {{list.selectedOptions.selected[0]?.value}}
+                            </p> -->
+
+                            <div class="middle">
                                 类别
                                 <p>{{ item }} 下类别</p>
-                                <mat-checkbox (change)="middleCheckBox($event)">选择所有</mat-checkbox>
+                                <mat-selection-list *ngFor="let item of checkedList">
+                                    <mat-list-option checkboxPosition="before" style="font-size: 14px">
+                                        {{item.subCategories.category2}}
+                                    </mat-list-option>
+                                </mat-selection-list>
+                            </div>
+
+
+                            <!-- <div class="middle">
+                                类别
+                                <p>{{ item }} 下类别</p>
+
+                                <mat-selection-list>
+                                    <mat-list-option *ngFor="let item of topicCategory" checkboxPosition="before" color="red">
+                                        {{item.subCategories.category2}}
+                                    </mat-list-option>
+                                </mat-selection-list>
+                            </div> -->
+
+                            <!-- <mat-checkbox (change)="middleCheckBox($event)">选择所有</mat-checkbox>
                                 <ul class="category1" [ngStyle]="{
                                 'list-style-type': 'none',
                                 margin: '0',
@@ -119,14 +156,14 @@
                             </div>
                             <div class="middle">
                                 子类1
-                                <!-- <li *ngFor="let item of middleBoxCategory2">
+                                <li *ngFor="let item of topicCategory">
                                     <mat-checkbox>
-                                        {{ item }}
+                                        {{ item.subCategories.category2 }}
                                     </mat-checkbox>
-                                </li> -->
-                                <mat-checkbox>{{ displayCategory2 }} </mat-checkbox>
-                            </div>
-                            <div class="right">子类2</div>
+                                </li>
+                                <mat-checkbox>{{ displayCategory2 }} </mat-checkbox> -->
+
+                            <!-- <div class="right">子类2</div> -->
                         </div>
                     </div>
                 </mat-tab>
