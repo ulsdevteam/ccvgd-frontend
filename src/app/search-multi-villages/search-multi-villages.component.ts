@@ -135,6 +135,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   checkedVillagesID: any[];
   //search
   postDataToSearch: PostDataToSearch[] = [];
+  //search - select all
+  filteredData: any[];
   //middle - category
   topicCategory: any[];
 
@@ -160,6 +162,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     private httpService : HttpServiceService
   ) {
     this.masterSelected = false;
+    console.log(this.filteredData);
     // this.provinceList = this.provinceCityCountyService.getProvince();
   }
 
@@ -191,13 +194,15 @@ export class SearchMultiVillagesComponent implements OnInit {
         })
       });
       this.options = new MatTableDataSource(result.data);
+      this.filteredData = this.options.filteredData;
+      // console.log("this.filteredData", this.filteredData)
     });
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.options.filter = filterValue.trim().toLowerCase();
-    // console.log(this.options.filter);
+    console.log(this.options.filter);
   }
    //********************* for checkbox field ************************************* */
 
@@ -529,6 +534,9 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.countyList.push(item.county);
       }
     });
+
+    this.filteredData = this.options.filteredData;
+    // console.log("this province", this.options)
   }
 
   changeCity(data: Event) {
@@ -540,11 +548,13 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.countyList.push(item.county);
       }
     });
-    console.log(this.options)
+    // console.log(this.options)
+    this.filteredData = this.options.filteredData;
   }
 
   changeCounty(data) {
     this.options.filter = data;
+    this.filteredData = this.options.filteredData;
   }
 
   onInputStartYearField(event: any) {
