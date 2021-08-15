@@ -138,7 +138,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   //middle - category
   topicCategory: any[];
 
-  checkedList: any[]
+  category2_checkedList: any[]
 
   //
   currentSelectedTopic: string;
@@ -275,6 +275,7 @@ export class SearchMultiVillagesComponent implements OnInit {
             isSelected: false,
             subCategories: {
               category2: this.responseData[index].data[item].category2,
+              isSelected: false,
               subCategories: {
                 category3: this.responseData[index].data[item].category3
               }
@@ -305,6 +306,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.currentSelectedTopic = event.tab.textLabel;
     this.getTopicWithCategories();
     this.getYearWithTopic();
+    this.category2_checkedList = [];
   }
 
   getYearWithTopic() {
@@ -341,16 +343,26 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   }
   // options: MatListOption[]
-  categorySelection(event) {
-
+  categorySelection(checkedList) {
     for(let index in this.topicCategory) {
-      for(let item in event) {
-        event[item].isSelected = true;
-      }
-      this.checkedList = event;
-    }
+      for(let item in checkedList) {
+        checkedList[item].isSelected = true;
 
-    console.log( this.checkedList);
+        // if(checkedList[item].category1.subCategories.category2 === undefined) {
+        //   checkedList[item].category1.subCategories.category2 = "no data";
+        // }
+        // console.log(checkedList[item].category1.subCategories.category2)
+        // if(checkedList[item].category1.subCategories.category2)
+      }
+
+      // Object.keys(checkedList).forEach(function(key) {
+      //   if(typeof checkedList[key] === 'undefined') {
+      //     checkedList[key] = "null"
+      //   }
+      // })
+      this.category2_checkedList = checkedList;
+    }
+    console.log( this.category2_checkedList);
   }
     //TODO  use dynamic db data - Later
     middleCheckBox(event: MatCheckboxChange) {
