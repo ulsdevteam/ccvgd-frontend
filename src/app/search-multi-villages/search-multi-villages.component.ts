@@ -183,6 +183,14 @@ export class SearchMultiVillagesComponent implements OnInit {
             this.countyList.push(item.county);
           }
         }
+        this.multiVillages_checkList.push({
+          village_id: item.id,
+          village_name: item.name,
+          province: item.province,
+          city: item.city,
+          county: item.county,
+          isSelected: false
+        });
       });
       this.options = new MatTableDataSource(result.data);
       this.filteredData = this.options.filteredData;
