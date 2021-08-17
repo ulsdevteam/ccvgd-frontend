@@ -382,7 +382,7 @@ export class SearchMultiVillagesComponent implements OnInit {
                     let yearResults = getEachVillageYear[item][0][this.middleTabsMap.get(this.currentSelectedTopic)];
                     if(yearResults !== undefined) {
                       // if(yearResults["year_only"].length > 0)
-                      // console.log(yearResults);
+                      console.log(yearResults);
                       //use remove duplicate method
                     }
                   }
@@ -400,21 +400,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   // options: MatListOption[]
   categorySelection(checkedList) {
     for(let index in this.topicCategory) {
-      for(let item in checkedList) {
-        checkedList[item].isSelected = true;
-
-        // if(checkedList[item].category1.subCategories.category2 === undefined) {
-        //   checkedList[item].category1.subCategories.category2 = "no data";
-        // }
-        // console.log(checkedList[item].category1.subCategories.category2)
-        // if(checkedList[item].category1.subCategories.category2)
-      }
-
-      // Object.keys(checkedList).forEach(function(key) {
-      //   if(typeof checkedList[key] === 'undefined') {
-      //     checkedList[key] = "null"
-      //   }
-      // })
+      for(let item in checkedList) { checkedList[item].isSelected = true; }
       this.category2_checkedList = checkedList;
     }
     console.log( this.category2_checkedList);
@@ -423,47 +409,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     middleCheckBox(event: MatCheckboxChange) {
       const selectedText = event.source._elementRef.nativeElement.innerText;
       console.log("selectedText", selectedText);
-      // console.log(this.responseData);
-
-      //TODO - BUG
-      // const getCheckedIndex = this.topicCategory.findIndex((element) => element.category1 === selectedText);
-      // console.log(this.topicCategory[getCheckedIndex].category2);
-      // this.displayCategory2 = this.topicCategory[getCheckedIndex].category2;
-
-      // for(let categoriesIndex in this.topicCategory) {
-      //   const getCheckedIndex = this.topicCategory.findIndex((element) => element.category1 === selectedText);
-      //   console.log(this.topicCategory[getCheckedIndex]);
-      // }
-  
-      // console.log(this.categoryResult[selectedText].childCategories[0]);
-  
-      // let category2Text = "";
-      // if (this.categoryResult[selectedText].childCategories) {
-      //   category2Text = this.categoryResult[selectedText].childCategories[0];
-      // }
-  
-      // // console.log(selectedText);
-      // if (event.checked) {
-      //   // console.log(event.source._elementRef.nativeElement.innerText);
-  
-      //   this.tempcheckItems.push(selectedText);
-  
-      //   if (this.categoryResult[selectedText].childCategories[0] !== "null") {
-      //     this.middleBoxCategory2.push(category2Text);
-      //   }
-      //   // this.tempcheckItems.push(event.source.name);
-      // } else {
-      //   // var index = this.tempcheckItems.indexOf(event.source.name);
-      //   var index = this.tempcheckItems.indexOf(selectedText);
-      //   if (index > -1) {
-      //     this.tempcheckItems.splice(index, 1);
-      //   }
-  
-      //   // category2Text == 'null';
-      //   this.middleBoxCategory2 = [];
-  
-        // this.checkItems.delete(element.id);
-      
+      console.log(this.responseData);
     }
 
   // async getVillageDataWithTopics() {
