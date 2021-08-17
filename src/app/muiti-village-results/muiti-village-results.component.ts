@@ -38,7 +38,10 @@ export class MuitiVillageResultsComponent implements OnInit {
   @ViewChild("dataSource6Paginator") dataSource6Paginator: MatPaginator;
   @ViewChild("dataSource7Paginator") dataSource7Paginator: MatPaginator;
   @ViewChild("dataSource8Paginator") dataSource8Paginator: MatPaginator;
-
+  @ViewChild("dataSource9Paginator") dataSource9Paginator: MatPaginator;
+  @ViewChild("dataSource10Paginator") dataSource10Paginator: MatPaginator;
+  @ViewChild("dataSource11Paginator") dataSource11Paginator: MatPaginator
+  @ViewChild("dataSource12Paginator") dataSource12Paginator: MatPaginator;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   userInput: any = {};
   getAllResponses: any = {};
@@ -53,6 +56,10 @@ export class MuitiVillageResultsComponent implements OnInit {
   dataSource7;
   dataSource8;
   dataSource9;
+  dataSource10;
+  dataSource11;
+  dataSource12;
+
 
   dataSourceMap = new Map();
 
@@ -65,6 +72,10 @@ export class MuitiVillageResultsComponent implements OnInit {
   displayedColumns6: string[] = []
   displayedColumns7: string[] = []
   displayedColumns8: string[] = []
+  displayedColumns9: string[] = []
+  displayedColumns10: string[] = []
+  displayedColumns11: string[] = []
+  displayedColumns12: string[] = []
 
 
   constructor(private multiVillageFilterService: MultiVillageFilterService) {
@@ -106,7 +117,10 @@ export class MuitiVillageResultsComponent implements OnInit {
         this.displayedColumns6  = this.removeGazetteerId(results[5].field);
         this.displayedColumns7  = this.removeGazetteerId(results[6].field);
         this.displayedColumns8  = this.removeGazetteerId(results[7].field);
-
+        this.displayedColumns9  = this.removeGazetteerId(results[8].field);
+        this.displayedColumns10  = this.removeGazetteerId(results[9].field);
+        this.displayedColumns11  = this.removeGazetteerId(results[10].field);
+        this.displayedColumns12  = this.removeGazetteerId(results[11].field);
 
         this.dataSource1 = new MatTableDataSource(results[0].data);
         this.dataSource2 = new MatTableDataSource(results[1].data);
@@ -116,6 +130,10 @@ export class MuitiVillageResultsComponent implements OnInit {
         this.dataSource6 = new MatTableDataSource(results[5].data);
         this.dataSource7 = new MatTableDataSource(results[6].data);
         this.dataSource8 = new MatTableDataSource(results[7].data);
+        this.dataSource9 = new MatTableDataSource(results[8].data);
+        this.dataSource10 = new MatTableDataSource(results[9].data);
+        this.dataSource11 = new MatTableDataSource(results[10].data);
+        this.dataSource12 = new MatTableDataSource(results[11].data);
 
 
 
@@ -128,6 +146,10 @@ export class MuitiVillageResultsComponent implements OnInit {
         this.dataSource6.paginator = this.dataSource6Paginator;
         this.dataSource7.paginator = this.dataSource7Paginator;
         this.dataSource8.paginator = this.dataSource8Paginator;
+        this.dataSource9.paginator = this.dataSource9Paginator;
+        this.dataSource10.paginator = this.dataSource10Paginator;
+        this.dataSource11.paginator = this.dataSource11Paginator;
+        this.dataSource12.paginator = this.dataSource12Paginator;
       });
   }
 

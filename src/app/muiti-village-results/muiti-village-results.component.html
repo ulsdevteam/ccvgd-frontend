@@ -171,3 +171,88 @@
     </table>
     <mat-paginator #dataSource8Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
+
+<div>
+    <h2>军事政治</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍军事政治</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource9" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns9" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns9"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns9"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource9Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<div>
+    <h2>经济</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍经济</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource10" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns10" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns10"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns10"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource10Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div>
+    <h2>计划生育</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍计划生育</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource11" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns11" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns11"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns11"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource11Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div>
+    <h2>教育</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍教育</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource12" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns12" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns12"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns12"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource12Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
