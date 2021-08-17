@@ -183,15 +183,6 @@ export class SearchMultiVillagesComponent implements OnInit {
             this.countyList.push(item.county);
           }
         }
-        // console.log(item);
-        this.multiVillages_checkList.push({
-          village_id: item.id,
-          village_name: item.name,
-          province: item.province,
-          city: item.city,
-          county: item.county,
-          isSelected: false
-        })
       });
       this.options = new MatTableDataSource(result.data);
       this.filteredData = this.options.filteredData;
@@ -206,8 +197,59 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
    //********************* for checkbox field ************************************* */
 
+   changeProvince(data: Event) {
+    this.options.filter = data;
+
+    this.cityList = [];
+    this.options.filteredData.map((item) => {
+      if (!this.cityList.includes(item.city)) {
+        this.cityList.push(item.city);
+      }
+    });
+
+    this.countyList = [];
+    this.options.filteredData.map((item) => {
+      if (!this.countyList.includes(item.county)) {
+        this.countyList.push(item.county);
+      }
+    });
+
+    this.filteredData = this.options.filteredData;
+    // console.log("this province", this.options)
+  }
+
+  changeCity(data: Event) {
+    this.options.filter = data;
+
+    this.countyList = [];
+    this.options.filteredData.map((item) => {
+      if (!this.countyList.includes(item.county)) {
+        this.countyList.push(item.county);
+      }
+    });
+    // console.log(this.options)
+    this.filteredData = this.options.filteredData;
+  }
+
+  changeCounty(data) {
+    this.options.filter = data;
+    this.filteredData = this.options.filteredData;
+  }
+  
   // The master checkbox will check/ uncheck all items
   checkUncheckAll() {
+    //update checkLsit
+    this.multiVillages_checkList = [];
+    this.filteredData.map(item => {
+      this.multiVillages_checkList.push({
+        village_id: item.id,
+        village_name: item.name,
+        province: item.province,
+        city: item.city,
+        county: item.county,
+        isSelected: false
+      });
+    })
     for(let i = 0; i < this.multiVillages_checkList.length; i++) {
       this.multiVillages_checkList[i].isSelected = this.masterSelected;
     }
@@ -516,45 +558,6 @@ export class SearchMultiVillagesComponent implements OnInit {
       diff.push(k);
     }
     return diff;
-  }
-
-  changeProvince(data: Event) {
-    this.options.filter = data;
-
-    this.cityList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.cityList.includes(item.city)) {
-        this.cityList.push(item.city);
-      }
-    });
-
-    this.countyList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.countyList.includes(item.county)) {
-        this.countyList.push(item.county);
-      }
-    });
-
-    this.filteredData = this.options.filteredData;
-    // console.log("this province", this.options)
-  }
-
-  changeCity(data: Event) {
-    this.options.filter = data;
-
-    this.countyList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.countyList.includes(item.county)) {
-        this.countyList.push(item.county);
-      }
-    });
-    // console.log(this.options)
-    this.filteredData = this.options.filteredData;
-  }
-
-  changeCounty(data) {
-    this.options.filter = data;
-    this.filteredData = this.options.filteredData;
   }
 
   onInputStartYearField(event: any) {
