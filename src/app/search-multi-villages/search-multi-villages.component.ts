@@ -8,7 +8,7 @@ import {
   OnInit,
   Renderer2,
   ViewChild,
-  Inject
+  Inject,
 } from "@angular/core";
 import { ProvinceCityCountyService } from "../services/province-city-county.service";
 import { MatTableDataSource } from "@angular/material/table";
@@ -18,7 +18,7 @@ import { MultiVillageFilterService } from "../services/multi-village-filter.serv
 import { HttpClient } from "@angular/common/http";
 import { Input, Output, EventEmitter } from "@angular/core";
 import { MatTabGroup } from "@angular/material/tabs";
-import { Category, CheckList, PostDataToSearch, Year } from "./modals/formatData";
+import { Category, CheckList, PostDataToSearch, Year, DisplayTopicCategory } from "./modals/formatData";
 import { HttpServiceService } from '../services/http-service.service';
 // import { MatSelectionList } from "@angular/material/list";
 import { MatListOption, MatSelectionListChange } from '@angular/material/list'
@@ -34,6 +34,9 @@ import { DialogComponent } from './dialog/dialog.component'
 export class SearchMultiVillagesComponent implements OnInit {
   @ViewChild("myYearDiv", { static: false }) myYearDiv: ElementRef;
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
+  @Input() okIsClick;
+
+  comfirmDelete: boolean; 
   options;
   //TODO this is fake data for province, need change later
   provinceList: string[] = [];
@@ -145,7 +148,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   //middle - category
   topicCategory: any[];
 
-  category2_checkedList: any[]
+  category2_checkedList: any[];
+  displayTopicCategory: DisplayTopicCategory[];
 
   //
   currentSelectedTopic: string;
@@ -154,6 +158,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   responseData: any;
   //year -left top
   topicYear: Year[] = [];
+  totalYearOnly: any[] = [];
+  selectedYear;
 
 
   constructor(
@@ -168,7 +174,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.masterSelected = false;
-    console.log(this.filteredData);
+    // console.log(this.filteredData);
     // this.provinceList = this.provinceCityCountyService.getProvince();
   }
 
@@ -275,6 +281,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     let checkedItemID = this.multiVillages_checkList.findIndex((obj => obj.village_id === element.id));
     this.multiVillages_checkList[checkedItemID].isSelected = event.checked ? true : false;
     this.getCheckedItemList();
+    this.getYearWithTopic();
   }
 
   //here all the items are checked 
@@ -299,11 +306,12 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   deleteVillage(event, checkedItem) {
+    this.dialog.open(DialogComponent);
+    // console.log(this.okIsClick);
     let deleteElementIndex = this.multiVillages_checkList.findIndex(item => item === checkedItem);
     this.multiVillages_checkList[deleteElementIndex].isSelected = false;
     this.getCheckedItemList();
     console.log(this.multiVillages_checkedList);
-    this.dialog.open(DialogComponent);
   }
 
   // getDefaultTopics() 
@@ -321,7 +329,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     );
     this.responseData = response;
     this.getTopicWithCategories();
-    this. getYearWithTopic();
+    this.getYearWithTopic();
   }
 
   //if search button is clicked, go to results page
@@ -379,104 +387,70 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   getYearWithTopic() {
-    for(let index in this.responseData) {
-      if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
-        // console.log(this.responseData);
-        if(this.responseData[index].year !== undefined){
-          if(this.responseData[index].year.length > 0) {
-            for(let villageIndex in this.responseData[index].year) {
-              console.log("item" , this.responseData[index].year[villageIndex]);
-              for(let villageID in this.checkedVillagesID) {
-                // console.log(this.checkedVillagesID[villageID]);
-                let getEachVillageYear = this.responseData[index].year[villageIndex][this.checkedVillagesID[villageID]];
-                if(getEachVillageYear !== undefined) {
-                  for(let item in getEachVillageYear) {
-                    // console.log("currentitem", getEachVillageYear[item][0]);
-                    // console.log("curren topic", this.middleTabsMap.get(this.currentSelectedTopic));
-                    let yearResults = getEachVillageYear[item][0][this.middleTabsMap.get(this.currentSelectedTopic)];
-                    if(yearResults !== undefined) {
-                      // if(yearResults["year_only"].length > 0)
-                      console.log(yearResults);
-                      //use remove duplicate method
-                    }
-                  }
-                }
-                console.log("item" , getEachVillageYear);
+    this.topicYear = [];
+    let totalYearOnly = [];
+
+    console.log(this.responseData);
+    if(this.responseData) {
+      let matchIndex = this.responseData.findIndex(item => item.tableNameChinese === this.currentSelectedTopic);
+
+      for(let eachID in this.checkedVillagesID) {
+        if(this.responseData[matchIndex].year) {
+          let year_index = this.responseData[matchIndex].year.findIndex( (item) =>  {
+          if(item[this.checkedVillagesID[eachID]]) {
+            const currentTopicEN = this.middleTabsMap.get(this.currentSelectedTopic);
+            const getYearObject = item[this.checkedVillagesID[eachID]][0][currentTopicEN];
+            for(let eachYearIndex in getYearObject.year_only) {
+              if(totalYearOnly.indexOf(getYearObject.year_only[eachYearIndex]) === -1) {
+                totalYearOnly.push(getYearObject.year_only[eachYearIndex]);
+                totalYearOnly.sort();
               }
             }
           }
+        });
         }
       }
 
+      this.topicYear.push({
+        topic: this.currentSelectedTopic,
+        village_id: this.checkedVillagesID,
+        total_year_only: totalYearOnly
+      })
     }
 
+    console.log(this.topicYear)
+  }
+
+
+  checkboxYear(event) {
+    
   }
   // options: MatListOption[]
   categorySelection(checkedList) {
+    let results_c1 = [];
+    this.displayTopicCategory = [];
     for(let index in this.topicCategory) {
-      for(let item in checkedList) { checkedList[item].isSelected = true; }
+      for(let item in checkedList) { 
+        checkedList[item].isSelected = true; 
+        if(results_c1.indexOf(checkedList[item].category1) === -1) {
+          results_c1.push(checkedList[item].category1);
+        }
+      }
       this.category2_checkedList = checkedList;
     }
-    console.log( this.category2_checkedList);
+    this.displayTopicCategory.push({
+      selectedTopic: this.currentSelectedTopic,
+      selectedCategoryList: results_c1
+    })
+    console.log(this.displayTopicCategory);
   }
     //TODO  use dynamic db data - Later
     middleCheckBox(event: MatCheckboxChange) {
       const selectedText = event.source._elementRef.nativeElement.innerText;
-      console.log("selectedText", selectedText);
+      // console.log("selectedText", selectedText);
       console.log(this.responseData);
     }
 
-  // async getVillageDataWithTopics() {
-  //   //TODO
-  //   // this.getCheckBoxLanguageChinese(currentServiceData[2].data[0].category1);
-  //   console.log("post Villages and Topics 😵‍💫", this.postVillagesTopics);
-  //   this.multiVillageFilterService
-  //     .onPostMultiVillages(this.postVillagesTopics)
-  //     .then((result) => {
-  //       console.log("post topics and village id result", result);
-  //       // console.log(typeof result);
-  //       console.log("size", Object.keys(result).length);
-  //       console.log(result[2].tableNameChinese);
-
-  //       let rawCategories = result[2].data;
-  //       console.log("rawCategories", rawCategories);
-
-  //       //clear
-  //       this.middleBoxCategory1 = [];
-  //       this.categoryResult = {};
-
-  //       for (let c of rawCategories) {
-  //         if (!(c.category1 in this.categoryResult)) {
-  //           this.categoryResult[c.category1] = {
-  //             name: c.category1,
-  //             childCategories: [],
-  //           };
-  //           if (!(c.category2 in this.categoryResult)) {
-  //             this.categoryResult[c.category1].childCategories.push(
-  //               c.category2
-  //             );
-  //           }
-  //         }
-  //       }
-  //       console.log(this.categoryResult);
-
-  //       for (let i in this.categoryResult) {
-  //         // console.log(i);
-  //         this.middleBoxCategory1.push(i);
-  //         // console.log(result[i].childCategories);
-  //       }
-  //       console.log("result", this.categoryResult);
-
-  //       // if(this.categoryResult)
-  //       // }
-
-  //       // for(let i = 0; i < Object.keys(result).length; i++) {
-
-  //       // }
-
-  //       // result[2].data.map((item) => {
-
-  //       //   // console.log(item);
   //       //TODO
   //       //   const getChineseWordCategory1 = item.category1
   //       //     .split('')
@@ -504,28 +478,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.httpService.post("advancesearch", postData).then((responseData) => {
         console.log("responseData", responseData);
       });
-  }
-
-
-  arr_diff(a1, a2) {
-    var a = [],
-      diff = [];
-
-    for (var i = 0; i < a1.length; i++) {
-      a[a1[i]] = true;
-    }
-
-    for (var i = 0; i < a2.length; i++) {
-      if (a[a2[i]]) {
-        delete a[a2[i]];
-      } else {
-        a[a2[i]] = true;
-      }
-    }
-    for (var k in a) {
-      diff.push(k);
-    }
-    return diff;
   }
 
   onInputStartYearField(event: any) {

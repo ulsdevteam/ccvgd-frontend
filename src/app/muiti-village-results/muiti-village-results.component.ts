@@ -112,7 +112,7 @@ export class MuitiVillageResultsComponent implements OnInit {
         this.displayedColumns1  = this.removeGazetteerId(results[0].field);
         this.displayedColumns2  = this.removeGazetteerId(results[1].field);
         this.displayedColumns3  = this.removeGazetteerId(results[2].field);
-        this.displayedColumns4  = this.removeGazetteerId(results[3].field[0]);
+        this.displayedColumns4  = this.removeGazetteerId(results[3].field);
         this.displayedColumns5  = this.removeGazetteerId(results[4].field);
         this.displayedColumns6  = this.removeGazetteerId(results[5].field);
         this.displayedColumns7  = this.removeGazetteerId(results[6].field);

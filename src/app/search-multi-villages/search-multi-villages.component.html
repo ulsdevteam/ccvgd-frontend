@@ -88,6 +88,7 @@
         <div class="villageselected">已选村庄-Selected Villages</div>
 
         <mat-list *ngFor="let checkedItem of multiVillages_checkedList">
+            <!-- <app-dialog [okIsClick]="okIsClick($event)"></app-dialog> -->
             <mat-list-item>
                 <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="deleteVillage($event, checkedItem)">delete</mat-icon>
                 {{ checkedItem.village_name }} {{ checkedItem.province }} {{ checkedItem.city }} {{ checkedItem.county }}
@@ -128,7 +129,7 @@
                             <div class="middle">
                                 类别
                                 <p>{{ item }} 下类别</p>
-                                <mat-selection-list #list2 [(ngModel)]="selectedOptionCurrent" (ngModalChange)="categorySelection($event)">
+                                <mat-selection-list #list2 [(ngModel)]="selectedOptionCurrent">
                                     <ng-container>
                                         <mat-list-option *ngFor="let item of category2_checkedList" checkboxPosition="before" style="font-size: 14px" [hidden]="item.subCategories.category2 === undefined">
                                             {{item.subCategories.category2}}
@@ -156,7 +157,7 @@
 
         <div class="topicselectedlist">
             已选主题-Selected Topics
-            <hr />
+            <!-- <hr />
             <p>已选 {{ tempcheckItems.length }}</p>
             <p>{{ selectedTabLabel }}下 -- 子类1</p>
             <div *ngFor="let item of tempcheckItems">
@@ -164,7 +165,17 @@
                     {{ item }}
                     <br />
                 </div>
+            </div> -->
+
+            <div *ngFor="let eachList of displayTopicCategory">
+                <p>{{ eachList.selectedTopic }}下 -- 子类1</p>
+                <mat-list *ngFor="let item of eachList.selectedCategoryList">
+                    <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
+                        {{ item }}
+                    </mat-list-item>
+                </mat-list>
             </div>
+
         </div>
     </div>
 
@@ -177,21 +188,19 @@
         <div class="yearselect">年份-Year</div>
         <div class="singleyear">
             <div class="yearselectionlist">
-                <mat-checkbox (change)="rightTopYearCheckBox($event)">全选</mat-checkbox>
-                <li *ngFor="let eachYear of singleYearList" [ngStyle]="{
-            'list-style-type': 'none'
-          }">
-                    <mat-checkbox (change)="rightTopYearCheckBox($event)">
-                        {{ eachYear }}
-                    </mat-checkbox>
-                </li>
-                <!-- <mat-checkbox name="1949" (change)="middleCheckBox($event)"
-          >1949</mat-checkbox
-        > -->
+                <mat-selection-list #listSingleYear [(ngModel)]="selectedYear" (ngModelChange)="checkboxYear($event)">
+                    <ng-container *ngFor="let item of topicYear">
+                        <div *ngFor="let eachYear of item.total_year_only">
+                            <mat-list-option checkboxPosition="before" style="font-size: 14px;">
+                                {{eachYear}}
+                            </mat-list-option>
+                        </div>
+                    </ng-container>
+                </mat-selection-list>
             </div>
             <div class="yearselectedlist">
                 已选年份-Selected Single Year
-                <p>已选 {{ rightToptempcheckItems.length }}</p>
+                <p>已选 {{listSingleYear.selectedOptions.selected.length}}</p>
                 <div *ngFor="let rightitem of rightToptempcheckItems">
                     <p>{{ rightitem }}</p>
                 </div>
