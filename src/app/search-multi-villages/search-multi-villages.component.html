@@ -86,11 +86,15 @@
             </table>
         </div>
         <div class="villageselected">已选村庄-Selected Villages</div>
-        <ng-container *ngFor="let item of checkItems | keyvalue">
-            <p>
-                {{ item.value.name }} {{ item.value.province }} {{ item.value.city }} {{ item.value.county }}
-            </p>
-        </ng-container>
+
+        <mat-list *ngFor="let checkedItem of multiVillages_checkedList">
+            <mat-list-item>
+                <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="deleteVillage($event, checkedItem)">delete</mat-icon>
+                {{ checkedItem.village_name }} {{ checkedItem.province }} {{ checkedItem.city }} {{ checkedItem.county }}
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </mat-list>
+
         <div class="villageselectedlist"></div>
     </div>
 

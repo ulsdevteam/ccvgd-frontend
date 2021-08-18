@@ -8,6 +8,7 @@ import {
   OnInit,
   Renderer2,
   ViewChild,
+  Inject
 } from "@angular/core";
 import { ProvinceCityCountyService } from "../services/province-city-county.service";
 import { MatTableDataSource } from "@angular/material/table";
@@ -21,6 +22,10 @@ import { Category, CheckList, PostDataToSearch, Year } from "./modals/formatData
 import { HttpServiceService } from '../services/http-service.service';
 // import { MatSelectionList } from "@angular/material/list";
 import { MatListOption, MatSelectionListChange } from '@angular/material/list'
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import { DialogComponent } from './dialog/dialog.component'
+
 @Component({
   selector: "app-search-multi-villages",
   templateUrl: "./search-multi-villages.component.html",
@@ -159,7 +164,8 @@ export class SearchMultiVillagesComponent implements OnInit {
     private router: Router, // private multiVillageFilterService: MultiVillageFilterService,
     private http: HttpClient,
     private multiVillageFilterService: MultiVillageFilterService,
-    private httpService : HttpServiceService
+    private httpService : HttpServiceService,
+    public dialog: MatDialog
   ) {
     this.masterSelected = false;
     console.log(this.filteredData);
@@ -292,6 +298,14 @@ export class SearchMultiVillagesComponent implements OnInit {
     if(this.checkedVillagesID.length > 0) this.processRequest();
   }
 
+  deleteVillage(event, checkedItem) {
+    let deleteElementIndex = this.multiVillages_checkList.findIndex(item => item === checkedItem);
+    this.multiVillages_checkList[deleteElementIndex].isSelected = false;
+    this.getCheckedItemList();
+    console.log(this.multiVillages_checkedList);
+    this.dialog.open(DialogComponent);
+  }
+
   // getDefaultTopics() 
 
   async processRequest() {
@@ -367,11 +381,11 @@ export class SearchMultiVillagesComponent implements OnInit {
   getYearWithTopic() {
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
-        // console.log(this.responseData[index]);
+        // console.log(this.responseData);
         if(this.responseData[index].year !== undefined){
           if(this.responseData[index].year.length > 0) {
             for(let villageIndex in this.responseData[index].year) {
-              // console.log("item" , this.responseData[index].year[villageIndex]);
+              console.log("item" , this.responseData[index].year[villageIndex]);
               for(let villageID in this.checkedVillagesID) {
                 // console.log(this.checkedVillagesID[villageID]);
                 let getEachVillageYear = this.responseData[index].year[villageIndex][this.checkedVillagesID[villageID]];
@@ -387,7 +401,7 @@ export class SearchMultiVillagesComponent implements OnInit {
                     }
                   }
                 }
-                // console.log("item" , getEachVillageYear);
+                console.log("item" , getEachVillageYear);
               }
             }
           }
