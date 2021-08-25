@@ -90,16 +90,16 @@
         </div>
         <div class="villageselected">已选村庄-Selected Villages</div>
 
-        <mat-list *ngFor="let checkedItem of multiVillages_checkedList">
-            <!-- <app-dialog [okIsClick]="okIsClick($event)"></app-dialog> -->
-            <mat-list-item>
-                <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="deleteVillage($event, checkedItem)">delete</mat-icon>
-                {{ checkedItem.village_name }} {{ checkedItem.province }} {{ checkedItem.city }} {{ checkedItem.county }}
-            </mat-list-item>
-            <mat-divider></mat-divider>
-        </mat-list>
-
-        <div class="villageselectedlist"></div>
+        <div class="villageselectedlist">
+            <mat-list *ngFor="let checkedItem of multiVillages_checkedList" style="max-height: 100px;">
+                <!-- <app-dialog [okIsClick]="okIsClick($event)"></app-dialog> -->
+                <mat-list-item>
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="deleteVillage($event, checkedItem)">delete</mat-icon>
+                    {{ checkedItem.village_name }} {{ checkedItem.province }} {{ checkedItem.city }} {{ checkedItem.county }}
+                </mat-list-item>
+                <mat-divider></mat-divider>
+            </mat-list>
+        </div>
     </div>
 
     <div class="container2">
@@ -200,13 +200,19 @@
                         </div>
                     </ng-container>
                 </mat-selection-list>
+
             </div>
             <div class="yearselectedlist">
                 已选年份-Selected Single Year
                 <p>已选 {{listSingleYear.selectedOptions.selected.length}}</p>
-                <div *ngFor="let eachCheckedYear of checked_year_only">
-                    <p>{{ eachCheckedYear }}</p>
-                </div>
+                <ng-container>
+                    <table>
+                        <div *ngFor="let eachCheckedYear of checked_year_only">
+                            <p>{{ eachCheckedYear }}</p>
+                        </div>
+                    </table>
+
+                </ng-container>
 
             </div>
         </div>

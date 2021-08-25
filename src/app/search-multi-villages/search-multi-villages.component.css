@@ -6,7 +6,7 @@
     align-items: stretch;
     background: lavenderblush;
     /* height: 600px; */
-    height: 100%;
+    height: 90%;
 }
 
 
@@ -115,10 +115,13 @@
 }
 
 .villageselectedlist {
-    display: flex;
+    /* display: flex; */
     background: white;
     color: black;
     height: 40%;
+    /* min-height: 300px;
+    max-height: 300px; */
+    overflow: scroll;
 }
 
 
@@ -224,8 +227,9 @@
 .yearselectedlist {
     background: white;
     flex: 1;
-    height: 500%;
+    /* height: 500%; */
     margin-top: 5%;
+    min-height: 150px;
 }
 
 
@@ -294,4 +298,9 @@ div.mat-list-item-content,
 
 mat-list-option[aria-selected="true"] {
     background: rgba(134, 229, 229, 0.7);
+}
+
+.yearselectionlist {
+    height: 300px;
+    overflow: scroll;
 }
