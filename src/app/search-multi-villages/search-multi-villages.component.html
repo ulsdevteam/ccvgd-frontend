@@ -5,6 +5,7 @@
             <mat-form-field>
                 <mat-label>Province 省</mat-label>
                 <mat-select [(ngModel)]="provinceSearch" (ngModelChange)="changeProvince($event)">
+                    <mat-option>None</mat-option>
                     <mat-option *ngFor="let province of provinceList" [value]="province">
                         {{ province }}
                     </mat-option>
@@ -15,6 +16,7 @@
             <mat-form-field>
                 <mat-label>City 市</mat-label>
                 <mat-select [(ngModel)]="citySearch" (ngModelChange)="changeCity($event)">
+                    <mat-option>None</mat-option>
                     <mat-option *ngFor="let city of cityList" [value]="city">
                         {{ city }}
                     </mat-option>
@@ -24,6 +26,7 @@
             <mat-form-field>
                 <mat-label>County 县</mat-label>
                 <mat-select [(ngModel)]="countySearch" (ngModelChange)="changeCounty($event)">
+                    <mat-option>None</mat-option>
                     <mat-option *ngFor="let county of countyList" [value]="county">
                         {{ county }}
                     </mat-option>
@@ -188,10 +191,10 @@
         <div class="yearselect">年份-Year</div>
         <div class="singleyear">
             <div class="yearselectionlist">
-                <mat-selection-list #listSingleYear [(ngModel)]="selectedYear" (ngModelChange)="checkboxYear($event)">
+                <mat-selection-list #listSingleYear>
                     <ng-container *ngFor="let item of topicYear">
                         <div *ngFor="let eachYear of item.total_year_only">
-                            <mat-list-option checkboxPosition="before" style="font-size: 14px;">
+                            <mat-list-option #option checkboxPosition="before" style="font-size: 14px;" (click)="checkboxYear($event, eachYear, option.selected)">
                                 {{eachYear}}
                             </mat-list-option>
                         </div>
@@ -201,9 +204,10 @@
             <div class="yearselectedlist">
                 已选年份-Selected Single Year
                 <p>已选 {{listSingleYear.selectedOptions.selected.length}}</p>
-                <div *ngFor="let rightitem of rightToptempcheckItems">
-                    <p>{{ rightitem }}</p>
+                <div *ngFor="let eachCheckedYear of checked_year_only">
+                    <p>{{ eachCheckedYear }}</p>
                 </div>
+
             </div>
         </div>
 

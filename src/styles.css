@@ -1,24 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+
 @import "~bootstrap/dist/css/bootstrap.css";
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+html {
+    height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+    height: 100%;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    position: relative;
+    margin: 0 10%;
+}
 
 .mat-checkbox-layout {
-  white-space: normal !important;
+    white-space: normal !important;
 }
 
-.mat-tree cdk-tree{
-  position: sticky;
+.mat-tree cdk-tree {
+    position: sticky;
 }
+
 
 /*.mat-list.mat-list.mat-list-base {*/
+
+
 /*  background: chocolate;*/
+
+
 /*  position: fixed;*/
+
+
 /*}*/
 
 .mat-tree.mat-tree.cdk-tree {
-  position: sticky !important;
-  top: 58px;
+    position: sticky !important;
+    top: 58px;
 }

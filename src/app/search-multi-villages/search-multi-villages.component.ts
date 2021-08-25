@@ -159,7 +159,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   //year -left top
   topicYear: Year[] = [];
   totalYearOnly: any[] = [];
-  selectedYear;
+  checked_year_only: any[] = [];
 
 
   constructor(
@@ -306,12 +306,22 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   deleteVillage(event, checkedItem) {
-    this.dialog.open(DialogComponent);
-    // console.log(this.okIsClick);
-    let deleteElementIndex = this.multiVillages_checkList.findIndex(item => item === checkedItem);
-    this.multiVillages_checkList[deleteElementIndex].isSelected = false;
-    this.getCheckedItemList();
-    console.log(this.multiVillages_checkedList);
+    const dialogRef = this.dialog.open(DialogComponent, {
+      // width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+
+      if(result) {
+        let deleteElementIndex = this.multiVillages_checkList.findIndex(item => item === checkedItem);
+        this.multiVillages_checkList[deleteElementIndex].isSelected = false;
+        this.getCheckedItemList();
+        console.log(this.multiVillages_checkedList);
+      }
+    });
+
+
   }
 
   // getDefaultTopics() 
@@ -321,21 +331,25 @@ export class SearchMultiVillagesComponent implements OnInit {
     await this.multiVillageFilterService.onPostMultiVillages(
       {
         villageid: this.checkedVillagesID,
-        //BUG 1.checkedall 2. fourthlastNames -- ask backend
+        //BUG 1.checkedall 2. fourthlastNames -- ask backend -
+        // "ethnicgroups" BUG -- "firstavailabilityorpurchase","ethnicgroups","population" "military", "economy", 
+        //"BUG - familyplanning", "education"
+        //cannot read "field " undefined if not match all the topics for search results page.
+        //BUG
+        // topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
+        // "firstavailabilityorpurchase","population", "military", "economy", 
+        // "education"],
         topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
         "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
-        "familyplanning", "education"]
+        "familyplanning", "education"],
+        // topic:["population"]
+        // year: [this.checked_year_only[0]],
       }
     );
     this.responseData = response;
+    console.log("this.responseData", this.responseData)
     this.getTopicWithCategories();
     this.getYearWithTopic();
-  }
-
-  //if search button is clicked, go to results page
-  async goToPage() {
-    this.processRequest();
-    this.router.navigate(["/multi-village-search-result"]);
   }
 
   getTopicWithCategories() {
@@ -388,7 +402,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   getYearWithTopic() {
     this.topicYear = [];
-    let totalYearOnly = [];
+    this.totalYearOnly = [];
 
     console.log(this.responseData);
     if(this.responseData) {
@@ -401,9 +415,9 @@ export class SearchMultiVillagesComponent implements OnInit {
             const currentTopicEN = this.middleTabsMap.get(this.currentSelectedTopic);
             const getYearObject = item[this.checkedVillagesID[eachID]][0][currentTopicEN];
             for(let eachYearIndex in getYearObject.year_only) {
-              if(totalYearOnly.indexOf(getYearObject.year_only[eachYearIndex]) === -1) {
-                totalYearOnly.push(getYearObject.year_only[eachYearIndex]);
-                totalYearOnly.sort();
+              if(this.totalYearOnly.indexOf(getYearObject.year_only[eachYearIndex]) === -1) {
+                this.totalYearOnly.push(getYearObject.year_only[eachYearIndex]);
+                this.totalYearOnly.sort();
               }
             }
           }
@@ -414,17 +428,50 @@ export class SearchMultiVillagesComponent implements OnInit {
       this.topicYear.push({
         topic: this.currentSelectedTopic,
         village_id: this.checkedVillagesID,
-        total_year_only: totalYearOnly
+        total_year_only: this.totalYearOnly
       })
     }
-
-    console.log(this.topicYear)
+    console.log("topicYear", this.topicYear)
   }
 
+  checkboxYear(event, selectedYear, checked) {
+    // let selectedYear = year.toString();
+    if(checked) {
+      this.checked_year_only.push(selectedYear);
+    }
+    else{
+      let removeIndex = this.checked_year_only.indexOf(selectedYear);
+      if(removeIndex > -1 ) this.checked_year_only.splice(removeIndex, this.checked_year_only.length)
+    }
 
-  checkboxYear(event) {
-    
+
+    const values = Object.keys(this.checked_year_only).map(it => this.checked_year_only[it]);
+    console.log(typeof values)
+
+
   }
+
+  async postFinalRequest() {
+    let resnew = await this.multiVillageFilterService.onPostMultiVillages(
+      {
+        //BUG 1.checkedall 2. fourthlastNames -- ask backend
+          villageid: this.checkedVillagesID,
+          topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
+            "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
+            "familyplanning", "education"],
+          year: this.checked_year_only
+          // year_range: [2009, 2012],
+      }
+    );
+    console.log("res", resnew);
+  }
+
+    //if search button is clicked, go to results page
+    async goToPage() {
+      this.processRequest();
+      // this.postFinalRequest();
+      this.router.navigate(["/multi-village-search-result"]);
+    }
   // options: MatListOption[]
   categorySelection(checkedList) {
     let results_c1 = [];

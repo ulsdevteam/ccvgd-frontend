@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog'
 import { SearchMultiVillagesComponent } from "../search-multi-villages.component"
 
@@ -18,7 +18,7 @@ export class DialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  okIsClicked() {
-    this.okIsClick.emit(true);
-  }
+  // okIsClicked() {
+  //   this.okIsClick.emit(true);
+  // }
 }
