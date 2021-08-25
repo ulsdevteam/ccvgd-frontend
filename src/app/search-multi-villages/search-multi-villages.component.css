@@ -310,3 +310,14 @@ mat-list-option[aria-selected="true"] {
      */
     height: 90%;
 }
+
+.resetBtn {
+    margin-left: 30%;
+}
+
+
+/* respontive design */
+
+.searchBtn {
+    margin-left: 19%;
+}

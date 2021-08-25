@@ -98,6 +98,7 @@ export class MuitiVillageResultsComponent implements OnInit {
 
   
     filterDataSource(event: Event, currentDataSource) {
+      console.log("currentDataSource",currentDataSource)
     const filterValue = (event.target as HTMLInputElement).value;
     currentDataSource.filter = filterValue.trim().toLowerCase();
     if (currentDataSource.paginator) currentDataSource.paginator.firstPage();
