@@ -37,18 +37,6 @@ export class VillagesearchPipe implements PipeTransform {
 
         return true;
       })
-
-      // console.log("items", Object.entries(items));
-      // return items.filter(provinceName => {
-      //   // console.log(provinceSearch);
-      //   console.log(typeof provinceSearch);
-      //   // provinceName.indexOf(provinceSearch) === -1
-      //   // if(provinceName && provinceName !== provinceSearch) {
-      //   //   return false;
-      //   // }
-      //   // console.log(true);
-      //   // return true;
-      // })
     }
     else{
       console.log("no input");

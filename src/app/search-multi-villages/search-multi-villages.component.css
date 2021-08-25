@@ -173,6 +173,14 @@
 }
 
 
+/* mat icon */
+
+.mat-icon {
+    cursor: pointer;
+    color: red;
+}
+
+
 /*===========================*/
 
 .topicselectionlist {
@@ -256,7 +264,7 @@
 }
 
 .aligned-with-icon {
-    position: relative;
+    /* position: relative; */
     margin-top: 5px;
 }
 

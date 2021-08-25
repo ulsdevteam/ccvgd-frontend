@@ -66,6 +66,7 @@ import { SingleVillageSearchResultComponent } from './single-village-search-resu
 import { SearchMultiVillagesComponent } from './search-multi-villages/search-multi-villages.component';
 import { VillagesearchPipe } from './search-multi-villages/villagesearch.pipe';
 import { MuitiVillageResultsComponent } from './muiti-village-results/muiti-village-results.component';
+import { DialogComponent } from './search-multi-villages/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { MuitiVillageResultsComponent } from './muiti-village-results/muiti-vill
     SearchMultiVillagesComponent,
     VillagesearchPipe,
     MuitiVillageResultsComponent,
+    DialogComponent,
   ],
   imports: [
     HttpClientModule,

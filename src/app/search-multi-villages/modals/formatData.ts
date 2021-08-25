@@ -20,7 +20,13 @@ export interface PostDataToSearch {
 
 
 export interface Year {
-  currentTopic: string,
-  total_year_only?: [],
-  total_year_range?: []
+  topic: string,
+  village_id: any[]
+  total_year_only?: any[],
+  total_year_range?: any[]
+}
+
+export interface DisplayTopicCategory {
+  selectedTopic: string,
+  selectedCategoryList?:any[] 
 }

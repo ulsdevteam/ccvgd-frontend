@@ -42,9 +42,9 @@
 
 <!-- TODO -->
 <div>
-    <h2>经济</h2>
+    <h2>自然环境</h2>
     <mat-form-field appearance="standard" class="advanceFilter">
-        <mat-label>搜索🔍经济</mat-label>
+        <mat-label>搜索🔍</mat-label>
         <input matInput (keyup)="filterDataSource3($event)" placeholder="Ex. 类别" #input>
     </mat-form-field>
     <table mat-table [dataSource]="dataSource3" class="mat-elevation-z8">
@@ -64,19 +64,19 @@
 </div>
 
 <div>
-    <h2>人口</h2>
+    <h2>自然灾害</h2>
     <mat-form-field appearance="standard" class="advanceFilter">
-        <mat-label>搜索🔍人口</mat-label>
+        <mat-label>搜索🔍自然灾害</mat-label>
         <input matInput (keyup)="filterDataSource4($event)" placeholder="Ex. 类别" #input>
     </mat-form-field>
     <table mat-table [dataSource]="dataSource4" class="mat-elevation-z8">
-        <ng-container *ngFor="let col of displayedColumns3" [matColumnDef]="col">
+        <ng-container *ngFor="let col of displayedColumns4" [matColumnDef]="col">
             <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
             <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns3"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns4"></tr>
         <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
         </tr>
@@ -86,23 +86,173 @@
 </div>
 
 <div>
-    <h2>军事政治</h2>
+    <h2>姓氏</h2>
     <mat-form-field appearance="standard" class="advanceFilter">
-        <mat-label>搜索🔍军事政治</mat-label>
+        <mat-label>搜索🔍姓氏</mat-label>
         <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
     </mat-form-field>
     <table mat-table [dataSource]="dataSource5" class="mat-elevation-z8">
-        <ng-container *ngFor="let col of displayedColumns3" [matColumnDef]="col">
+        <ng-container *ngFor="let col of displayedColumns5" [matColumnDef]="col">
             <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
             <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns3"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns5"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns5"></tr>
         <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
         </tr>
     </table>
 
     <mat-paginator #militaryPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<div>
+    <h2>第一次拥有或购买年份</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍第一次拥有或购买年份</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource6" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns6" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns6"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns6"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource6Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<div>
+    <h2>民族</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍民族</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource7" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns7" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns7"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns7"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource7Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div>
+    <h2>人口</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍人口</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource8" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns8" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns8"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns8"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource8Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div>
+    <h2>军事政治</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍军事政治</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource9" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns9" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns9"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns9"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource9Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<div>
+    <h2>经济</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍经济</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource10" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns10" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns10"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns10"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource10Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div>
+    <h2>计划生育</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍计划生育</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource11" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns11" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns11"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns11"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource11Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div>
+    <h2>教育</h2>
+    <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-label>搜索🔍教育</mat-label>
+        <input matInput (keyup)="filterDataSource5($event)" placeholder="Ex. 类别" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource12" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns12" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns12"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns12"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator #dataSource12Paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>

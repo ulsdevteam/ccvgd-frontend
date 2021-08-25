@@ -45,7 +45,7 @@ export class MultiVillageFilterService {
     return response;
   }
 
-  async onPostMultiVillages(postData: { villageid: any; topic: any }) {
+  async onPostMultiVillages(postData: { villageid: any; topic: any; year? : any }) {
     this.getUserList = postData;
     console.log("post", postData);
     // this.getYearBySelectedVillagesAndTopics(postData);
