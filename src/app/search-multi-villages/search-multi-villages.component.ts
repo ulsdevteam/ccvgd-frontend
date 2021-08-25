@@ -161,6 +161,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   topicYear: Year[] = [];
   totalYearOnly: any[] = [];
   checked_year_only: any[] = [];
+  inputed_year_range: any[] = [];
   //post
   finalPostTopicList: any[] = [];
 
@@ -261,6 +262,11 @@ export class SearchMultiVillagesComponent implements OnInit {
   
   // The master checkbox will check/ uncheck all items
   checkUncheckAll() {
+
+    if(!this.masterSelected) {
+      this.topicCategory = [];
+      this.category2_checkedList = [];
+    }
     //update checkLsit
     this.multiVillages_checkList = [];
     this.filteredData.map(item => {
@@ -281,6 +287,11 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   //check if all the checkbox selected
   async isAllCheckBoxSelected(event: MatCheckboxChange, element) {
+    if(!this.masterSelected) {
+      this.topicCategory = [];
+      this.category2_checkedList = [];
+    }
+
     let checkedItemID = this.multiVillages_checkList.findIndex((obj => obj.village_id === element.id));
     this.multiVillages_checkList[checkedItemID].isSelected = event.checked ? true : false;
     this.getCheckedItemList();
@@ -343,15 +354,20 @@ export class SearchMultiVillagesComponent implements OnInit {
     );
     this.responseData = response;
     console.log("this.responseData", this.responseData)
+    console.log("this.checkedVillagesID",this.checkedVillagesID);
+    this.topicCategory = [];
     this.getTopicWithCategories();
     this.getYearWithTopic();
   }
 
   getTopicWithCategories() {
+
+    console.log("this.multiVillages_checkList",this.multiVillages_checkList)
     //by default - hard coded
     this.topicCategory = [];
     let totalResults = [];
-    console.log("this.currentSelectedTopic",this.currentSelectedTopic)
+    const checkedIndex = this.multiVillages_checkList.filter(item => item.isSelected === true);
+    console.log("this.selected index",checkedIndex)
     if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
@@ -463,7 +479,8 @@ export class SearchMultiVillagesComponent implements OnInit {
           //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
           //   "familyplanning", "education"],
           topic: this.finalPostTopicList,
-          year: this.checked_year_only
+          year: this.checked_year_only,
+          year_range: this.inputed_year_range
           // year_range: [2009, 2012],
       }
     );
@@ -555,57 +572,14 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
   onInputEndYearField(event: any) {
     this.endYearInput = event.target.value;
-    console.log(event.target.value);
+    // console.log(event.target.value);
   }
 
   async onPostInputYear() {
-    //TODO single selection first
-
-    // this.postYearData = {
-    //   villageid: this.postVillagesTopics.villageid,
-    //   topic: this.postVillagesTopics.topic,
-    //   year: [],
-    //   year_range: [parseInt(this.startYearInput), parseInt(this.endYearInput)],
-    // };
-
-    this.postYearData.villageid = this.postVillagesTopics.villageid;
-    this.postYearData.topic = this.postVillagesTopics.topic;
-    this.postYearData.year_range = [
+    this.inputed_year_range = [
       parseInt(this.startYearInput),
       parseInt(this.endYearInput),
     ];
-    console.log("this postYearData", this.postYearData);
-
-    let x = this.postVillagesTopics.villageid;
-    this.multiVillageFilterService
-      .postYearMultiVillages(this.postYearData)
-      .then((result) => {
-        console.log("year res", result[2].year[0]);
-        result[2].year.map((villageData) => {
-          // console.log(villageYear[42]);
-          villageData[parseInt(this.postVillagesTopics.villageid[0])].map(
-            (allYearData) => {
-              // for
-              for (let i = 0; i < allYearData.year_range.length; i++) {
-                const singleYear = allYearData.year_range[i][0];
-                //TODO use hashmap later
-                // this.singleYearMap.set(
-                //   this.postVillagesTopics.villageid,
-                //   allYearData.year_range[i][0]
-                // );
-                if (this.singleYearList.indexOf(singleYear) === -1) {
-                  this.singleYearList.push(singleYear);
-                } else {
-                  console.log("dup value 😈", singleYear);
-                }
-              }
-              // console.log(this.singleYearMap);
-              // console.log(allYearData.year_range.length);
-            }
-          );
-        });
-        // console.log("result ");
-      });
   }
 
   rightTopYearCheckBox(event: MatCheckboxChange) {
@@ -634,34 +608,15 @@ export class SearchMultiVillagesComponent implements OnInit {
     // console.log(this.postYearData);
   }
 
-  //TODO
-  // addInputYears() {
-  //   console.log('input year called');
-  //   // console.log(this.startYearInput + ' - ' + this.endYearInput);
-
-  //   const div = this.renderer.createElement('p');
-  //   const text = this.renderer.createText(
-  //     `${this.startYearInput} - ${this.endYearInput}`
-  //   );
-  //   this.renderer.appendChild(div, text);
-  //   // console.log(this.myYearDiv.nativeElement);
-  //   this.renderer.appendChild(this.myYearDiv.nativeElement, div);
-  // }
-
   resetAll() {
     console.log("reset");
-    this.checkItems.clear();
-    this.tempcheckItems = [];
-    this.rightToptempcheckItems = [];
-    // const div =
+    //left
+    this.masterSelected = false;
+    this.multiVillages_checkedList = [];
+    //middle
+    this.topicCategory = [];
+    this.category2_checkedList = [];
+    this.displayTopicCategory = [];
 
-    const childElements = this.myYearDiv.nativeElement.children;
-    console.log("childElements", childElements);
-    for (let child of childElements) {
-      this.renderer.removeChild(this.myYearDiv.nativeElement, child);
-    }
-
-    this.searchCollectorInput = "";
-    // this.startYearInput = '';
   }
 }
