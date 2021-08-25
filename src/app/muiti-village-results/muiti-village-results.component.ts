@@ -109,6 +109,8 @@ export class MuitiVillageResultsComponent implements OnInit {
       .then((results) => {
         console.log("total result", results);
 
+        // if(results.data.length === 0)
+
         this.displayedColumns1  = this.removeGazetteerId(results[0].field);
         this.displayedColumns2  = this.removeGazetteerId(results[1].field);
         this.displayedColumns3  = this.removeGazetteerId(results[2].field);

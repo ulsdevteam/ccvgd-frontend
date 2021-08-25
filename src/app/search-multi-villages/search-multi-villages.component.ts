@@ -149,7 +149,9 @@ export class SearchMultiVillagesComponent implements OnInit {
   topicCategory: any[];
 
   category2_checkedList: any[];
-  displayTopicCategory: DisplayTopicCategory[];
+  displayTopicCategory: DisplayTopicCategory[] = [];
+  resultSelectedTopics: any[];
+  tabIsChanged: boolean = false;
 
   //
   currentSelectedTopic: string;
@@ -311,7 +313,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
 
       if(result) {
         let deleteElementIndex = this.multiVillages_checkList.findIndex(item => item === checkedItem);
@@ -377,13 +379,13 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
   this.topicCategory = this.removeDuplicates(totalResults, "category1");
-  console.log(this.topicCategory);
+  // console.log(this.topicCategory);
 }
 
   removeDuplicates(originalArray, prop) {
     var newArray = [];
     var lookupObject  = [];
-    this.topicCategory = [];
+    // this.topicCategory = [];
     for(var i in originalArray) {
        lookupObject[originalArray[i][prop]] = originalArray[i];
     }
@@ -394,10 +396,16 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
 
   tabChanged(event) {
+    this.tabIsChanged = true;
+    
     this.currentSelectedTopic = event.tab.textLabel;
     this.getTopicWithCategories();
     this.getYearWithTopic();
-    this.category2_checkedList = [];
+    console.log(this.topicCategory)
+    console.log("topic select",this.displayTopicCategory);
+    // this.resultSelectedTopics.push(this.displayTopicCategory);
+    // console.log(this.category2_checkedList)
+    // this.category2_checkedList = [];
   }
 
   getYearWithTopic() {
@@ -472,10 +480,12 @@ export class SearchMultiVillagesComponent implements OnInit {
       // this.postFinalRequest();
       this.router.navigate(["/multi-village-search-result"]);
     }
-  // options: MatListOption[]
+  // options: MatListOption[] - call multi-times
   categorySelection(checkedList) {
+    this.tabIsChanged = false;
     let results_c1 = [];
-    this.displayTopicCategory = [];
+    //BUG
+    // this.displayTopicCategory = [];
     for(let index in this.topicCategory) {
       for(let item in checkedList) { 
         checkedList[item].isSelected = true; 
@@ -485,16 +495,21 @@ export class SearchMultiVillagesComponent implements OnInit {
       }
       this.category2_checkedList = checkedList;
     }
-    this.displayTopicCategory.push({
-      selectedTopic: this.currentSelectedTopic,
-      selectedCategoryList: results_c1
-    })
-    console.log(this.displayTopicCategory);
+
+    if(results_c1.length > 0) {
+      this.displayTopicCategory.push({
+        selectedTopic: this.currentSelectedTopic,
+        selectedCategoryList: results_c1
+      })  
+    }
+
+    this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
+        // console.log("topic select",this.displayTopicCategory);
+
   }
     //TODO  use dynamic db data - Later
     middleCheckBox(event: MatCheckboxChange) {
       const selectedText = event.source._elementRef.nativeElement.innerText;
-      // console.log("selectedText", selectedText);
       console.log(this.responseData);
     }
 
