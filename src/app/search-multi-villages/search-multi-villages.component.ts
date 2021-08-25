@@ -473,13 +473,19 @@ export class SearchMultiVillagesComponent implements OnInit {
     //if search button is clicked, go to results page
     async goToPage() {
 
-      for(let item in this.displayTopicCategory) {
-        this.finalPostTopicList.push(this.middleTabsMap.get(this.displayTopicCategory[item].selectedTopic))
-      }
       // console.log(this.finalPostTopicList)
 
-      // this.processRequest();
-      this.postFinalRequest();
+      if(this.finalPostTopicList.length === 0) {
+        //convert to get request backend
+        this.processRequest();
+      }
+      else {
+        for(let item in this.displayTopicCategory) {
+        this.finalPostTopicList.push(this.middleTabsMap.get(this.displayTopicCategory[item].selectedTopic))
+        }
+        this.postFinalRequest();
+      }
+      
       this.router.navigate(["/multi-village-search-result"]);
     }
   // options: MatListOption[] - call multi-times
