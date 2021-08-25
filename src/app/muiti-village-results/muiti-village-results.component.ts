@@ -2,6 +2,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { MultiVillageFilterService } from "../services/multi-village-filter.service";
 import { MatPaginator } from "@angular/material/paginator";
+import { Router } from "@angular/router";
 //TODO
 export interface PeriodicElement {
   name: string;
@@ -43,7 +44,7 @@ export class MuitiVillageResultsComponent implements OnInit {
   displayResultsData: any[] = []
 
 
-  constructor(private multiVillageFilterService: MultiVillageFilterService) {
+  constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router) {
     console.log("call again")
     // this.userInput = localStorage.getItem("userInput");
     // this.getData();
@@ -74,6 +75,10 @@ export class MuitiVillageResultsComponent implements OnInit {
 
     this.searchResultData  = await this.multiVillageFilterService.onPostMultiVillages(this.userInput);
 
+    if(this.searchResultData.code === 4001) {
+      this.router.navigate(["/multi-village-search"]);
+    }
+  
         for(let index in this.searchResultData) {
           // this.searchResultData[index]
           console.log(this.searchResultData[index]);

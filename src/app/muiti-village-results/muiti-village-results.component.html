@@ -1,8 +1,8 @@
 <div *ngFor="let eachCategory of displayResultsData">
     <div>
-        <h2>{{eachCategory.topicName}}</h2>
+        <h2 style="color: white; ">{{eachCategory.topicName}}</h2>
         <mat-form-field appearance="standard" class="advanceFilter">
-            <mat-label>搜索🔍{{eachCategory.topicName}}</mat-label>
+            <mat-label style="color: white;">搜索🔍{{eachCategory.topicName}}</mat-label>
             <input matInput (keyup)="filterDataSource($event)" placeholder="Ex. 类别" #input>
         </mat-form-field>
         <table mat-table #dataSource [dataSource]="eachCategory.dataSource" class="mat-elevation-z8">

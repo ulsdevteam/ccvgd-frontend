@@ -180,7 +180,7 @@
 
 .mat-icon {
     cursor: pointer;
-    color: red;
+    /* color: red; */
 }
 
 
@@ -210,7 +210,8 @@
     text-align: center;
     /* border: 2px; */
     width: 20%;
-    height: 600px;
+    max-height: 90%;
+    /* height: 600px; */
     margin: 2px;
 }
 
@@ -222,14 +223,6 @@
 .yearselect {
     display: flex;
     justify-content: center;
-}
-
-.yearselectedlist {
-    background: white;
-    flex: 1;
-    /* height: 500%; */
-    margin-top: 5%;
-    min-height: 150px;
 }
 
 
@@ -245,7 +238,8 @@
     flex-direction: column;
     /* background: #793391; */
     color: black;
-    height: 50%;
+    /* height: 50%; */
+    height: 30%;
     margin: 2px;
     overflow: auto;
     text-align: left;
@@ -272,10 +266,11 @@
     margin-top: 5px;
 }
 
-.mat-icon {
-    width: 2px;
+.mat-fab {
+    margin-right: 10%;
+    /* width: 2px;
     height: 20px;
-    margin-right: 9%;
+    margin-right: 9%; */
     /* margin-top: 5%; */
     /* margin-top: 5px; */
 }
@@ -301,6 +296,17 @@ mat-list-option[aria-selected="true"] {
 }
 
 .yearselectionlist {
-    height: 300px;
+    height: 200px;
+    /* height: 30%; */
     overflow: scroll;
+}
+
+.yearselectedlist {
+    background: white;
+    flex: 1;
+    /* height: 500%; */
+    margin-top: 5%;
+    /* min-height: 150px;
+     */
+    height: 90%;
 }

@@ -94,8 +94,9 @@
             <mat-list *ngFor="let checkedItem of multiVillages_checkedList" style="max-height: 100px;">
                 <!-- <app-dialog [okIsClick]="okIsClick($event)"></app-dialog> -->
                 <mat-list-item>
-                    <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="deleteVillage($event, checkedItem)">delete</mat-icon>
-                    {{ checkedItem.village_name }} {{ checkedItem.province }} {{ checkedItem.city }} {{ checkedItem.county }}
+                    <button mat-fab color="accent" aria-label="Example icon button with a filter list icon">
+                        <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="deleteVillage($event, checkedItem)">delete</mat-icon>
+                    </button> {{ checkedItem.village_name }} {{ checkedItem.province }} {{ checkedItem.city }} {{ checkedItem.county }}
                 </mat-list-item>
                 <mat-divider></mat-divider>
             </mat-list>
@@ -219,16 +220,33 @@
 
         <div class="yearrangeselect">年段-Year Range</div>
         <div class="yearrange">
-            <input type="text" class="inputTearField" placeholder="输入开始年份， 例如1949" (keyup)="onInputStartYearField($event)" />
-            <div>
-                <mat-icon>check_circle_outline </mat-icon><span class="aligned-with-icon">可选年份: 1949至2019</span>
-            </div>
-            至
-            <input type="text" class="inputTearField" placeholder="输入结束年份， 晚于开始年份" (keyup)="onInputEndYearField($event)" #searchCollectorInput />
 
-            <div>
+            <mat-form-field class="example-form-field" appearance="fill">
+                <mat-label>输入开始年份， 例如1949</mat-label>
+                <input matInput type="text" [(ngModel)]="startYearInput">
+                <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                  <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <!-- <input type="text" class="inputTearField" placeholder="输入开始年份， 例如1949" (keyup)="onInputStartYearField($event)" /> -->
+            <!-- <div>
+                <mat-icon>check_circle_outline </mat-icon><span class="aligned-with-icon">可选年份: 1949至2019</span>
+            </div> -->
+            至
+            <!-- <input type="text" class="inputTearField" placeholder="输入结束年份， 晚于开始年份" (keyup)="onInputEndYearField($event)" #searchCollectorInput /> -->
+
+            <!-- <div>
                 <mat-icon>check_circle_outline </mat-icon><span class="aligned-with-icon">结束年份晚于开始年份</span>
-            </div>
+            </div> -->
+
+            <mat-form-field class="example-form-field" appearance="fill">
+                <mat-label>输入结束年份， 晚于开始年份</mat-label>
+                <input matInput type="text" [(ngModel)]="endYearInput">
+                <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                  <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
 
             <button mat-raised-button color="primary" class="addYear" (click)="onPostInputYear()">
         添加 - Add

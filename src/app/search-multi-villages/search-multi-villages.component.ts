@@ -88,8 +88,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   checkItems = new Map();
   tempcheckItems: string[] = [];
   rightToptempcheckItems: string[] = [];
-  startYearInput: string;
-  endYearInput: string;
+  startYearInput: string = "";
+  endYearInput: string = "";
   searchCollectorInput: string;
   multiSearchResult: any;
   selectedTabLabel: string;
@@ -164,6 +164,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   inputed_year_range: any[] = [];
   //post
   finalPostTopicList: any[] = [];
+  value1 = "";
 
 
   constructor(
@@ -353,9 +354,8 @@ export class SearchMultiVillagesComponent implements OnInit {
       }
     );
     this.responseData = response;
-    console.log("this.responseData", this.responseData)
-    console.log("this.checkedVillagesID",this.checkedVillagesID);
-    this.topicCategory = [];
+    // console.log("this.responseData", this.responseData)
+    // console.log("this.checkedVillagesID",this.checkedVillagesID);
     this.getTopicWithCategories();
     this.getYearWithTopic();
   }
@@ -566,16 +566,17 @@ export class SearchMultiVillagesComponent implements OnInit {
       });
   }
 
-  onInputStartYearField(event: any) {
-    this.startYearInput = event.target.value;
-    console.log(event.target.value);
-  }
-  onInputEndYearField(event: any) {
-    this.endYearInput = event.target.value;
-    // console.log(event.target.value);
-  }
+  // onInputStartYearField(event: any) {
+  //   this.startYearInput = event.target.value;
+  //   console.log(event.target.value);
+  // }
+  // onInputEndYearField(event: any) {
+  //   this.endYearInput = event.target.value;
+  //   // console.log(event.target.value);
+  // }
 
   async onPostInputYear() {
+    // console.log("value", this.value1)
     this.inputed_year_range = [
       parseInt(this.startYearInput),
       parseInt(this.endYearInput),
