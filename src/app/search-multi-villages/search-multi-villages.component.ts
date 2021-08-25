@@ -151,7 +151,6 @@ export class SearchMultiVillagesComponent implements OnInit {
   category2_checkedList: any[];
   displayTopicCategory: DisplayTopicCategory[] = [];
   resultSelectedTopics: any[];
-  tabIsChanged: boolean = false;
 
   //
   currentSelectedTopic: string;
@@ -162,6 +161,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   topicYear: Year[] = [];
   totalYearOnly: any[] = [];
   checked_year_only: any[] = [];
+  //post
+  finalPostTopicList: any[] = [];
 
 
   constructor(
@@ -333,14 +334,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     await this.multiVillageFilterService.onPostMultiVillages(
       {
         villageid: this.checkedVillagesID,
-        //BUG 1.checkedall 2. fourthlastNames -- ask backend -
-        // "ethnicgroups" BUG -- "firstavailabilityorpurchase","ethnicgroups","population" "military", "economy", 
-        //"BUG - familyplanning", "education"
-        //cannot read "field " undefined if not match all the topics for search results page.
-        //BUG
-        // topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
-        // "firstavailabilityorpurchase","population", "military", "economy", 
-        // "education"],
         topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
         "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
         "familyplanning", "education"],
@@ -358,10 +351,12 @@ export class SearchMultiVillagesComponent implements OnInit {
     //by default - hard coded
     this.topicCategory = [];
     let totalResults = [];
+    console.log("this.currentSelectedTopic",this.currentSelectedTopic)
     if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
-        // console.log(this.responseData[index]);
+        // console.log("this.currentSelectedTopic",this.currentSelectedTopic)
+        console.log(this.responseData[index]);
         for(let item in this.responseData[index].data){
           let storeCategoriesData = {
             category1: this.responseData[index].data[item].category1,
@@ -379,7 +374,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
   this.topicCategory = this.removeDuplicates(totalResults, "category1");
-  // console.log(this.topicCategory);
+  console.log("this.topicCategory",this.topicCategory);
 }
 
   removeDuplicates(originalArray, prop) {
@@ -396,13 +391,13 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
 
   tabChanged(event) {
-    this.tabIsChanged = true;
     
     this.currentSelectedTopic = event.tab.textLabel;
     this.getTopicWithCategories();
     this.getYearWithTopic();
     console.log(this.topicCategory)
     console.log("topic select",this.displayTopicCategory);
+
     // this.resultSelectedTopics.push(this.displayTopicCategory);
     // console.log(this.category2_checkedList)
     // this.category2_checkedList = [];
@@ -417,7 +412,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       let matchIndex = this.responseData.findIndex(item => item.tableNameChinese === this.currentSelectedTopic);
 
       for(let eachID in this.checkedVillagesID) {
-        if(this.responseData[matchIndex].year) {
+        if(this.responseData[matchIndex] && this.responseData[matchIndex].year) {
           let year_index = this.responseData[matchIndex].year.findIndex( (item) =>  {
           if(item[this.checkedVillagesID[eachID]]) {
             const currentTopicEN = this.middleTabsMap.get(this.currentSelectedTopic);
@@ -464,9 +459,10 @@ export class SearchMultiVillagesComponent implements OnInit {
       {
         //BUG 1.checkedall 2. fourthlastNames -- ask backend
           villageid: this.checkedVillagesID,
-          topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
-            "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
-            "familyplanning", "education"],
+          // topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
+          //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
+          //   "familyplanning", "education"],
+          topic: this.finalPostTopicList,
           year: this.checked_year_only
           // year_range: [2009, 2012],
       }
@@ -476,13 +472,18 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     //if search button is clicked, go to results page
     async goToPage() {
-      this.processRequest();
-      // this.postFinalRequest();
+
+      for(let item in this.displayTopicCategory) {
+        this.finalPostTopicList.push(this.middleTabsMap.get(this.displayTopicCategory[item].selectedTopic))
+      }
+      // console.log(this.finalPostTopicList)
+
+      // this.processRequest();
+      this.postFinalRequest();
       this.router.navigate(["/multi-village-search-result"]);
     }
   // options: MatListOption[] - call multi-times
   categorySelection(checkedList) {
-    this.tabIsChanged = false;
     let results_c1 = [];
     //BUG
     // this.displayTopicCategory = [];
