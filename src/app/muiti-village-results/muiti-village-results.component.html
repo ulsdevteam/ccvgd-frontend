@@ -3,9 +3,9 @@
         <h2 style="color: white; ">{{eachCategory.topicName}}</h2>
         <mat-form-field appearance="standard" class="advanceFilter">
             <mat-label style="color: white;">搜索🔍{{eachCategory.topicName}}</mat-label>
-            <input matInput (keyup)="filterDataSource($event)" placeholder="Ex. 类别" #input>
+            <input matInput (keyup)="filterDataSource($event,eachCategory.dataSource)" placeholder="Ex. 类别" #inputSearchField>
         </mat-form-field>
-        <table mat-table #dataSource [dataSource]="eachCategory.dataSource" class="mat-elevation-z8">
+        <table mat-table #dataSource [dataSource]="eachCategory.dataSource" class="mat-elevation-z8" style="border-radius: 5%;">
             <ng-container *ngFor="let col of eachCategory.displayedColumns" [matColumnDef]="col">
                 <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
                 <td mat-cell *matCellDef="let element">{{ element[col] }}</td>

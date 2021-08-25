@@ -37,6 +37,8 @@ export class MuitiVillageResultsComponent implements OnInit {
   userInput: any = {};
   getAllResponses: any = {};
 
+  inputSearchField: any;
+
 
   dataSource;
 
@@ -95,10 +97,10 @@ export class MuitiVillageResultsComponent implements OnInit {
   }
 
   
-    filterDataSource(event: Event) {
+    filterDataSource(event: Event, currentDataSource) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
+    currentDataSource.filter = filterValue.trim().toLowerCase();
+    if (currentDataSource.paginator) currentDataSource.paginator.firstPage();
   }
 
 }
