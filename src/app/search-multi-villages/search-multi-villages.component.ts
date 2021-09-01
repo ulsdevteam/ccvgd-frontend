@@ -105,7 +105,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   cat1Cat2Map = new Map();
 
   middleTabsMap = new Map([
-    ["村庄基本信息", "gazetteerinformation"],
+    // ["村庄基本信息", "gazetteerinformation"],
+    ["村庄基本信息", "village"],
     ["自然环境", "naturalenvironment"],
     ["自然灾害", "naturaldisasters"],
     ["姓氏", "fourthlastNames"],
@@ -346,15 +347,19 @@ export class SearchMultiVillagesComponent implements OnInit {
     await this.multiVillageFilterService.onPostMultiVillages(
       {
         villageid: this.checkedVillagesID,
-        topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
+        // ["village","gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
+        // "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
+        // "familyplanning", "education"],
+        topic: ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
         "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
         "familyplanning", "education"],
-        // topic:["population"]
+        // topic:["population"],
+        year:[]
         // year: [this.checked_year_only[0]],
       }
     );
     this.responseData = response;
-    // console.log("this.responseData", this.responseData)
+    console.log("this.responseData", this.responseData)
     // console.log("this.checkedVillagesID",this.checkedVillagesID);
     this.getTopicWithCategories();
     this.getYearWithTopic();
@@ -529,6 +534,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
         // console.log("topic select",this.displayTopicCategory);
+    window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));
 
   }
     //TODO  use dynamic db data - Later

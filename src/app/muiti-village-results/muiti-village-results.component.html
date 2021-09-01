@@ -1,10 +1,24 @@
 <div *ngFor="let eachCategory of displayResultsData">
     <div>
         <h2 style="color: white; ">{{eachCategory.topicName}}</h2>
-        <mat-form-field appearance="standard" class="advanceFilter">
+        <mat-chip-list #chipList aria-label="Category selection">
+            <mat-chip *ngFor="let eachCategory of eachCategory.selected_Categories" [selectable]="selectable"
+                     [removable]="removable" (removed)="remove(eachCategory)">
+              {{eachCategory}}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+
+            <input #chipsInput 
+                placeholder="New category..."
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="addOnBlur"
+                   (matChipInputTokenEnd)="add($event, eachCategory.dataSource)">
+          </mat-chip-list>
+        <!-- <mat-form-field appearance="standard" class="advanceFilter">
             <mat-label style="color: white;">搜索🔍{{eachCategory.topicName}}</mat-label>
             <input matInput (keyup)="filterDataSource($event,eachCategory.dataSource)" placeholder="Ex. 类别" #inputSearchField>
-        </mat-form-field>
+        </mat-form-field> -->
         <table mat-table #dataSource [dataSource]="eachCategory.dataSource" class="mat-elevation-z8" style="border-radius: 5%;">
             <ng-container *ngFor="let col of eachCategory.displayedColumns" [matColumnDef]="col">
                 <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
@@ -14,11 +28,15 @@
             <tr mat-header-row *matHeaderRowDef="eachCategory.displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: eachCategory.displayedColumns"></tr>
 
-            <tr class="mat-row" *matNoDataRow>
+            <!-- <tr class="mat-row" *matNoDataRow>
                 <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-            </tr>
+            </tr> -->
         </table>
 
         <mat-paginator #mainPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
 </div>
+
+
+
+
