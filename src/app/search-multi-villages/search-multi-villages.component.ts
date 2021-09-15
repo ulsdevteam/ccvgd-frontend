@@ -174,6 +174,11 @@ export class SearchMultiVillagesComponent implements OnInit {
   category1Set = new Set();
   category2Set = new Set();
   category3Set = new Set();
+  //
+  defaultTopicList = ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
+  "firstavailabilityorpurchase","population","military","economy","familyplanning"];
+  defaultTopics_InCh = ["村庄基本信息","自然环境","自然灾害", "姓氏",
+      "第一次拥有或购买年份","民族","军事政治","经济","计划生育"];
 
 
   constructor(
@@ -351,6 +356,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   // getDefaultTopics() 
 
   async processRequest() {
+
+
     const response =
     await this.multiVillageFilterService.onPostMultiVillages(
       {
@@ -358,17 +365,12 @@ export class SearchMultiVillagesComponent implements OnInit {
         // topic: ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
         // "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
         // "familyplanning", "education"],
-        topic:["village","naturalenvironment","naturaldisasters", "fourthlastNames",
-        "firstavailabilityorpurchase","population","military","economy", 
-        "familyplanning"]
-        // topic:["naturaldisasters"],
-        // year:[]
-        // year: [this.checked_year_only[0]],
+        topic: this.defaultTopicList
       }
     );
+
     this.responseData = response;
     console.log("this.responseData", this.responseData)
-    // console.log("this.checkedVillagesID",this.checkedVillagesID);
     this.getTopicWithCategories();
     this.getYearWithTopic();
   }
@@ -521,6 +523,21 @@ export class SearchMultiVillagesComponent implements OnInit {
       else {
         this.postFinalRequest();
       }
+
+      if(this.displayTopicCategory.length < 1) {
+
+        for(let i = 0; i < this.defaultTopics_InCh.length; i++) {    
+        this.displayTopicCategory.push({
+        selectedTopic: this.defaultTopics_InCh[i],
+        hasCategory: false
+        }) 
+      }
+
+      }
+
+      console.log("😷 this.displayTopicCategory",this.displayTopicCategory)
+
+      this.storeUserSelection();
       
       this.router.navigate(["/multi-village-search-result"]);
     }
@@ -538,7 +555,8 @@ export class SearchMultiVillagesComponent implements OnInit {
 
       this.displayTopicCategory.push({
         selectedTopic: this.currentSelectedTopic,
-        category1List: selectedCategory1List
+        category1List: selectedCategory1List,
+        hasCategory: true
       })  
       this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
 
@@ -573,8 +591,13 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     // this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
     //     // console.log("topic select",this.displayTopicCategory);
-    window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));
 
+    //TODO
+    // window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));
+  }
+
+  storeUserSelection() {
+    window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));
   }
 
 

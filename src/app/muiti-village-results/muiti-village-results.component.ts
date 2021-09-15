@@ -113,18 +113,22 @@ export class MuitiVillageResultsComponent implements OnInit {
         
           this.dataSource = this.searchResultData[index].data;
           for(let item in this.userSelectionList) {
+            console.log(this.userSelectionList[item])
+
             if(this.userSelectionList[item].selectedTopic === this.searchResultData[index].tableNameChinese) {
               console.log(this.searchResultData[index].data)
 
               //advance filter - display only user selected categories
-              const each_res = this.searchResultData[index].data.filter(i => 
-                this.userSelectionList[item].category1List.indexOf(i.category1) !== -1)
+              const each_res = this.userSelectionList[item].hasCategory === true ? this.searchResultData[index].data.filter(i => 
+                this.userSelectionList[item].category1List.indexOf(i.category1) !== -1) : this.searchResultData[index].data;
 
+                console.log(each_res)
               this.displayResultsData.push({
                 topicName: this.searchResultData[index].tableNameChinese,
                 dataSource: new MatTableDataSource(each_res),
                 displayedColumns: this.removeGazetteerId(this.searchResultData[index].field),
-                selected_Categories: this.userSelectionList[item].category1List
+                selected_Categories: this.userSelectionList[item]. hasCategory ? 
+                this.userSelectionList[item].category1List : null
               })
             }
           }
