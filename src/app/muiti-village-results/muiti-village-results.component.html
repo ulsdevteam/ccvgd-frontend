@@ -1,4 +1,6 @@
 <div *ngFor="let eachCategory of displayResultsData">
+    <!-- <button (click)="downloadCurrentTopic($event, eachCategory.topicName)">download {{eachCategory.topicName}}</button> -->
+    <a [href]="eachCategory.downloadUrl"> download {{eachCategory.topicName}}</a>
     <div>
         <h2 style="color: white; ">{{eachCategory.topicName}}</h2>
         <mat-chip-list #chipList aria-label="Category selection">

@@ -5,6 +5,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { Router } from "@angular/router";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import { environment } from '../../environments/environment'
 //TODO
 export interface PeriodicElement {
   name: string;
@@ -64,6 +65,22 @@ export class MuitiVillageResultsComponent implements OnInit {
     {name: 'Apple'},
   ];
 
+  mapFromCHToEN = new Map([
+    // ["村庄基本信息", "gazetteerinformation"],
+    ["村庄基本信息", "village"],
+    ["自然环境", "naturalenvironment"],
+    ["自然灾害", "naturaldisasters"],
+    ["姓氏", "fourthlastNames"],
+    ["第一次拥有或购买年份", "firstavailabilityorpurchase"],
+    ["民族", "ethnicgroups"],
+    ["人口", "population"],
+    ["军事政治", "military"],
+    ["经济", "economy"],
+    ["计划生育", "familyplanning"],
+    ["教育", "education"]
+  ]);
+
+  getVillageidForDownload: string;
 
   constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router) {}
 
@@ -74,7 +91,7 @@ export class MuitiVillageResultsComponent implements OnInit {
   ngOnInit(): void {
     this.userSelectionList = JSON.parse(window.localStorage.getItem("user selection"));
     this.getData();
-    console.log("userSelectionList", this.userSelectionList)
+    // console.log("userSelectionList", this.userSelectionList)
   }
 
   removeGazetteerId(rawArray) {
@@ -95,33 +112,23 @@ export class MuitiVillageResultsComponent implements OnInit {
     // console.log('get it !', await this.multiVillageFilterService.getUserList);
     this.userInput = await this.multiVillageFilterService.getUserList;
     console.log("this.userInput",this.userInput)
-    // localStorage.setItem("userInput", this.userInput);
-
 
     this.searchResultData  = await this.multiVillageFilterService.onPostMultiVillages(this.userInput);
-    console.log(this.searchResultData)
 
 
     if(this.searchResultData.code === 4001) {
       this.router.navigate(["/multi-village-search"]);
     }
-    if(this.searchResultData.data.length === 0) {
+    if(this.searchResultData.data && this.searchResultData.data.length === 0) {
       alert(`请检查数据库 !  \n  error message: ${this.searchResultData.error}`);
       this.router.navigate(["/multi-village-search"]);
     }
   
         for(let index in this.searchResultData) {
-          // this.searchResultData[index]
-          console.log(this.searchResultData[index]);
-
-          console.log(this.userSelectionList)
-        
           this.dataSource = this.searchResultData[index].data;
           for(let item in this.userSelectionList) {
-            console.log(this.userSelectionList[item])
 
             if(this.userSelectionList[item].selectedTopic === this.searchResultData[index].tableNameChinese) {
-              console.log(this.searchResultData[index].data)
 
               //advance filter - display only user selected categories
               const each_res = this.userSelectionList[item].hasCategory === true ? this.searchResultData[index].data.filter(i => 
@@ -133,7 +140,8 @@ export class MuitiVillageResultsComponent implements OnInit {
                 dataSource: new MatTableDataSource(each_res),
                 displayedColumns: this.removeGazetteerId(this.searchResultData[index].field),
                 selected_Categories: this.userSelectionList[item]. hasCategory ? 
-                this.userSelectionList[item].category1List : null
+                this.userSelectionList[item].category1List : null,
+                downloadUrl: `${environment.API_ROOT}advancesearch/download/?village=${this.userInput.villageid.toString()}&topic=${this.mapFromCHToEN.get(this.searchResultData[index].tableNameChinese)}`
               })
             }
           }
@@ -148,10 +156,16 @@ export class MuitiVillageResultsComponent implements OnInit {
 
   
     filterDataSource(event: Event, currentDataSource) {
-      console.log("currentDataSource",currentDataSource)
+      // console.log("currentDataSource",currentDataSource)
     const filterValue = (event.target as HTMLInputElement).value;
     currentDataSource.filter = filterValue.trim().toLowerCase();
     if (currentDataSource.paginator) currentDataSource.paginator.firstPage();
+  }
+
+  downloadCurrentTopic(event, topicName) {
+    // console.log("this.userInput",this.userInput)
+    // console.log(topicName)
+
   }
 
   onlyGetSelectedCategoriesRow() {}
