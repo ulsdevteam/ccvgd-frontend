@@ -5,7 +5,8 @@ import { MatPaginator } from "@angular/material/paginator";
 import { Router } from "@angular/router";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
-import { environment } from '../../environments/environment'
+import { environment } from '../../environments/environment';
+
 //TODO
 export interface PeriodicElement {
   name: string;
