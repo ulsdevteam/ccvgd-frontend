@@ -53,7 +53,7 @@ export class MultiVillageFilterService {
       .post("advancesearch", postData)
       .catch((err: HttpErrorResponse) => {
         console.log("error for request", err);
-        return { data: [] };
+        return { data: [], error: err.message };
       });
     return response;
   }

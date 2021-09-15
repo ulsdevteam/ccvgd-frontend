@@ -440,6 +440,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     // this.category2_checkedList = [];
   }
 
+  //TODO
   getYearWithTopic() {
     this.topicYear = [];
     this.totalYearOnly = [];
@@ -471,7 +472,7 @@ export class SearchMultiVillagesComponent implements OnInit {
         total_year_only: this.totalYearOnly
       })
     }
-    // console.log("topicYear", this.topicYear)
+    // console.log("topicYear 😶‍🌫️", this.topicYear)
   }
 
   checkboxYear(event, selectedYear, checked) {
@@ -492,6 +493,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   async postFinalRequest() {
+
+    console.log("this.finalPostTopicList",this.finalPostTopicList)
     let resnew = await this.multiVillageFilterService.onPostMultiVillages(
       {
         //BUG 1.checkedall 2. fourthlastNames -- ask backend
@@ -499,7 +502,7 @@ export class SearchMultiVillagesComponent implements OnInit {
           // topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
           //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
           //   "familyplanning", "education"],
-          topic: this.finalPostTopicList,
+          topic: this.finalPostTopicList.length > 0 ? this.finalPostTopicList : this.defaultTopicList,
           year: this.checked_year_only,
           year_range: this.inputed_year_range
           // year_range: [2009, 2012],
@@ -516,7 +519,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       
       // console.log("this.finalPostTopicList" , this.finalPostTopicList)
       
-      if(this.finalPostTopicList.length === 0) {
+      if(this.finalPostTopicList.length === 0 && this.checked_year_only.length === 0) {
         //convert to get request backend
         this.processRequest();
       }

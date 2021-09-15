@@ -101,7 +101,12 @@ export class MuitiVillageResultsComponent implements OnInit {
     this.searchResultData  = await this.multiVillageFilterService.onPostMultiVillages(this.userInput);
     console.log(this.searchResultData)
 
+
     if(this.searchResultData.code === 4001) {
+      this.router.navigate(["/multi-village-search"]);
+    }
+    if(this.searchResultData.data.length === 0) {
+      alert(`请检查数据库 !  \n  error message: ${this.searchResultData.error}`);
       this.router.navigate(["/multi-village-search"]);
     }
   
