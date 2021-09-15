@@ -138,11 +138,18 @@
                         <div class="category">
                             <div class="left"> 类别
                                 <p>{{ item }} 下类别</p>
-                                <mat-selection-list #list1 [(ngModel)]="selectedOptionCurrent" (ngModelChange)="categorySelection($event)">
-                                    <!-- hidden="true" -->
+                                <!-- <mat-selection-list #list1 [(ngModel)]="selectedOptionCurrent" (ngModelChange)="categorySelection($event)">
                                     <ng-container>
                                         <mat-list-option *ngFor="let item of topicCategory" checkboxPosition="before" style="font-size: 14px;" [selection]="item.isSelected" [value]="item">
                                             {{item.category1}}
+                                        </mat-list-option>
+                                    </ng-container>
+                                </mat-selection-list> -->
+
+                                <mat-selection-list #list1 [(ngModel)]="category1_Option" (ngModelChange)="category1Selection($event)">
+                                    <ng-container>
+                                        <mat-list-option *ngFor="let category1 of category1Set" checkboxPosition="before" style="font-size: 14px;" [value]="category1">
+                                            {{category1}}
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list>
@@ -156,7 +163,7 @@
                                 Option selected: {{list1.selectedOptions.selected[0]?.value}}
                             </p> -->
 
-                            <div class="middle">
+                            <!-- <div class="middle">
                                 类别
                                 <p>{{ item }} 下类别</p>
                                 <mat-selection-list #list2 [(ngModel)]="selectedOptionCurrent">
@@ -166,14 +173,25 @@
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list>
+                            </div> -->
+
+                            <div class="middle">
+                                类别
+                                <p>{{ item }} 下类别</p>
+                                <mat-selection-list #list2 [(ngModel)]="category2_Option" (ngModelChange)="category2Selection($event)">
+                                    <ng-container>
+                                        <mat-list-option *ngFor="let item of category2Set" checkboxPosition="before" style="font-size: 14px">
+                                            {{ item }}
+                                        </mat-list-option>
+                                    </ng-container>
+                                </mat-selection-list>
                             </div>
 
                             <div class="right">
-                                <!-- BUG -->
-                                <mat-selection-list>
-                                    <ng-container *ngFor="let item of category2_checkedList">
-                                        <mat-list-option *ngIf="item.subCategories && item.subCategories.category2 && item.subCategories.category2.subCategories && item.subCategories.category2.subCategories.category3" checkboxPosition="before" style="font-size: 14px;">
-                                            {{item.subCategories.category2.subCategories.category3}}
+                                <mat-selection-list #list3 [(ngModel)]="category3_Option">
+                                    <ng-container>
+                                        <mat-list-option *ngFor="let item of category3Set" checkboxPosition="before" style="font-size: 14px">
+                                            {{ item }}
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list>
@@ -188,19 +206,13 @@
 
         <div class="topicselectedlist">
             <div class="topic-selected-header">已选主题-Selected Topics</div>
-            <!-- <hr />
-            <p>已选 {{ tempcheckItems.length }}</p>
-            <p>{{ selectedTabLabel }}下 -- 子类1</p>
-            <div *ngFor="let item of tempcheckItems">
-                <div id="itemTemp">
-                    {{ item }}
-                    <br />
-                </div>
-            </div> -->
+
+
+
 
             <div *ngFor="let eachList of displayTopicCategory">
                 <p>{{ eachList.selectedTopic }}下 -- 子类1</p>
-                <mat-list *ngFor="let item of eachList.selectedCategoryList">
+                <mat-list *ngFor="let item of eachList.category1List">
                     <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
                         {{ item }}
                     </mat-list-item>
