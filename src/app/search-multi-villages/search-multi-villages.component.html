@@ -136,6 +136,15 @@
                 <mat-tab label="{{ item }}" *ngFor="let item of displayedMiddleTabs">
                     <div class="economy">
                         <div class="category">
+
+
+                            <!-- <div>
+                                <div *ngFor="let firstName of firstLastNameIdSet">
+                                    <mat-checkbox>第一大姓 - {{firstName}}</mat-checkbox>
+                                </div>
+                            </div> -->
+
+
                             <div class="left"> 类别
                                 <p>{{ item }} 下类别</p>
                                 <!-- <mat-selection-list #list1 [(ngModel)]="selectedOptionCurrent" (ngModelChange)="categorySelection($event)">
@@ -145,6 +154,13 @@
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list> -->
+
+                                <!-- <div *ngIf=""></div> -->
+                                <div *ngFor="let firstName of firstLastNameIdSet">
+                                    <mat-checkbox>第一大姓 - {{firstName}}</mat-checkbox>
+                                </div>
+
+
 
                                 <mat-selection-list #list1 [(ngModel)]="category1_Option" (ngModelChange)="category1Selection($event)">
                                     <ng-container>
@@ -185,6 +201,10 @@
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list>
+
+                                <div *ngFor="let secondName of secondLastNameIdSet">
+                                    <mat-checkbox>第二大姓 - {{secondName}}</mat-checkbox>
+                                </div>
                             </div>
 
                             <div class="right">
@@ -307,7 +327,7 @@
             重置所有筛选项 - Reset
           </button>
 
-        <button mat-raised-button class="multiSearch" (click)="goToPage()" class="searchBtn">
+        <button mat-raised-button color="primary" class="multiSearch" (click)="goToPage()" class="searchBtn">
             搜索 - Search
           </button>
     </nav>

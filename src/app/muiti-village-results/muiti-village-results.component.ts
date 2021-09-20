@@ -121,7 +121,7 @@ export class MuitiVillageResultsComponent implements OnInit {
       this.router.navigate(["/multi-village-search"]);
     }
     if(this.searchResultData.data && this.searchResultData.data.length === 0) {
-      alert(`请检查数据库 !  \n  error message: ${this.searchResultData.error}`);
+      alert(`后端返回报错 !  \n  error message: ${this.searchResultData.error}`);
       this.router.navigate(["/multi-village-search"]);
     }
   

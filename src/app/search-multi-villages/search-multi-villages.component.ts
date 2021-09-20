@@ -80,6 +80,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     "教育",
   ];
 
+
   dataSource;
   selectedValue: string;
   provinceSearch: string;
@@ -175,8 +176,16 @@ export class SearchMultiVillagesComponent implements OnInit {
   category2Set = new Set();
   category3Set = new Set();
   //
+  fourthlastNamesDisplay: any;
+  firstLastNameIdSet = new Set();
+  secondLastNameIdSet = new Set();
+
+
+  // ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
+  //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
+//   "familyplanning", "education"]
   defaultTopicList = ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
-  "firstavailabilityorpurchase","population","military","economy","familyplanning"];
+  "firstavailabilityorpurchase","ethnicgroups","population","military","economy","familyplanning","education"];
   defaultTopics_InCh = ["村庄基本信息","自然环境","自然灾害", "姓氏",
       "第一次拥有或购买年份","民族","军事政治","经济","计划生育"];
 
@@ -392,22 +401,40 @@ export class SearchMultiVillagesComponent implements OnInit {
         // console.log("this.currentSelectedTopic",this.currentSelectedTopic)
         // console.log(this.responseData[index]);
         this.currentTopicData = this.responseData[index];
-        for(let item in this.responseData[index].data){
-          this.category1Set.add(this.responseData[index].data[item].category1);
-          // this.category2Set.add(this.responseData[index].data[item].category2);
-      //     let storeCategoriesData = {
-      //       category1: this.responseData[index].data[item].category1,
-      //       isSelected: false,
-      //       subCategories: {
-      //         category2: this.responseData[index].data[item].category2,
-      //         isSelected: false,
-      //         subCategories: {
-      //           category3: this.responseData[index].data[item].category3
-      //         }
-      //       }
+
+        if(this.responseData[index].tableNameChinese === "姓氏") {
+          console.log("ming ", this.currentTopicData.data)
+          this.fourthlastNamesDisplay = this.currentTopicData.data;
+          
+          for(let i = 0; i < this.fourthlastNamesDisplay.length; i++) {
+            console.log(this.fourthlastNamesDisplay[i].firstLastNameId)
+            if(this.fourthlastNamesDisplay[i].firstLastNameId) {
+              this.firstLastNameIdSet.add(this.fourthlastNamesDisplay[i].firstLastNameId);
+            }
+            if(this.fourthlastNamesDisplay[i].secondLastNameId) {
+              this.secondLastNameIdSet.add(this.fourthlastNamesDisplay[i].secondLastNameId);
+            }
+          }
+          // console.log("firstLastNameIdSet",this.firstLastNameIdSet)
         }
-      //   totalResults.push(storeCategoriesData);
-      // }
+        else {
+          for(let item in this.responseData[index].data){
+            this.category1Set.add(this.responseData[index].data[item].category1);
+            // this.category2Set.add(this.responseData[index].data[item].category2);
+        //     let storeCategoriesData = {
+        //       category1: this.responseData[index].data[item].category1,
+        //       isSelected: false,
+        //       subCategories: {
+        //         category2: this.responseData[index].data[item].category2,
+        //         isSelected: false,
+        //         subCategories: {
+        //           category3: this.responseData[index].data[item].category3
+        //         }
+        //       }
+          }
+        //   totalResults.push(storeCategoriesData);
+        // }
+        }
     }
   }
 }
@@ -428,12 +455,15 @@ export class SearchMultiVillagesComponent implements OnInit {
   tabChanged(event) {
 
     console.log("this reponse", this.responseData)
-    
+    this.firstLastNameIdSet.clear();
+    this.secondLastNameIdSet.clear();
     this.currentSelectedTopic = event.tab.textLabel;
     this.getTopicWithCategories();
     this.getYearWithTopic();
     console.log(this.topicCategory)
     console.log("topic select",this.displayTopicCategory);
+    //clear name sets
+
 
     // this.resultSelectedTopics.push(this.displayTopicCategory);
     // console.log(this.category2_checkedList)
