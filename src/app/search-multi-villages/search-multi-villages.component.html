@@ -135,30 +135,32 @@
             <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabChanged($event)" #tabGroup>
                 <mat-tab label="{{ item }}" *ngFor="let item of displayedMiddleTabs">
                     <div class="economy">
+
+                        <div *ngIf="isNamesTab">
+                            <mat-selection-list #namesNum [multiple]="false">
+                                <mat-list-option *ngFor="let item of showAllNamesDataRow" [value]="num">
+                                    <!-- <span>{{nums}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        {{item}}</span> -->
+                                    <span>{{item}}</span>
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </div>
+
+                        <!-- <div class="name_topic">
+
+                            <mat-selection-list #names [multiple]="false">
+                                <mat-list-option *ngFor="let item of showAllNamesDataRow" [value]="name">
+                                    {{item}}
+                                </mat-list-option>
+                            </mat-selection-list>
+
+                        </div> -->
+
                         <div class="category">
 
 
-                            <!-- <div>
-                                <div *ngFor="let firstName of firstLastNameIdSet">
-                                    <mat-checkbox>第一大姓 - {{firstName}}</mat-checkbox>
-                                </div>
-                            </div> -->
+                            <div class="left">
 
-
-                            <div class="left"> 类别
-                                <p>{{ item }} 下类别</p>
-                                <!-- <mat-selection-list #list1 [(ngModel)]="selectedOptionCurrent" (ngModelChange)="categorySelection($event)">
-                                    <ng-container>
-                                        <mat-list-option *ngFor="let item of topicCategory" checkboxPosition="before" style="font-size: 14px;" [selection]="item.isSelected" [value]="item">
-                                            {{item.category1}}
-                                        </mat-list-option>
-                                    </ng-container>
-                                </mat-selection-list> -->
-
-                                <!-- <div *ngIf=""></div> -->
-                                <div *ngFor="let firstName of firstLastNameIdSet">
-                                    <mat-checkbox>第一大姓 - {{firstName}}</mat-checkbox>
-                                </div>
 
 
 
@@ -179,21 +181,10 @@
                                 Option selected: {{list1.selectedOptions.selected[0]?.value}}
                             </p> -->
 
-                            <!-- <div class="middle">
-                                类别
-                                <p>{{ item }} 下类别</p>
-                                <mat-selection-list #list2 [(ngModel)]="selectedOptionCurrent">
-                                    <ng-container>
-                                        <mat-list-option *ngFor="let item of category2_checkedList" checkboxPosition="before" style="font-size: 14px" [hidden]="item.subCategories.category2 === undefined">
-                                            {{item.subCategories.category2}}
-                                        </mat-list-option>
-                                    </ng-container>
-                                </mat-selection-list>
-                            </div> -->
 
                             <div class="middle">
-                                类别
-                                <p>{{ item }} 下类别</p>
+                                <!-- 类别 -->
+                                <!-- <p>{{ item }} 下类别</p> -->
                                 <mat-selection-list #list2 [(ngModel)]="category2_Option" (ngModelChange)="category2Selection($event)">
                                     <ng-container>
                                         <mat-list-option *ngFor="let item of category2Set" checkboxPosition="before" style="font-size: 14px">
@@ -202,9 +193,8 @@
                                     </ng-container>
                                 </mat-selection-list>
 
-                                <div *ngFor="let secondName of secondLastNameIdSet">
-                                    <mat-checkbox>第二大姓 - {{secondName}}</mat-checkbox>
-                                </div>
+
+
                             </div>
 
                             <div class="right">

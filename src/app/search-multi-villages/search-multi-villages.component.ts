@@ -176,9 +176,13 @@ export class SearchMultiVillagesComponent implements OnInit {
   category2Set = new Set();
   category3Set = new Set();
   //
-  fourthlastNamesDisplay: any;
-  firstLastNameIdSet = new Set();
-  secondLastNameIdSet = new Set();
+  // fourthlastNamesDisplay: any;
+  // firstLastNameIdSet = new Set();
+  // secondLastNameIdSet = new Set();
+  allNamesData: any[] = [];
+  showAllNamesDataRow = new Set();
+  numsOfLastNames: any[] = [];
+  isNamesTab: boolean = false;
 
 
   // ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
@@ -403,21 +407,25 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.currentTopicData = this.responseData[index];
 
         if(this.responseData[index].tableNameChinese === "姓氏") {
+          this.isNamesTab = true;
           console.log("ming ", this.currentTopicData.data)
-          this.fourthlastNamesDisplay = this.currentTopicData.data;
+          this.allNamesData = this.currentTopicData.data;
           
-          for(let i = 0; i < this.fourthlastNamesDisplay.length; i++) {
-            console.log(this.fourthlastNamesDisplay[i].firstLastNameId)
-            if(this.fourthlastNamesDisplay[i].firstLastNameId) {
-              this.firstLastNameIdSet.add(this.fourthlastNamesDisplay[i].firstLastNameId);
-            }
-            if(this.fourthlastNamesDisplay[i].secondLastNameId) {
-              this.secondLastNameIdSet.add(this.fourthlastNamesDisplay[i].secondLastNameId);
-            }
+          for(let i = 0; i < this.allNamesData.length; i++) {
+            const currentLastNameRow = `
+            姓氏总数 --- ${this.allNamesData[i].totalNumberOfLastNameInVillage}
+            ${Array(15).fill('\xa0').join('')}
+            前五大姓 --- ${this.allNamesData[i].firstLastNameId}${this.allNamesData[i].secondLastNameId}
+            ${this.allNamesData[i].thirdLastNameId}${this.allNamesData[i].fourthLastNameId}
+            ${this.allNamesData[i].fifthLastNameId}
+            `
+            this.showAllNamesDataRow.add(currentLastNameRow);
           }
-          // console.log("firstLastNameIdSet",this.firstLastNameIdSet)
+
+          console.log("showAllLastNames", this.showAllNamesDataRow)
         }
         else {
+          this.isNamesTab = false;
           for(let item in this.responseData[index].data){
             this.category1Set.add(this.responseData[index].data[item].category1);
             // this.category2Set.add(this.responseData[index].data[item].category2);
@@ -455,8 +463,6 @@ export class SearchMultiVillagesComponent implements OnInit {
   tabChanged(event) {
 
     console.log("this reponse", this.responseData)
-    this.firstLastNameIdSet.clear();
-    this.secondLastNameIdSet.clear();
     this.currentSelectedTopic = event.tab.textLabel;
     this.getTopicWithCategories();
     this.getYearWithTopic();
