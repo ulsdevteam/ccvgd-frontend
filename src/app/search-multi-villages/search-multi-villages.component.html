@@ -72,7 +72,7 @@
                     <ng-container matColumnDef="isSelected">
                         <th mat-header-cell *matHeaderCellDef>选择</th>
                         <mat-cell *matCellDef="let element">
-                            <mat-checkbox (change)="isAllCheckBoxSelected($event,element)" [checked]="masterSelected"></mat-checkbox>
+                            <mat-checkbox style="margin-top: 100%;" (change)="isAllCheckBoxSelected($event,element)" [checked]="masterSelected"></mat-checkbox>
                         </mat-cell>
                     </ng-container>
                     <!-- Provice Column -->
@@ -99,7 +99,7 @@
                         <th mat-header-cell *matHeaderCellDef>县</th>
                         <td mat-cell *matCellDef="let element">{{ element.county }}</td>
                     </ng-container>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr mat-row class="selectList" *matRowDef="let row; columns: displayedColumns"></tr>
                 </table>
             </mat-card-content>
         </div>
@@ -137,24 +137,17 @@
                     <div class="economy">
 
                         <div *ngIf="isNamesTab">
-                            <mat-selection-list #namesNum [multiple]="false">
-                                <mat-list-option *ngFor="let item of showAllNamesDataRow" [value]="num">
-                                    <!-- <span>{{nums}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        {{item}}</span> -->
-                                    <span>{{item}}</span>
-                                </mat-list-option>
-                            </mat-selection-list>
+
+                            <div class="table">
+
+                                <mat-card class="row" *ngFor="let item of showAllNamesDataListUnique" style="margin: 10%;">
+                                    <span class="cell" style="margin: 10%;">{{ item.name }} </span>
+                                    <span class="cell">{{ item.fiveLastNames }}</span>
+                                    <span class="cell">{{ item.num }}</span>
+                                </mat-card>
+                            </div>
+
                         </div>
-
-                        <!-- <div class="name_topic">
-
-                            <mat-selection-list #names [multiple]="false">
-                                <mat-list-option *ngFor="let item of showAllNamesDataRow" [value]="name">
-                                    {{item}}
-                                </mat-list-option>
-                            </mat-selection-list>
-
-                        </div> -->
 
                         <div class="category">
 
@@ -166,7 +159,7 @@
 
                                 <mat-selection-list #list1 [(ngModel)]="category1_Option" (ngModelChange)="category1Selection($event)">
                                     <ng-container>
-                                        <mat-list-option *ngFor="let category1 of category1Set" checkboxPosition="before" style="font-size: 14px;" [value]="category1">
+                                        <mat-list-option class="selectList" *ngFor="let category1 of category1Set" checkboxPosition="before" style="font-size: 14px;" [value]="category1">
                                             {{category1}}
                                         </mat-list-option>
                                     </ng-container>
@@ -187,7 +180,7 @@
                                 <!-- <p>{{ item }} 下类别</p> -->
                                 <mat-selection-list #list2 [(ngModel)]="category2_Option" (ngModelChange)="category2Selection($event)">
                                     <ng-container>
-                                        <mat-list-option *ngFor="let item of category2Set" checkboxPosition="before" style="font-size: 14px">
+                                        <mat-list-option class="selectList" *ngFor="let item of category2Set" checkboxPosition="before" style="font-size: 14px">
                                             {{ item }}
                                         </mat-list-option>
                                     </ng-container>
@@ -200,7 +193,7 @@
                             <div class="right">
                                 <mat-selection-list #list3 [(ngModel)]="category3_Option">
                                     <ng-container>
-                                        <mat-list-option *ngFor="let item of category3Set" checkboxPosition="before" style="font-size: 14px">
+                                        <mat-list-option class="selectList" *ngFor="let item of category3Set" checkboxPosition="before" style="font-size: 14px">
                                             {{ item }}
                                         </mat-list-option>
                                     </ng-container>
