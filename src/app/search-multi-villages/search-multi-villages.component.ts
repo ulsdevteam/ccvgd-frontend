@@ -176,12 +176,14 @@ export class SearchMultiVillagesComponent implements OnInit {
   category2Set = new Set();
   category3Set = new Set();
   //
-  // fourthlastNamesDisplay: any;
-  // firstLastNameIdSet = new Set();
-  // secondLastNameIdSet = new Set();
+
+  // name *******
   allNamesData: any[] = [];
-  showAllNamesDataRow = new Set();
+  filteredNamesData: any[] = [];
+  showAllNamesDataList: any[] = [];
+  showAllNamesDataListUnique: any[] = [];
   numsOfLastNames: any[] = [];
+  nameOfVillage: any[] = [];
   isNamesTab: boolean = false;
 
 
@@ -238,14 +240,12 @@ export class SearchMultiVillagesComponent implements OnInit {
       });
       this.options = new MatTableDataSource(result.data);
       this.filteredData = this.options.filteredData;
-      // console.log("this.filteredData", this.filteredData)
     });
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.options.filter = filterValue.trim().toLowerCase();
-    console.log(this.options.filter);
   }
    //********************* for checkbox field ************************************* */
 
@@ -267,7 +267,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     });
 
     this.filteredData = this.options.filteredData;
-    // console.log("this province", this.options)
   }
 
   changeCity(data: Event) {
@@ -279,7 +278,6 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.countyList.push(item.county);
       }
     });
-    // console.log(this.options)
     this.filteredData = this.options.filteredData;
   }
 
@@ -353,7 +351,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(`Dialog result: ${result}`);
 
       if(result) {
         let deleteElementIndex = this.multiVillages_checkList.findIndex(item => item === checkedItem);
@@ -388,60 +385,77 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.getYearWithTopic();
   }
 
-  getTopicWithCategories() {
+  getUniqueListByKey(inputList:any[], key) {
+    return [...new Map(inputList.map(item => [item[key], item])).values()]
+  }
 
-    // console.log("this.multiVillages_checkList",this.multiVillages_checkList)
+  getAllCurrentLastNames() {
+
+    let currentLastNameRow = "";
+    this.isNamesTab = true;
+    // console.log("ming ", this.currentTopicData.data)
+    this.allNamesData = this.currentTopicData.data;
+
+    let village_info = {
+      villageId: "",
+      name: "",
+      num: "",
+      fiveLastNames:""
+    };
+    
+    // this.showAllNamesDataList = []
+    // const arr = [];
+    
+    for(let i = 0; i < this.allNamesData.length; i++) {
+      console.log(this.allNamesData[i])
+
+      // village_info.villageId = this.allNamesData[i].villageId;
+      // village_info.name = this.allNamesData[i].gazetteerName;
+      // village_info.num = this.allNamesData[i].totalNumberOfLastNameInVillage;
+      // village_info.fiveLastNames = `${this.allNamesData[i].firstLastNameId}${this.allNamesData[i].secondLastNameId}
+      // ${this.allNamesData[i].thirdLastNameId}${this.allNamesData[i].fourthLastNameId}
+      // ${this.allNamesData[i].fifthLastNameId}`
+      this.showAllNamesDataList.push({
+        name: this.allNamesData[i].gazetteerName,
+        num: this.allNamesData[i].totalNumberOfLastNameInVillage,
+        fiveLastNames: `${this.allNamesData[i].firstLastNameId}${this.allNamesData[i].secondLastNameId}
+        ${this.allNamesData[i].thirdLastNameId}${this.allNamesData[i].fourthLastNameId}
+        ${this.allNamesData[i].fifthLastNameId}`
+      })
+    }
+  
+    this.showAllNamesDataListUnique = this.getUniqueListByKey(this.showAllNamesDataList, "name");
+    // console.log("result", arr)
+    // this.showAllNamesDataList = this.getUniqueListByKey(this.showAllNamesDataList, "name");
+    // console.log("result", this.showAllNamesDataList)
+
+  }
+
+  getTopicWithCategories() {
     //by default - hard coded
     this.topicCategory = [];
     let totalResults = [];
     //
     this.category1Set.clear();
     this.category2Set.clear();
+
+    // this.showAllNamesDataRow.clear();
+
     const checkedIndex = this.multiVillages_checkList.filter(item => item.isSelected === true);
     console.log("this.selected index",checkedIndex)
     if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
-        // console.log("this.currentSelectedTopic",this.currentSelectedTopic)
-        // console.log(this.responseData[index]);
         this.currentTopicData = this.responseData[index];
+        console.log(this.currentTopicData)
 
-        if(this.responseData[index].tableNameChinese === "姓氏") {
-          this.isNamesTab = true;
-          console.log("ming ", this.currentTopicData.data)
-          this.allNamesData = this.currentTopicData.data;
-          
-          for(let i = 0; i < this.allNamesData.length; i++) {
-            const currentLastNameRow = `
-            姓氏总数 --- ${this.allNamesData[i].totalNumberOfLastNameInVillage}
-            ${Array(15).fill('\xa0').join('')}
-            前五大姓 --- ${this.allNamesData[i].firstLastNameId}${this.allNamesData[i].secondLastNameId}
-            ${this.allNamesData[i].thirdLastNameId}${this.allNamesData[i].fourthLastNameId}
-            ${this.allNamesData[i].fifthLastNameId}
-            `
-            this.showAllNamesDataRow.add(currentLastNameRow);
-          }
+        if(this.responseData[index].tableNameChinese === "姓氏")  this.getAllCurrentLastNames();
 
-          console.log("showAllLastNames", this.showAllNamesDataRow)
-        }
         else {
           this.isNamesTab = false;
           for(let item in this.responseData[index].data){
             this.category1Set.add(this.responseData[index].data[item].category1);
-            // this.category2Set.add(this.responseData[index].data[item].category2);
-        //     let storeCategoriesData = {
-        //       category1: this.responseData[index].data[item].category1,
-        //       isSelected: false,
-        //       subCategories: {
-        //         category2: this.responseData[index].data[item].category2,
-        //         isSelected: false,
-        //         subCategories: {
-        //           category3: this.responseData[index].data[item].category3
-        //         }
-        //       }
           }
-        //   totalResults.push(storeCategoriesData);
-        // }
         }
     }
   }
@@ -466,14 +480,8 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.currentSelectedTopic = event.tab.textLabel;
     this.getTopicWithCategories();
     this.getYearWithTopic();
-    console.log(this.topicCategory)
-    console.log("topic select",this.displayTopicCategory);
     //clear name sets
 
-
-    // this.resultSelectedTopics.push(this.displayTopicCategory);
-    // console.log(this.category2_checkedList)
-    // this.category2_checkedList = [];
   }
 
   //TODO
@@ -481,7 +489,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.topicYear = [];
     this.totalYearOnly = [];
 
-    // console.log("this.responseData" , this.responseData);
     if(this.responseData) {
       let matchIndex = this.responseData.findIndex(item => item.tableNameChinese === this.currentSelectedTopic);
 
@@ -508,7 +515,6 @@ export class SearchMultiVillagesComponent implements OnInit {
         total_year_only: this.totalYearOnly
       })
     }
-    // console.log("topicYear 😶‍🌫️", this.topicYear)
   }
 
   checkboxYear(event, selectedYear, checked) {
@@ -523,14 +529,12 @@ export class SearchMultiVillagesComponent implements OnInit {
 
 
     const values = Object.keys(this.checked_year_only).map(it => this.checked_year_only[it]);
-    // console.log(typeof values)
 
 
   }
 
   async postFinalRequest() {
 
-    console.log("this.finalPostTopicList",this.finalPostTopicList)
     let resnew = await this.multiVillageFilterService.onPostMultiVillages(
       {
         //BUG 1.checkedall 2. fourthlastNames -- ask backend
@@ -544,7 +548,6 @@ export class SearchMultiVillagesComponent implements OnInit {
           // year_range: [2009, 2012],
       }
     );
-    console.log("res", resnew);
   }
 
     //if search button is clicked, go to results page
@@ -573,8 +576,6 @@ export class SearchMultiVillagesComponent implements OnInit {
       }
 
       }
-
-      console.log("😷 this.displayTopicCategory",this.displayTopicCategory)
 
       this.storeUserSelection();
       
@@ -691,7 +692,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   onCreatePost(postData: { villageid: any; topic: any }) {
     // Send Http request
     this.httpService.post("advancesearch", postData).then((responseData) => {
-        console.log("responseData", responseData);
+        // console.log("responseData", responseData);
       });
   }
 
@@ -739,7 +740,6 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   resetAll() {
-    console.log("reset");
     //left
     this.masterSelected = false;
     this.multiVillages_checkedList = [];
