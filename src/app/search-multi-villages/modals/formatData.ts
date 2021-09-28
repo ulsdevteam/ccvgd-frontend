@@ -28,5 +28,8 @@ export interface Year {
 
 export interface DisplayTopicCategory {
   selectedTopic: string,
-  selectedCategoryList?:any[] 
+  hasCategory: boolean,
+  category1List?:any[],
+  category2List?:any[],
+  category3List?:any[]
 }

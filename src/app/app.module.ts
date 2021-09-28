@@ -55,7 +55,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { VillageNameService } from './services/village-name.service';
 import { SingleVillageSearchComponent } from './single-village-search/single-village-search.component';
 import { TableDisplayComponent } from './table-display/table-display.component';
-import { MultiVillageSearchComponent } from './multi-village-search/multi-village-search.component';
 import { TableDisplayV2Component } from './table-display-V2/table-display-V2.component';
 import { TableDisplayV22Component } from './table-display-v22/table-display-v22.component';
 import { TableDisplayV23Component } from './table-display-v23/table-display-v23.component';
@@ -74,7 +73,6 @@ import { DialogComponent } from './search-multi-villages/dialog/dialog.component
     TopBarComponent,
     SingleVillageSearchComponent,
     TableDisplayComponent,
-    MultiVillageSearchComponent,
     TableDisplayV2Component,
     TableDisplayV22Component,
     TableDisplayV23Component,
@@ -88,7 +86,7 @@ import { DialogComponent } from './search-multi-villages/dialog/dialog.component
   ],
   imports: [
     HttpClientModule,
-
+    MatCardModule,
     BrowserModule,
     BrowserAnimationsModule,
 
