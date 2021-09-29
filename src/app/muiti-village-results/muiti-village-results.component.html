@@ -1,4 +1,33 @@
 <div style="margin: 5%;">
+    <mat-card>
+
+        <div>
+            <mat-form-field class="example-form-field" appearance="fill">
+                <mat-label>输入开始年份， 例如1949</mat-label>
+                <input matInput type="text" [(ngModel)]="startYearInput">
+                <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                  <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            至
+            <mat-form-field class="example-form-field" appearance="fill">
+                <mat-label>输入结束年份， 晚于开始年份</mat-label>
+                <input matInput type="text" [(ngModel)]="endYearInput">
+                <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                  <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <button mat-raised-button style="background-color: #75b6e7" class="yearSearchBtn" (click)="onPostInputYear()">Search
+            </button>
+        </div>
+    </mat-card>
+
+</div>
+
+
+
+<div style="margin: 5%;">
     <!-- <button (click)="downloadCurrentTopic($event, eachCategory.topicName)">download {{eachCategory.topicName}}</button> -->
     <!-- <a mat-raised-button [href]="eachCategory.downloadUrl" target="_blank" class="downloadBtn" style="margin-top: 3%;">
         <mat-icon color="primary">download</mat-icon>

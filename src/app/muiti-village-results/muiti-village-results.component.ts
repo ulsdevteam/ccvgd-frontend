@@ -86,6 +86,11 @@ export class MuitiVillageResultsComponent implements OnInit {
   gazetteerinformation_datasource;
   gazetterinfo_displayColumns: any[] = []
 
+  //year
+  inputed_year_range: any[] = [];
+  startYearInput: string;
+  endYearInput: string;
+
   constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router) {}
 
 
@@ -129,14 +134,14 @@ export class MuitiVillageResultsComponent implements OnInit {
     }
 
     this.gazetteerinformation_datasource = new MatTableDataSource(this.searchResultData[1].data);
-    this.gazetterinfo_displayColumns =  this.removeVillageId(this.searchResultData[1].field),
+    this.gazetterinfo_displayColumns =  this.removeVillageId(this.searchResultData[1].field);
   
 
-    console.log(this.searchResultData[1])
+    console.log("response => ", this.searchResultData)
+
         for(let index in this.searchResultData) {
           this.dataSource = this.searchResultData[index].data;
 
-          // console.log(this.searchResultData[index])
           for(let item in this.userSelectionList) {
 
             if(this.userSelectionList[item].selectedTopic === this.searchResultData[index].tableNameChinese) {
@@ -157,24 +162,40 @@ export class MuitiVillageResultsComponent implements OnInit {
           }
         }
 
-        console.log(this.displayResultsData)
+        console.log("displayResultsData", this.displayResultsData)
         this.mainPaginator.changes.subscribe(a => a.forEach((b, index) => 
         this.displayResultsData[index].dataSource.paginator = b));
 
         this.onlyGetSelectedCategoriesRow();
   }
 
+   onPostInputYear() {
+    // console.log("value", this.value1)
+    this.inputed_year_range = [
+      parseInt(this.startYearInput),
+      parseInt(this.endYearInput),
+    ];
+
+    // console.log(this.startYearInput)
+
+    if(this.startYearInput === undefined) alert("please input Start Year field!")
+    if(this.endYearInput === undefined) alert("please input End Year field!")
+
+    this.userInput.year_range = this.inputed_year_range;
+
+    this.displayResultsData = [];
+
+    this.getData();
+  }
+
   
     filterDataSource(event: Event, currentDataSource) {
-      // console.log("currentDataSource",currentDataSource)
     const filterValue = (event.target as HTMLInputElement).value;
     currentDataSource.filter = filterValue.trim().toLowerCase();
     if (currentDataSource.paginator) currentDataSource.paginator.firstPage();
   }
 
   downloadCurrentTopic(event, topicName) {
-    // console.log("this.userInput",this.userInput)
-    // console.log(topicName)
 
   }
 
@@ -183,7 +204,7 @@ export class MuitiVillageResultsComponent implements OnInit {
   add(event: MatChipInputEvent, currentDataSource): void {
     const value = (event.value || '').trim();
 
-    console.log("event.input.value",event)
+    // console.log("event.input.value",event)
 
     currentDataSource.filter = event.input.value.trim().toLowerCase();
     // if (currentDataSource.paginator) currentDataSource.paginator.firstPage();

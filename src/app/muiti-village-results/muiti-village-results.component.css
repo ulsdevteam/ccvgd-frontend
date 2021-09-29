@@ -8,3 +8,13 @@ table {
 }
 
 .downloadBtn {}
+
+.yearSearchBtn {
+    width: 15%;
+    background-color: #75b6e7;
+    margin-left: 5%;
+    /* padding: 0.5%; */
+    padding: 0.3%;
+    color: white;
+    font-size: larger;
+}
