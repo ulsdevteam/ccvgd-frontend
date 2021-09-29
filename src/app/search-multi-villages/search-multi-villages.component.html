@@ -231,36 +231,6 @@
     <mat-card class="container3">
         <p class="select-headers">选择时间-Select Time</p>
 
-        <div class="yearselect">年份-Year</div>
-        <div class="singleyear">
-            <div class="yearselectionlist">
-                <mat-selection-list #listSingleYear>
-                    <ng-container *ngFor="let item of topicYear">
-                        <div *ngFor="let eachYear of item.total_year_only">
-                            <mat-list-option #option checkboxPosition="before" style="font-size: 14px;" (click)="checkboxYear($event, eachYear, option.selected)">
-                                {{eachYear}}
-                            </mat-list-option>
-                        </div>
-                    </ng-container>
-                </mat-selection-list>
-
-            </div>
-            <div class="yearselectedlist">
-                <div class="year-selected-header"> 已选年份-Selected Single Year</div>
-
-                <p>已选 {{listSingleYear.selectedOptions.selected.length}}</p>
-                <ng-container>
-                    <table>
-                        <div *ngFor="let eachCheckedYear of checked_year_only">
-                            <p>{{ eachCheckedYear }}</p>
-                        </div>
-                    </table>
-
-                </ng-container>
-
-            </div>
-        </div>
-
         <div class="yearrangeselect">年段-Year Range</div>
         <div class="yearrange">
 
@@ -283,14 +253,56 @@
             <button mat-raised-button color="primary" class="addYear" (click)="onPostInputYear()">
         添加 - Add
       </button>
-
-            <div class="yearselectedlist" #myYearDiv>
+            <!-- <div class="yearselectedlist" #myYearDiv>
                 <div class="year-range-selected-header"> 已选年段-Selected Year Range</div>
+                <p>{{displayYearRange}}</p>
+            </div> -->
+        </div>
 
 
-                <p>{{ inputed_year_range }}</p>
+
+        <div class="yearselect">年份-Year</div>
+        <div class="singleyear">
+            <div class="yearselectionlist">
+                <mat-selection-list #listSingleYear>
+                    <ng-container *ngFor="let item of topicYear">
+                        <div *ngFor="let eachYear of item.total_year_only">
+                            <mat-list-option #option checkboxPosition="before" style="font-size: 14px;" (click)="checkboxYear($event, eachYear, option.selected)">
+                                {{eachYear}}
+                            </mat-list-option>
+                        </div>
+                    </ng-container>
+                </mat-selection-list>
+
+            </div>
+            <div class="yearselectedlist">
+                <div class="year-selected-header"> 已选年份-Selected Single Year Or Year Range</div>
+
+                <p>已选 {{listSingleYear.selectedOptions.selected.length}}</p>
+                <ng-container>
+
+                    <div>
+
+                        <div class="yearselectedlist" #myYearDiv>
+                            <div class="year-range-selected-header"> 已选年段-Selected Year Range</div>
+                            <p>{{displayYearRange}}</p>
+                        </div>
+
+                        <table>
+                            <div *ngFor="let eachCheckedYear of checked_year_only">
+                                <p>{{ eachCheckedYear }}</p>
+                            </div>
+                        </table>
+
+                    </div>
+
+
+
+                </ng-container>
+
             </div>
         </div>
+
     </mat-card>
 
     <nav class="navbar fixed-bottom navbar-light bg-light" style="background-color: #e3f2fd;">

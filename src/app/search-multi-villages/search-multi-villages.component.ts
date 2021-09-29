@@ -166,6 +166,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   totalYearOnly: any[] = [];
   checked_year_only: any[] = [];
   inputed_year_range: any[] = [];
+
+  displayYearRange: string;
   //post
   finalPostTopicList: any[] = [];
   value1 = "";
@@ -185,6 +187,9 @@ export class SearchMultiVillagesComponent implements OnInit {
   numsOfLastNames: any[] = [];
   nameOfVillage: any[] = [];
   isNamesTab: boolean = false;
+
+
+  SingleYearIsChecked: boolean;
 
 
   // ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
@@ -526,13 +531,18 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   checkboxYear(event, selectedYear, checked) {
     // let selectedYear = year.toString();
+
     if(checked) {
+      this.SingleYearIsChecked = true;
       this.checked_year_only.push(selectedYear);
     }
     else{
+      this.SingleYearIsChecked = false;
       let removeIndex = this.checked_year_only.indexOf(selectedYear);
       if(removeIndex > -1 ) this.checked_year_only.splice(removeIndex, this.checked_year_only.length)
     }
+    // if(selectedYear.length)
+    console.log(selectedYear.length)
 
 
     const values = Object.keys(this.checked_year_only).map(it => this.checked_year_only[it]);
@@ -718,6 +728,8 @@ export class SearchMultiVillagesComponent implements OnInit {
       parseInt(this.startYearInput),
       parseInt(this.endYearInput),
     ];
+
+    this.displayYearRange = `${this.startYearInput} --- ${this.endYearInput}`;
   }
 
   rightTopYearCheckBox(event: MatCheckboxChange) {
