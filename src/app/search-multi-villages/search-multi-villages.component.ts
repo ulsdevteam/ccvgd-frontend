@@ -436,13 +436,15 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.topicCategory = [];
     let totalResults = [];
     //
+    
     this.category1Set.clear();
     this.category2Set.clear();
 
     // this.showAllNamesDataRow.clear();
 
     const checkedIndex = this.multiVillages_checkList.filter(item => item.isSelected === true);
-    console.log("this.selected index",checkedIndex)
+    console.log("this.selected index",checkedIndex.length)
+
     if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
@@ -459,6 +461,11 @@ export class SearchMultiVillagesComponent implements OnInit {
         }
     }
   }
+
+    //   if(checkedIndex.length === 0) {
+    //     this.category1Set.clear();
+    //     this.category2Set.clear();
+    // }
 }
 
   removeDuplicates(originalArray, prop) {

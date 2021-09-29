@@ -82,6 +82,9 @@ export class MuitiVillageResultsComponent implements OnInit {
   ]);
 
   getVillageidForDownload: string;
+  gazetteerinformationDisplay: any[] = []
+  gazetteerinformation_datasource;
+  gazetterinfo_displayColumns: any[] = []
 
   constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router) {}
 
@@ -95,7 +98,7 @@ export class MuitiVillageResultsComponent implements OnInit {
     // console.log("userSelectionList", this.userSelectionList)
   }
 
-  removeGazetteerId(rawArray) {
+  removeVillageId(rawArray) {
     let resultsDisplay = [];
     for(let item in rawArray) {
       // gazetteerId
@@ -124,9 +127,16 @@ export class MuitiVillageResultsComponent implements OnInit {
       alert(`后端返回报错 !  \n  error message: ${this.searchResultData.error}`);
       this.router.navigate(["/multi-village-search"]);
     }
+
+    this.gazetteerinformation_datasource = new MatTableDataSource(this.searchResultData[1].data);
+    this.gazetterinfo_displayColumns =  this.removeVillageId(this.searchResultData[1].field),
   
+
+    console.log(this.searchResultData[1])
         for(let index in this.searchResultData) {
           this.dataSource = this.searchResultData[index].data;
+
+          // console.log(this.searchResultData[index])
           for(let item in this.userSelectionList) {
 
             if(this.userSelectionList[item].selectedTopic === this.searchResultData[index].tableNameChinese) {
@@ -135,11 +145,10 @@ export class MuitiVillageResultsComponent implements OnInit {
               const each_res = this.userSelectionList[item].hasCategory === true ? this.searchResultData[index].data.filter(i => 
                 this.userSelectionList[item].category1List.indexOf(i.category1) !== -1) : this.searchResultData[index].data;
 
-                console.log(each_res)
               this.displayResultsData.push({
                 topicName: this.searchResultData[index].tableNameChinese,
                 dataSource: new MatTableDataSource(each_res),
-                displayedColumns: this.removeGazetteerId(this.searchResultData[index].field),
+                displayedColumns: this.removeVillageId(this.searchResultData[index].field),
                 selected_Categories: this.userSelectionList[item]. hasCategory ? 
                 this.userSelectionList[item].category1List : null,
                 downloadUrl: `${environment.API_ROOT}advancesearch/download/?village=${this.userInput.villageid.toString()}&topic=${this.mapFromCHToEN.get(this.searchResultData[index].tableNameChinese)}`
