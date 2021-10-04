@@ -236,7 +236,7 @@
 
             <mat-form-field class="example-form-field" appearance="fill">
                 <mat-label>输入开始年份， 例如1949</mat-label>
-                <input matInput type="text" [(ngModel)]="startYearInput">
+                <input matInput type="text" [(ngModel)]="startYearInput" [disabled]="closeYearRange">
                 <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
                   <mat-icon>close</mat-icon>
                 </button>
@@ -244,7 +244,7 @@
             至
             <mat-form-field class="example-form-field" appearance="fill">
                 <mat-label>输入结束年份， 晚于开始年份</mat-label>
-                <input matInput type="text" [(ngModel)]="endYearInput">
+                <input matInput type="text" [(ngModel)]="endYearInput" [disabled]="closeYearRange">
                 <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
                   <mat-icon>close</mat-icon>
                 </button>
@@ -253,6 +253,10 @@
             <button mat-raised-button color="primary" class="addYear" (click)="onPostInputYear()">
         添加 - Add
       </button>
+
+
+            <div class="year-selected-header"> 单年和多年不能一起选</div>
+            <!-- <p>单年和多年不能一起选</p> -->
             <!-- <div class="yearselectedlist" #myYearDiv>
                 <div class="year-range-selected-header"> 已选年段-Selected Year Range</div>
                 <p>{{displayYearRange}}</p>
@@ -267,7 +271,7 @@
                 <mat-selection-list #listSingleYear>
                     <ng-container *ngFor="let item of topicYear">
                         <div *ngFor="let eachYear of item.total_year_only">
-                            <mat-list-option #option checkboxPosition="before" style="font-size: 14px;" (click)="checkboxYear($event, eachYear, option.selected)">
+                            <mat-list-option #option [disabled]="closeSingleYear" checkboxPosition="before" style="font-size: 14px;" (click)="checkboxYear($event, eachYear, option.selected)">
                                 {{eachYear}}
                             </mat-list-option>
                         </div>
@@ -278,27 +282,33 @@
             <div class="yearselectedlist">
                 <div class="year-selected-header"> 已选年份-Selected Single Year Or Year Range</div>
 
-                <p>已选 {{listSingleYear.selectedOptions.selected.length}}</p>
-                <ng-container>
+                <p *ngIf="closeYearRange">已选single-year - 数量{{listSingleYear.selectedOptions.selected.length}}</p>
 
-                    <div>
+                <div *ngIf="!closeYearRange">
+                    <p>已选年段</p>
+                    <p>{{displayYearRange}}</p>
+                </div>
 
-                        <div class="yearselectedlist" #myYearDiv>
+                <!-- <ng-container> -->
+
+                <div class="year-result-container">
+
+                    <!-- <div class="yearselectedlist" #myYearDiv>
                             <div class="year-range-selected-header"> 已选年段-Selected Year Range</div>
                             <p>{{displayYearRange}}</p>
+                        </div> -->
+
+                    <table>
+                        <div *ngFor="let eachCheckedYear of checked_year_only">
+                            <p>{{ eachCheckedYear }}</p>
                         </div>
+                    </table>
 
-                        <table>
-                            <div *ngFor="let eachCheckedYear of checked_year_only">
-                                <p>{{ eachCheckedYear }}</p>
-                            </div>
-                        </table>
-
-                    </div>
+                </div>
 
 
 
-                </ng-container>
+                <!-- </ng-container> -->
 
             </div>
         </div>

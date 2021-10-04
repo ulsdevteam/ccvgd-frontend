@@ -190,13 +190,13 @@ export class SearchMultiVillagesComponent implements OnInit {
 
 
   SingleYearIsChecked: boolean;
+  closeSingleYear: boolean = false;
+  closeYearRange: boolean = false;
 
-
-  // ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
-  //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
-//   "familyplanning", "education"]
-  defaultTopicList = ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
-  "firstavailabilityorpurchase","ethnicgroups","population","military","economy","familyplanning","education"];
+  // ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
+  // "firstavailabilityorpurchase","ethnicgroups","population","military","economy","familyplanning","education"];
+  defaultTopicList = ["village", "fourthlastNames","ethnicgroups",
+  "population","military","economy","familyplanning","education"];
   defaultTopics_InCh = ["村庄基本信息","自然环境","自然灾害", "姓氏",
       "第一次拥有或购买年份","民族","军事政治","经济","计划生育"];
 
@@ -345,7 +345,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   getListOfchecked_VillagesID() {
     this.checkedVillagesID = [];
     for(let i in this.multiVillages_checkedList) {
-      this.checkedVillagesID.push(this.multiVillages_checkedList[i].village_id);
+      this.checkedVillagesID.push(this.multiVillages_checkedList[i].village_id.toString());
     }
     if(this.checkedVillagesID.length > 0) this.processRequest();
   }
@@ -380,7 +380,8 @@ export class SearchMultiVillagesComponent implements OnInit {
         // topic: ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
         // "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
         // "familyplanning", "education"],
-        topic: this.defaultTopicList
+        topic: this.defaultTopicList,
+        year: []
       }
     );
 
@@ -454,7 +455,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
         this.currentTopicData = this.responseData[index];
-        console.log(this.currentTopicData)
+        console.log(this.currentTopicData);
 
         if(this.responseData[index].tableNameChinese === "姓氏")  this.getAllCurrentLastNames();
 
@@ -501,6 +502,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.topicYear = [];
     this.totalYearOnly = [];
 
+    // BUG
     if(this.responseData) {
       let matchIndex = this.responseData.findIndex(item => item.tableNameChinese === this.currentSelectedTopic);
 
@@ -535,14 +537,25 @@ export class SearchMultiVillagesComponent implements OnInit {
     if(checked) {
       this.SingleYearIsChecked = true;
       this.checked_year_only.push(selectedYear);
+      this.closeSingleYear = false;
     }
     else{
       this.SingleYearIsChecked = false;
       let removeIndex = this.checked_year_only.indexOf(selectedYear);
       if(removeIndex > -1 ) this.checked_year_only.splice(removeIndex, this.checked_year_only.length)
     }
+
+
+    if(this.checked_year_only.length > 0) {
+      this.closeYearRange = true;
+    }
+    else{
+      this.closeYearRange = false;
+    }
+
     // if(selectedYear.length)
-    console.log(selectedYear.length)
+    // console.log(selectedYear)
+    // console.log(event)
 
 
     const values = Object.keys(this.checked_year_only).map(it => this.checked_year_only[it]);
@@ -578,6 +591,9 @@ export class SearchMultiVillagesComponent implements OnInit {
       if(this.finalPostTopicList.length === 0 && this.checked_year_only.length === 0) {
         //convert to get request backend
         this.processRequest();
+      }
+      else if(this.finalPostTopicList.length === 0 && this.checked_year_only.length > 0) {
+        this.postFinalRequest();
       }
       else {
         this.postFinalRequest();
@@ -729,6 +745,30 @@ export class SearchMultiVillagesComponent implements OnInit {
       parseInt(this.endYearInput),
     ];
 
+
+
+    if(this.startYearInput && this.endYearInput) {
+      if(this.endYearInput > this.startYearInput) {
+        this.closeSingleYear = true;
+      }
+      if(this.endYearInput === this.startYearInput) {
+        this.checked_year_only.push(parseInt(this.startYearInput));
+        this.inputed_year_range = [];
+      }
+      else this.closeSingleYear = false;
+
+      if(this.endYearInput < this.startYearInput) 
+      alert("end Year input should be larger or euqual to start year input");
+      
+    }
+    else{
+      this.closeSingleYear = false;
+    }
+
+    console.log("this.checked_year_only",this.checked_year_only)
+
+    if(!this.startYearInput || !this.endYearInput) alert("please input year fields")
+
     this.displayYearRange = `${this.startYearInput} --- ${this.endYearInput}`;
   }
 
@@ -737,6 +777,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     //IMPORTANT
     if (event.checked) {
       // m;
+      this.closeYearRange = true;
       // console.log("singleYearSelected", this.singleYearSelected);
       this.postYearData.year.push(parseInt(this.singleYearSelected));
       this.rightToptempcheckItems.push(event.source.name);

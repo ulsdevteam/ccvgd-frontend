@@ -132,7 +132,7 @@ export class MuitiVillageResultsComponent implements OnInit {
     this.gazetterinfo_displayColumns =  this.removeVillageId(this.searchResultData[1].field),
   
 
-    console.log(this.searchResultData[1])
+    console.log("data", this.searchResultData)
         for(let index in this.searchResultData) {
           this.dataSource = this.searchResultData[index].data;
 
