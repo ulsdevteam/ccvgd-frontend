@@ -745,6 +745,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       parseInt(this.endYearInput),
     ];
 
+    this.displayYearRange = `${this.startYearInput} --- ${this.endYearInput}`;
 
 
     if(this.startYearInput && this.endYearInput) {
@@ -752,8 +753,10 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.closeSingleYear = true;
       }
       if(this.endYearInput === this.startYearInput) {
+        this.closeSingleYear = true;
         this.checked_year_only.push(parseInt(this.startYearInput));
         this.inputed_year_range = [];
+        this.displayYearRange = "";
       }
       else this.closeSingleYear = false;
 
@@ -769,7 +772,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     if(!this.startYearInput || !this.endYearInput) alert("please input year fields")
 
-    this.displayYearRange = `${this.startYearInput} --- ${this.endYearInput}`;
+  
   }
 
   rightTopYearCheckBox(event: MatCheckboxChange) {
