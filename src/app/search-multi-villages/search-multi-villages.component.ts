@@ -200,6 +200,15 @@ export class SearchMultiVillagesComponent implements OnInit {
   defaultTopics_InCh = ["村庄基本信息","自然环境","自然灾害", "姓氏",
       "第一次拥有或购买年份","民族","军事政治","经济","计划生育"];
 
+  search_value: string;
+  length = 100;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+  currentPageNum: number = 1;
+  form
 
   constructor(
     private villageNameService: VillageNameService,
@@ -218,7 +227,11 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.villageNameService.getVillages().then((result) => {
+    // this.getServerData(null);
+    this.fetchVillageData(this.currentPageNum);
+  }
+  fetchVillageData(pageNum) {
+    this.villageNameService.getVillages(pageNum).then((result) => {
       this.totalList = result.data;
       result.data.map((item) => {
         if (this.cityList.includes(item.city) === false) {
@@ -245,7 +258,41 @@ export class SearchMultiVillagesComponent implements OnInit {
       });
       this.options = new MatTableDataSource(result.data);
       this.filteredData = this.options.filteredData;
+    }).catch((error: any)  => {
+      console.log("error from the back", error)
     });
+  }
+
+  clearSearchValue() {
+    console.log("search_value=''")
+    this.search_value=''
+    this.fetchVillageData(1)
+  }
+
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    if (setPageSizeOptionsInput) {
+      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
+    }
+  }
+
+  handleSearchInput(userInput) {
+
+    this.villageNameService.filterVillages(userInput).then((searchResult) => {
+      console.log(searchResult)
+      this.options = new MatTableDataSource(searchResult.data);
+      // this.filteredData = this.options.filteredData;
+      console.log("this.filteredData",this.filteredData)
+    }).catch((err: any) => {
+      console.log("err", err)
+    });
+    // console.log(event)
+  }
+
+  getServerData(event? : PageEvent) {
+    console.log(event)
+    this.currentPageNum = event.pageIndex+1;
+    this.fetchVillageData(this.currentPageNum);
+    return event
   }
 
   applyFilter(event: Event) {
@@ -408,19 +455,8 @@ export class SearchMultiVillagesComponent implements OnInit {
       num: "",
       fiveLastNames:""
     };
-    
-    // this.showAllNamesDataList = []
-    // const arr = [];
-    
+  
     for(let i = 0; i < this.allNamesData.length; i++) {
-      console.log(this.allNamesData[i])
-
-      // village_info.villageId = this.allNamesData[i].villageId;
-      // village_info.name = this.allNamesData[i].gazetteerName;
-      // village_info.num = this.allNamesData[i].totalNumberOfLastNameInVillage;
-      // village_info.fiveLastNames = `${this.allNamesData[i].firstLastNameId}${this.allNamesData[i].secondLastNameId}
-      // ${this.allNamesData[i].thirdLastNameId}${this.allNamesData[i].fourthLastNameId}
-      // ${this.allNamesData[i].fifthLastNameId}`
       this.showAllNamesDataList.push({
         name: this.allNamesData[i].gazetteerName,
         num: this.allNamesData[i].totalNumberOfLastNameInVillage,
@@ -431,9 +467,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   
     this.showAllNamesDataListUnique = this.getUniqueListByKey(this.showAllNamesDataList, "name");
-    // console.log("result", arr)
-    // this.showAllNamesDataList = this.getUniqueListByKey(this.showAllNamesDataList, "name");
-    // console.log("result", this.showAllNamesDataList)
 
   }
 
@@ -817,3 +850,30 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   }
 }
+
+// import {Component} from '@angular/core';
+import {PageEvent} from '@angular/material/paginator';
+
+// /**
+//  * @title Configurable paginator
+//  */
+// @Component({
+//   selector: 'search-paginator',
+//   templateUrl: 'search-paginator.html',
+//   styleUrls: ['search-paginator.css'],
+// })
+// export class PaginatorConfigurableExample {
+//   // MatPaginator Inputs
+//   length = 100;
+//   pageSize = 10;
+//   pageSizeOptions: number[] = [5, 10, 25, 100];
+
+//   // MatPaginator Output
+//   pageEvent: PageEvent;
+
+//   setPageSizeOptions(setPageSizeOptionsInput: string) {
+//     if (setPageSizeOptionsInput) {
+//       this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
+//     }
+//   }
+// }

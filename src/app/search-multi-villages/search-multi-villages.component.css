@@ -21,13 +21,13 @@
     border-width: 1px;
     border-color: lightgray;
     border-radius: 5px;
-    width: 30%;
+    /* width: 30%; */
     margin: 2px;
     margin-right: 3%;
-    /* margin-top: 2%; */
     border-radius: 2%;
     margin-left: 1%;
-    height: 95%;
+     height: 95%;
+
 }
 
 .dropdown-header {
@@ -366,7 +366,11 @@ mat-list-option[aria-selected="true"] {
 }
 
 .any-input-field {
-    width: 200px;
+    /* margin-top: 22%; */
+    text-align: left;
+    align-items: center;
+    position: relative;
+    display: contents;
 }
 
 .mat-checkbox {

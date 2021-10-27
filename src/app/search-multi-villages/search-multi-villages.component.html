@@ -3,8 +3,9 @@
     <mat-card class="container1">
 
         <p class="select-headers">Select Villages-选择村庄 </p>
-        <mat-card-header class="dropdown-header">
+        <!-- <mat-card-header class="dropdown-header"> -->
 
+            <div>
             <!-- <mat-card-title>Select Villages-选择村庄 </mat-card-title> -->
             <div class="geologyDropdownList">
                 <mat-form-field>
@@ -38,17 +39,17 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-        </mat-card-header>
 
-        <br /><br />
-        <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
-        <mat-form-field class="any-input-field">
-            <mat-label>按any筛选</mat-label>
-            <input matInput (keyup)="applyFilter($event)" #input />
-        </mat-form-field>
+            <mat-form-field class="any-input-field" appearance="fill">
+                <!-- <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon> -->
+                <mat-label><i class="fas fa-search"></i>Search Any Village Here</mat-label>
+                <input matInput type="text" [(ngModel)]="search_value" (ngModelChange)="handleSearchInput($event)">
+                <button *ngIf="search_value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchValue()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-        <br />
-
+        </div>
 
         <div class="title">
             <label>选择</label>
@@ -57,9 +58,6 @@
             <label>市</label>
             <label>县</label>
         </div>
-
-
-
 
         <div>
             <mat-checkbox class="selectall" (change)="checkUncheckAll()" [(ngModel)]="masterSelected">选择所有-Select All</mat-checkbox>
@@ -99,10 +97,18 @@
                         <th mat-header-cell *matHeaderCellDef>县</th>
                         <td mat-cell *matCellDef="let element">{{ element.county }}</td>
                     </ng-container>
-                    <tr mat-row class="selectList" *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr mat-row class="selectList" *matRowDef="let row; columns: displayedColumns;"
+                    ></tr>
                 </table>
             </mat-card-content>
         </div>
+
+        <mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEvent = getServerData($event)"
+               aria-label="Select page">
+        </mat-paginator>
 
         <div class="villageselected">已选村庄-Selected Villages</div>
 

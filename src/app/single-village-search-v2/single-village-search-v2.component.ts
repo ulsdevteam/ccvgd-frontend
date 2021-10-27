@@ -62,7 +62,7 @@ export class SingleVillageSearchV2Component implements OnInit {
   }
 
   async init() {
-    this.temp = await this.villageNameService.getVillages();
+    this.temp = await this.villageNameService.getVillages(1);
     this.filteredOptions = this.temp.data;
     this.options = this.filteredOptions;
     console.log('this.filteredOptions', this.filteredOptions);
