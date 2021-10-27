@@ -59,40 +59,87 @@
             <label>县</label>
         </div>
 
-        <div>
+        <table mat-table [dataSource]="village_dataSource" class="mat-elevation-z8">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                              [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)"
+                              [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+          
+            <!-- Position Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+          
+            <!-- Name Column -->
+            <ng-container matColumnDef="province">
+              <th mat-header-cell *matHeaderCellDef> province </th>
+              <td mat-cell *matCellDef="let element"> {{element.province}} </td>
+            </ng-container>
+          
+            <!-- Weight Column -->
+            <ng-container matColumnDef="city">
+              <th mat-header-cell *matHeaderCellDef> city </th>
+              <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+            </ng-container>
+          
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="county">
+              <th mat-header-cell *matHeaderCellDef> county </th>
+              <td mat-cell *matCellDef="let element"> {{element.county}} </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="village_displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: village_displayedColumns;"
+                (click)="selection.toggle(row)">
+            </tr>
+          </table>
+
+
+
+        <!-- <div>
             <mat-checkbox class="selectall" (change)="checkUncheckAll()" [(ngModel)]="masterSelected">选择所有-Select All</mat-checkbox>
         </div>
         <div class="villageselectionlist">
 
             <mat-card-content class="village-Content">
                 <table class="villagetable" mat-table [dataSource]="options">
-                    <!--  checkbox column  -->
                     <ng-container matColumnDef="isSelected">
                         <th mat-header-cell *matHeaderCellDef>选择</th>
                         <mat-cell *matCellDef="let element">
                             <mat-checkbox style="margin-top: 100%;" (change)="isAllCheckBoxSelected($event,element)" [checked]="masterSelected"></mat-checkbox>
                         </mat-cell>
                     </ng-container>
-                    <!-- Provice Column -->
+
                     <ng-container matColumnDef="village_name">
                         <th mat-header-cell *matHeaderCellDef>村庄名字</th>
                         <td mat-cell *matCellDef="let element">{{ element.name }}</td>
                     </ng-container>
 
-                    <!-- Name Column -->
                     <ng-container matColumnDef="province">
                         <th mat-header-cell *matHeaderCellDef>省</th>
                         <td mat-cell *matCellDef="let element">{{ element.province }}</td>
                     </ng-container>
 
-                    <!-- Weight Column -->
                     <ng-container matColumnDef="city">
                         <th mat-header-cell *matHeaderCellDef>市</th>
                         <td mat-cell *matCellDef="let element">{{ element.city }}</td>
-                        <!-- <button>hallo</button> -->
                     </ng-container>
 
-                    <!-- Symbol Column -->
                     <ng-container matColumnDef="county">
                         <th mat-header-cell *matHeaderCellDef>县</th>
                         <td mat-cell *matCellDef="let element">{{ element.county }}</td>
@@ -101,7 +148,7 @@
                     ></tr>
                 </table>
             </mat-card-content>
-        </div>
+        </div> -->
 
         <mat-paginator [length]="length"
                [pageSize]="pageSize"
