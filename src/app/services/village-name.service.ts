@@ -11,7 +11,8 @@ export class VillageNameService {
   // auto-complete dropdown: only retrieve 100 village
   async getVillages(): Promise<VillageNameDisplay> {
     //Village[]{
-    return this.httpService.get('namesearch');
+    // return this.httpService.get('namesearch');
+    return this.httpService.get('namesearch?pageNumber=1');
   }
 
   // async getMultiVillages(): Promise<BasicVillageInformation> {

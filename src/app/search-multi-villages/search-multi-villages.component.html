@@ -237,7 +237,7 @@
             <mat-form-field class="example-form-field" appearance="fill">
                 <mat-label>输入开始年份， 例如1949</mat-label>
                 <input matInput type="text" [(ngModel)]="startYearInput" [disabled]="closeYearRange">
-                <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="startYearInput=''">
                   <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
@@ -245,7 +245,7 @@
             <mat-form-field class="example-form-field" appearance="fill">
                 <mat-label>输入结束年份， 晚于开始年份</mat-label>
                 <input matInput type="text" [(ngModel)]="endYearInput" [disabled]="closeYearRange">
-                <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="endYearInput=''">
                   <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>

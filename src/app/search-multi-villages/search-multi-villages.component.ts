@@ -531,6 +531,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
 
+  //TODO
   checkboxYear(event, selectedYear, checked) {
     // let selectedYear = year.toString();
 
@@ -538,8 +539,10 @@ export class SearchMultiVillagesComponent implements OnInit {
       this.SingleYearIsChecked = true;
       this.checked_year_only.push(selectedYear);
       this.closeSingleYear = false;
+      this.closeYearRange = true;
     }
     else{
+      // this.closeYearRange = false;
       this.SingleYearIsChecked = false;
       let removeIndex = this.checked_year_only.indexOf(selectedYear);
       if(removeIndex > -1 ) this.checked_year_only.splice(removeIndex, this.checked_year_only.length)
@@ -758,7 +761,7 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.inputed_year_range = [];
         this.displayYearRange = "";
       }
-      else this.closeSingleYear = false;
+      // else this.closeSingleYear = false;
 
       if(this.endYearInput < this.startYearInput) 
       alert("end Year input should be larger or euqual to start year input");
@@ -779,6 +782,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.singleYearSelected = event.source._elementRef.nativeElement.innerText;
     //IMPORTANT
     if (event.checked) {
+      alert("check")
       // m;
       this.closeYearRange = true;
       // console.log("singleYearSelected", this.singleYearSelected);
