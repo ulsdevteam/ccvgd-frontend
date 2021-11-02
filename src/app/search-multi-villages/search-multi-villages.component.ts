@@ -194,6 +194,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   nameOfVillage: any[] = [];
   isNamesTab: boolean = false;
 
+  topicHasYearSelection: string;
+
 
   SingleYearIsChecked: boolean;
   closeSingleYear: boolean = false;
@@ -491,6 +493,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.category2Set.clear();
     this.showAllNamesDataListUnique = [];
     // this.showAllNamesDataRow.clear();
+    let topicHasYearSelectionSet = new Set();
 
     const checkedIndex = this.multiVillages_checkList.filter(item => item.isSelected === true);
     console.log("this.selected index",checkedIndex.length)
@@ -503,6 +506,11 @@ export class SearchMultiVillagesComponent implements OnInit {
       
     }
     for(let index in this.responseData) {
+      // console.log(this.responseData[index].year)
+      //some has year data but data [] is empty
+      if(this.responseData[index].year && this.responseData[index].year.length >= 1) {
+        topicHasYearSelectionSet.add(this.responseData[index].tableNameChinese)
+      }
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
         this.currentTopicData = this.responseData[index];
         console.log("currentTopicData",this.currentTopicData);
@@ -528,7 +536,7 @@ export class SearchMultiVillagesComponent implements OnInit {
           else {
             this.isNamesTab = false;
             for(let item in this.responseData[index].data){
-              this.category1Set.add(this.responseData[index].data[item].category1);
+              this.category1Set.add(this.convertToChinese(this.responseData[index].data[item].category1));
             }
           }
         }
@@ -537,10 +545,8 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
 
-    //   if(checkedIndex.length === 0) {
-    //     this.category1Set.clear();
-    //     this.category2Set.clear();
-    // }
+  this.topicHasYearSelection = [...topicHasYearSelectionSet].join(" ");
+  // console.log("this.topicHasYearSelection",this.topicHasYearSelection)
 }
 
   removeDuplicates(originalArray, prop) {
@@ -557,7 +563,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
 
   tabChanged(event) {
-
     console.log("this reponse", this.responseData)
     this.currentSelectedTopic = event.tab.textLabel;
     this.onLoadCurrentTabData(this.currentSelectedTopic);
@@ -596,12 +601,15 @@ export class SearchMultiVillagesComponent implements OnInit {
           if(item[this.checkedVillagesID[eachID]]) {
             const currentTopicEN = this.middleTabsMap.get(this.currentSelectedTopic);
             const getYearObject = item[this.checkedVillagesID[eachID]][0][currentTopicEN];
-            for(let eachYearIndex in getYearObject.year_only) {
+            // if(getYearObject) {
+              for(let eachYearIndex in getYearObject.year_only) {
               if(this.totalYearOnly.indexOf(getYearObject.year_only[eachYearIndex]) === -1) {
                 this.totalYearOnly.push(getYearObject.year_only[eachYearIndex]);
                 this.totalYearOnly.sort();
               }
             }
+            // }
+            
           }
         });
         }
@@ -708,7 +716,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       for(let item in this.currentTopicData.data) {
         if(this.currentTopicData.data[item].category1 && this.currentTopicData.data[item].category1 === selectedCategory1List[i]) {
           if(this.currentTopicData.data[item].category2 && this.currentTopicData.data[item].category2 !== "null") {
-          this.category2Set.add(this.currentTopicData.data[item].category2);
+          this.category2Set.add(this.convertToChinese(this.currentTopicData.data[item].category2));
         }}
       }
     }
@@ -767,7 +775,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       for(let item in this.currentTopicData.data) {
         if(this.currentTopicData.data[item].category2 && this.currentTopicData.data[item].category2 === selectedCategory2List[i]) {
           if(this.currentTopicData.data[item].category3 && this.currentTopicData.data[item].category3 !== "null") {
-          this.category3Set.add(this.currentTopicData.data[item].category3);
+          this.category3Set.add(this.convertToChinese(this.currentTopicData.data[item].category3));
         }}
       }
     }
@@ -787,6 +795,23 @@ export class SearchMultiVillagesComponent implements OnInit {
       // console.log(this.responseData);
     }
 
+    convertToChinese(word) {
+        const getChineseWord = word
+            .split('')
+            .filter((char) => /\p{Script=Han}/u.test(char))
+            .join('');
+        
+        // console.log("getChineseWord",getChineseWord)
+        return getChineseWord
+          // if (
+          //   this.middleBoxCategory1.indexOf(getChineseWordCategory1) == -1
+          // ) {
+          //   this.middleBoxCategory1.push(getChineseWordCategory1);
+          //   this.cat1Cat2Map.set(item.category1, item.category2);
+          //   // console.log('trigger');
+          //   // this.category1Map.set(element.id, this.middleBoxCategory1);
+          // }
+    }
   //       //TODO
   //       //   const getChineseWordCategory1 = item.category1
   //       //     .split('')

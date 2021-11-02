@@ -31,7 +31,7 @@
                     <mat-select [(ngModel)]="countySearch" (ngModelChange)="changeCounty($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let county of countyList" [value]="county">
-                            {{ county }}<mat-card>Simple card</mat-card>
+                            {{ county }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -131,8 +131,7 @@
 
     <mat-card class="container2">
         <p class="select-headers">选择主题-Select Topics</p>
-
-        <!-- <mat-card-header class="topics"> -->
+        <mat-card *ngIf="topicHasYearSelection" style="background-color:rgb(129, 201, 195)">{{topicHasYearSelection}} has Year Data</mat-card>
         <div class="topics">
 
             <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabChanged($event)" #tabGroup>
@@ -272,7 +271,7 @@
 
 
         <div class="yearselect">年份-Year</div>
-        <mat-card *ngIf="closeYearRange && closeSingleYear">No Single Year Data for selected topic</mat-card>
+        <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">No Single Year Data for selected topic</mat-card>
         <div class="singleyear">
             <div class="yearselectionlist">
                 <mat-selection-list #listSingleYear>
@@ -288,7 +287,7 @@
             </div>
             <div class="yearselectedlist" >
                 <div class="year-selected-header"> 已选年份-Selected Single Year Or Year Range</div>
-                <mat-card *ngIf="closeYearRange && closeSingleYear">No Year Range Data for selected topic</mat-card>
+                <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">No Year Range Data for selected topic</mat-card>
                 <p *ngIf="closeYearRange">已选single-year - 数量{{listSingleYear.selectedOptions.selected.length}}</p>
 
                 <div *ngIf="!closeYearRange">
