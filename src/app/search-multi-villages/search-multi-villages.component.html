@@ -1,10 +1,7 @@
 <div class="flexcontainer">
     <!-- <div class="container1"> -->
     <mat-card class="container1">
-
         <p class="select-headers">Select Villages-选择村庄 </p>
-        <!-- <mat-card-header class="dropdown-header"> -->
-
             <div>
             <!-- <mat-card-title>Select Villages-选择村庄 </mat-card-title> -->
             <div class="geologyDropdownList">
@@ -34,7 +31,7 @@
                     <mat-select [(ngModel)]="countySearch" (ngModelChange)="changeCounty($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let county of countyList" [value]="county">
-                            {{ county }}
+                            {{ county }}<mat-card>Simple card</mat-card>
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -140,6 +137,9 @@
 
             <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabChanged($event)" #tabGroup>
                 <mat-tab label="{{ item }}" *ngFor="let item of displayedMiddleTabs">
+
+                    <mat-card *ngIf="noCategoryData" class="notes">{{noCategoryNote}}</mat-card>
+
                     <div class="economy">
 
                         <div *ngIf="isNamesTab">
@@ -240,7 +240,7 @@
         <div class="yearrangeselect">年段-Year Range</div>
         <div class="yearrange">
 
-            <mat-form-field class="example-form-field" appearance="fill">
+            <mat-form-field class="example-form-field" appearance="fill" [matTooltip]="tooltip_start_year">
                 <mat-label>输入开始年份， 例如1949</mat-label>
                 <input matInput type="text" [(ngModel)]="startYearInput" [disabled]="closeYearRange">
                 <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="startYearInput=''">
@@ -248,7 +248,7 @@
                 </button>
             </mat-form-field>
             至
-            <mat-form-field class="example-form-field" appearance="fill">
+            <mat-form-field class="example-form-field" appearance="fill" [matTooltip]="tooltip_end_year">
                 <mat-label>输入结束年份， 晚于开始年份</mat-label>
                 <input matInput type="text" [(ngModel)]="endYearInput" [disabled]="closeYearRange">
                 <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="endYearInput=''">
@@ -272,6 +272,7 @@
 
 
         <div class="yearselect">年份-Year</div>
+        <mat-card *ngIf="closeYearRange && closeSingleYear">No Single Year Data for selected topic</mat-card>
         <div class="singleyear">
             <div class="yearselectionlist">
                 <mat-selection-list #listSingleYear>
@@ -285,9 +286,9 @@
                 </mat-selection-list>
 
             </div>
-            <div class="yearselectedlist">
+            <div class="yearselectedlist" >
                 <div class="year-selected-header"> 已选年份-Selected Single Year Or Year Range</div>
-
+                <mat-card *ngIf="closeYearRange && closeSingleYear">No Year Range Data for selected topic</mat-card>
                 <p *ngIf="closeYearRange">已选single-year - 数量{{listSingleYear.selectedOptions.selected.length}}</p>
 
                 <div *ngIf="!closeYearRange">

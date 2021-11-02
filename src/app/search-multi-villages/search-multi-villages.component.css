@@ -397,7 +397,7 @@ mat-list-option[aria-selected="true"] {
 
 .selectList:nth-child(odd),
 .row:nth-child(odd) {
-    background-color: #99c9ee;
+    /* background-color: #99c9ee; */
 }
 
 
@@ -432,4 +432,8 @@ mat-card {
     /* min-height: 300px;
         max-height: 300px; */
     overflow: scroll;
+}
+
+.notes{
+    background-color: rgb(238, 140, 28);
 }

@@ -26,6 +26,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { DialogComponent } from './dialog/dialog.component';
 import { MatCardModule } from "@angular/material/card";
+import { FormControl } from "@angular/forms";
 
 
 @Component({
@@ -37,6 +38,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   @ViewChild("myYearDiv", { static: false }) myYearDiv: ElementRef;
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
   @Input() okIsClick;
+  formControl = new FormControl(['angular']);
 
   comfirmDelete: boolean; 
   options;
@@ -172,6 +174,10 @@ export class SearchMultiVillagesComponent implements OnInit {
   finalPostTopicList: any[] = [];
   value1 = "";
 
+//note is not category data under topic
+  noCategoryData: boolean;
+  noCategoryNote: string = "";
+
   //
   currentTopicData: any;
   category1Set = new Set();
@@ -193,9 +199,14 @@ export class SearchMultiVillagesComponent implements OnInit {
   closeSingleYear: boolean = false;
   closeYearRange: boolean = false;
 
+  // tooltip field
+  tooltip_start_year: string = "Please enter start year for searching";
+  tooltip_end_year: string = "Please enter end year for searching";
+
   // ["village","naturalenvironment","naturaldisasters", "fourthlastNames",
   // "firstavailabilityorpurchase","ethnicgroups","population","military","economy","familyplanning","education"];
-  defaultTopicList = ["village", "fourthlastNames","ethnicgroups",
+  defaultTopicList = ["village", "naturalenvironment","naturaldisasters",
+  "fourthlastNames","firstavailabilityorpurchase","ethnicgroups",
   "population","military","economy","familyplanning","education"];
   defaultTopics_InCh = ["村庄基本信息","自然环境","自然灾害", "姓氏",
       "第一次拥有或购买年份","民族","军事政治","经济","计划生育"];
@@ -478,26 +489,51 @@ export class SearchMultiVillagesComponent implements OnInit {
     
     this.category1Set.clear();
     this.category2Set.clear();
-
+    this.showAllNamesDataListUnique = [];
     // this.showAllNamesDataRow.clear();
 
     const checkedIndex = this.multiVillages_checkList.filter(item => item.isSelected === true);
     console.log("this.selected index",checkedIndex.length)
 
-    if(this.currentSelectedTopic === undefined) this.currentSelectedTopic = "村庄基本信息";
+    if(this.currentSelectedTopic === undefined) {
+      this.currentSelectedTopic = "村庄基本信息";
+      this.closeSingleYear = true;
+      this.closeYearRange = true;
+      this.tooltip_start_year = this.tooltip_end_year = `current ${this.currentSelectedTopic} selection do NOT have year field data`
+      
+    }
     for(let index in this.responseData) {
       if(this.responseData[index].tableNameChinese === this.currentSelectedTopic) {
         this.currentTopicData = this.responseData[index];
-        console.log(this.currentTopicData);
+        console.log("currentTopicData",this.currentTopicData);
 
-        if(this.responseData[index].tableNameChinese === "姓氏")  this.getAllCurrentLastNames();
+        if(this.currentTopicData.data.length === 0) {
+          this.noCategoryData = true;
+          this.noCategoryNote = `current selected topic 
+          ${this.currentTopicData.tableNameChinese} has no category data`;
+        }
 
         else {
-          this.isNamesTab = false;
-          for(let item in this.responseData[index].data){
-            this.category1Set.add(this.responseData[index].data[item].category1);
+          this.noCategoryData = false;
+          if(this.currentTopicData.year === undefined) {
+            this.closeSingleYear = true;
+            this.closeYearRange = true;
+            this.tooltip_start_year = this.tooltip_end_year = `current ${this.currentTopicData.tableNameChinese} selection do NOT have year field data`
+          }
+          else{
+            this.closeSingleYear = false;
+            this.closeYearRange = false;
+          }
+          if(this.responseData[index].tableNameChinese === "姓氏")  this.getAllCurrentLastNames();
+          else {
+            this.isNamesTab = false;
+            for(let item in this.responseData[index].data){
+              this.category1Set.add(this.responseData[index].data[item].category1);
+            }
           }
         }
+
+
     }
   }
 
@@ -524,10 +560,25 @@ export class SearchMultiVillagesComponent implements OnInit {
 
     console.log("this reponse", this.responseData)
     this.currentSelectedTopic = event.tab.textLabel;
+    this.onLoadCurrentTabData(this.currentSelectedTopic);
     this.getTopicWithCategories();
     this.getYearWithTopic();
+    // this.showAllNamesDataListUnique = [];
     //clear name sets
 
+  }
+
+  onLoadCurrentTabData(currentTab) {
+    console.log("currentTab",currentTab)
+
+    if(this.closeSingleYear && this.closeYearRange) {
+      this.tooltip_start_year = this.tooltip_end_year 
+      = `current ${currentTab} selection do NOT have year field data`
+    }
+    if(this.noCategoryData) {
+      this.noCategoryNote = `current selected topic 
+      ${currentTab} has no category data`;
+    }
   }
 
   //TODO
