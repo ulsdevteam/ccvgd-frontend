@@ -222,6 +222,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   pageEvent: PageEvent;
   currentPageNum: number = 1;
   form
+  selectedCategoriesDisplay: string;
 
   constructor(
     private villageNameService: VillageNameService,
@@ -441,7 +442,7 @@ export class SearchMultiVillagesComponent implements OnInit {
         // "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
         // "familyplanning", "education"],
         topic: this.defaultTopicList,
-        year: []
+        // year: []
       }
     );
 
@@ -568,6 +569,11 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.onLoadCurrentTabData(this.currentSelectedTopic);
     this.getTopicWithCategories();
     this.getYearWithTopic();
+
+    for(let item of this.displayTopicCategory) {
+      // console.log(item);
+      this.selectedCategoriesDisplay = [...item.category1List].join(",")
+    }
     // this.showAllNamesDataListUnique = [];
     //clear name sets
 
@@ -668,8 +674,9 @@ export class SearchMultiVillagesComponent implements OnInit {
           //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy", 
           //   "familyplanning", "education"],
           topic: this.finalPostTopicList.length > 0 ? this.finalPostTopicList : this.defaultTopicList,
-          year: this.checked_year_only,
-          year_range: this.inputed_year_range
+          //TODO
+          // year: this.checked_year_only,
+          // year_range: this.inputed_year_range
           // year_range: [2009, 2012],
       }
     );
@@ -728,40 +735,14 @@ export class SearchMultiVillagesComponent implements OnInit {
       })  
       this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
 
+      // console.log("displayTopicCategory",this.displayTopicCategory)
 
+      for(let item of this.displayTopicCategory) {
+        // console.log(item);
+        this.selectedCategoriesDisplay = [...item.category1List].join(",")
+      }
 
-
-    
-    
-
-
-
-
-    // let results_c1 = [];
-    // //BUG
-    // // this.displayTopicCategory = [];
-    // for(let index in this.topicCategory) {
-    //   for(let item in checkedList) { 
-    //     checkedList[item].isSelected = true; 
-    //     if(results_c1.indexOf(checkedList[item].category1) === -1) {
-    //       results_c1.push(checkedList[item].category1);
-    //     }
-    //   }
-    //   this.category2_checkedList = checkedList;
-    // }
-
-    // if(results_c1.length > 0) {
-    //   this.displayTopicCategory.push({
-    //     selectedTopic: this.currentSelectedTopic,
-    //     selectedCategoryList: results_c1
-    //   })  
-    // }
-
-    // this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
-    //     // console.log("topic select",this.displayTopicCategory);
-
-    //TODO
-    // window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));
+      // console.log("this.selectedCategoriesDisplay",this.selectedCategoriesDisplay)
   }
 
   storeUserSelection() {

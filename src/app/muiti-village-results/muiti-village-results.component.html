@@ -1,31 +1,6 @@
-<div style="margin: 5%;">
-    <!-- <button (click)="downloadCurrentTopic($event, eachCategory.topicName)">download {{eachCategory.topicName}}</button> -->
-    <!-- <a mat-raised-button [href]="eachCategory.downloadUrl" target="_blank" class="downloadBtn" style="margin-top: 3%;">
-        <mat-icon color="primary">download</mat-icon>
-        {{eachCategory.topicName}}</a> -->
-
-    <div>
-        <table mat-table [dataSource]="gazetteerinformation_datasource" class="mat-elevation-z8" style="border-radius: 5%;">
-            <ng-container *ngFor="let col of gazetterinfo_displayColumns" [matColumnDef]="col">
-                <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
-                <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="gazetterinfo_displayColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns:gazetterinfo_displayColumns"></tr>
-
-            <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="9999">
-                    😟 No data matching the Search
-                </td>
-            </tr>
-        </table>
-
-        <!-- <mat-paginator #mainPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
-    </div>
-</div>
 
 
+<mat-spinner aria-label="hello">hello</mat-spinner>
 
 
 

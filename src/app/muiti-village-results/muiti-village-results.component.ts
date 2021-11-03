@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import { environment } from '../../environments/environment';
+// import * as XLSX from 'xlsx';
 
 //TODO
 export interface PeriodicElement {
@@ -112,12 +113,15 @@ export class MuitiVillageResultsComponent implements OnInit {
   
 
   async getData() {
+    
     //TODO POST TO MUCH
     // console.log('get it !', await this.multiVillageFilterService.getUserList);
     this.userInput = await this.multiVillageFilterService.getUserList;
-    console.log("this.userInput",this.userInput)
+    // console.log(this.userInput.topic.push("gazetteerinformation"))
+    // console.log("this.userInput",this.userInput)
 
     this.searchResultData  = await this.multiVillageFilterService.onPostMultiVillages(this.userInput);
+    console.log("this.searchResultData",this.searchResultData)
 
 
     if(this.searchResultData.code === 4001) {
@@ -128,18 +132,26 @@ export class MuitiVillageResultsComponent implements OnInit {
       this.router.navigate(["/multi-village-search"]);
     }
 
-    this.gazetteerinformation_datasource = new MatTableDataSource(this.searchResultData[1].data);
-    this.gazetterinfo_displayColumns =  this.removeVillageId(this.searchResultData[1].field),
+
+    // console.log("this.searchResultData[0].data",this.searchResultData[0].data)
+    // console.log("1",this.searchResultData[1].data)
+    // this.gazetteerinformation_datasource = new MatTableDataSource(this.searchResultData[0].data);
+    // this.gazetterinfo_displayColumns =  this.removeVillageId(this.searchResultData[0].field);
+    // console.log("displayResultsData",this.displayResultsData)
+    
   
 
     console.log("data", this.searchResultData)
         for(let index in this.searchResultData) {
           this.dataSource = this.searchResultData[index].data;
 
-          // console.log(this.searchResultData[index])
+          console.log(this.userSelectionList)
+
           for(let item in this.userSelectionList) {
 
-            if(this.userSelectionList[item].selectedTopic === this.searchResultData[index].tableNameChinese) {
+            if(this.userSelectionList[item].selectedTopic === this.searchResultData[index].tableNameChinese
+              || this.userSelectionList[item].selectedTopic === "村志基本信息"
+              ) {
 
               //advance filter - display only user selected categories
               const each_res = this.userSelectionList[item].hasCategory === true ? this.searchResultData[index].data.filter(i => 

@@ -216,6 +216,17 @@
             <div class="topic-selected-header">已选主题-Selected Topics</div>
 
 
+            <div *ngFor="let eachList of displayTopicCategory">
+            <mat-card class="example-card">
+                <mat-card-title-group>
+                  <mat-card-subtitle>{{ eachList.selectedTopic }}下 -- 子类1</mat-card-subtitle>
+                  <mat-card-subtitle>{{selectedCategoriesDisplay}}</mat-card-subtitle>
+                </mat-card-title-group>
+                <mat-card-content>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
 
 
             <div *ngFor="let eachList of displayTopicCategory">
@@ -271,7 +282,7 @@
 
 
         <div class="yearselect">年份-Year</div>
-        <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">No Single Year Data for selected topic</mat-card>
+        <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">Please search directly. "Select Time" is not applicable for this topic.</mat-card>
         <div class="singleyear">
             <div class="yearselectionlist">
                 <mat-selection-list #listSingleYear>
@@ -287,7 +298,7 @@
             </div>
             <div class="yearselectedlist" >
                 <div class="year-selected-header"> 已选年份-Selected Single Year Or Year Range</div>
-                <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">No Year Range Data for selected topic</mat-card>
+                <!-- <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">Please search directly. "Select Time" is not applicable for this topic.</mat-card> -->
                 <p *ngIf="closeYearRange">已选single-year - 数量{{listSingleYear.selectedOptions.selected.length}}</p>
 
                 <div *ngIf="!closeYearRange">
