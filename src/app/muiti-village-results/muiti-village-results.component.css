@@ -8,3 +8,8 @@ table {
 }
 
 .downloadBtn {}
+
+
+.twitter-like.mat-progress-spinner{
+    display: inline;
+}

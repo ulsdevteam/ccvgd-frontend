@@ -27,6 +27,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { DialogComponent } from './dialog/dialog.component';
 import { MatCardModule } from "@angular/material/card";
 import { FormControl } from "@angular/forms";
+import {MatSelectionList} from '@angular/material/list';
 
 
 @Component({
@@ -39,6 +40,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
   @Input() okIsClick;
   formControl = new FormControl(['angular']);
+  @ViewChild('list1', {static: false}) private list1: MatSelectionList;
+  @ViewChild('list2', {static: false}) private list2: MatSelectionList;
 
   comfirmDelete: boolean; 
   options;
@@ -184,6 +187,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   category2Set = new Set();
   category3Set = new Set();
   //
+  category2Res;
 
   // name *******
   allNamesData: any[] = [];
@@ -224,6 +228,9 @@ export class SearchMultiVillagesComponent implements OnInit {
   form
   selectedCategoriesDisplay: string;
 
+  selectedOptionsC2;
+  C2_selected;
+
   constructor(
     private villageNameService: VillageNameService,
     private provinceCityCountyService: ProvinceCityCountyService,
@@ -239,6 +246,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     // console.log(this.filteredData);
     // this.provinceList = this.provinceCityCountyService.getProvince();
   }
+ 
 
   ngOnInit(): void {
     // this.getServerData(null);
@@ -546,6 +554,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
 
+  console.log("this.category1Set",this.category1Set)
   this.topicHasYearSelection = [...topicHasYearSelectionSet].join(" ");
   // console.log("this.topicHasYearSelection",this.topicHasYearSelection)
 }
@@ -628,6 +637,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       })
     }
   }
+
 
   //TODO
   checkboxYear(event, selectedYear, checked) {
@@ -716,17 +726,34 @@ export class SearchMultiVillagesComponent implements OnInit {
       
       this.router.navigate(["/multi-village-search-result"]);
     }
+
+    selectAll(){
+      this.list1.selectAll();
+      this.list2.selectAll();
+    }
   // options: MatListOption[] - call multi-times
   category1Selection(selectedCategory1List) {
+
+    // this.selectAll_list2();
+    console.log("C2_selected",this.C2_selected)
+
+
     this.category2Set.clear();
     for(let i = 0; i < selectedCategory1List.length; i++) {
       for(let item in this.currentTopicData.data) {
-        if(this.currentTopicData.data[item].category1 && this.currentTopicData.data[item].category1 === selectedCategory1List[i]) {
+        let eachC1 = this.currentTopicData.data[item].category1;
+        let eachC2 = this.currentTopicData.data[item].category2;
+        if(eachC1 && this.convertToChinese(eachC1) === selectedCategory1List[i]) {
           if(this.currentTopicData.data[item].category2 && this.currentTopicData.data[item].category2 !== "null") {
-          this.category2Set.add(this.convertToChinese(this.currentTopicData.data[item].category2));
+            let res_c2 = this.convertToChinese(this.currentTopicData.data[item].category2);
+              this.category2Set.add({
+                category2: this.convertToChinese(this.currentTopicData.data[item].category2),
+                isSelected: true
+              });
         }}
       }
     }
+
 
       this.displayTopicCategory.push({
         selectedTopic: this.currentSelectedTopic,
@@ -742,8 +769,15 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.selectedCategoriesDisplay = [...item.category1List].join(",")
       }
 
+      this.list2.selectAll();
+      console.log("this.category2Set",this.category2Set)
+
       // console.log("this.selectedCategoriesDisplay",this.selectedCategoriesDisplay)
   }
+
+   getUniqueListBy(arr, key) {
+    return [...new Map(arr.map(item => [item[key], item])).values()]
+}
 
   storeUserSelection() {
     window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));

@@ -160,8 +160,8 @@
                             <div class="left">
 
 
-
-
+                                <button (click)="selectAll()">selectAll</button>
+                                
                                 <mat-selection-list #list1 [(ngModel)]="category1_Option" (ngModelChange)="category1Selection($event)">
                                     <ng-container>
                                         <mat-list-option class="selectList" *ngFor="let category1 of category1Set" checkboxPosition="before" style="font-size: 14px;" [value]="category1">
@@ -185,8 +185,12 @@
                                 <!-- <p>{{ item }} 下类别</p> -->
                                 <mat-selection-list #list2 [(ngModel)]="category2_Option" (ngModelChange)="category2Selection($event)">
                                     <ng-container>
-                                        <mat-list-option class="selectList" *ngFor="let item of category2Set" checkboxPosition="before" style="font-size: 14px">
-                                            {{ item }}
+                                        <mat-list-option class="selectList" *ngFor="let item of category2Set" 
+                                        checkboxPosition="before" 
+                                        style="font-size: 14px"
+                                        [selected]="item.isSelected"
+                                        >
+                                            {{ item.category2 }}
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list>

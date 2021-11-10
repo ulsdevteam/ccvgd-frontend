@@ -1,12 +1,13 @@
 import { MatTableDataSource } from "@angular/material/table";
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import { Component, ElementRef, Inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { MultiVillageFilterService } from "../services/multi-village-filter.service";
 import { MatPaginator } from "@angular/material/paginator";
 import { Router } from "@angular/router";
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, ENTER, P} from '@angular/cdk/keycodes';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import { environment } from '../../environments/environment';
-// import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog'
 
 //TODO
 export interface PeriodicElement {
@@ -40,6 +41,7 @@ export interface Fruit {
 })
 export class MuitiVillageResultsComponent implements OnInit {
   @ViewChildren(MatPaginator) mainPaginator = new QueryList<MatPaginator>();
+  @ViewChild('TABLE') table: ElementRef;
   // @Input() dataSource;
   // @ViewChild("mainPaginator") mainPaginator: MatPaginator;
 
@@ -86,8 +88,10 @@ export class MuitiVillageResultsComponent implements OnInit {
   gazetteerinformationDisplay: any[] = []
   gazetteerinformation_datasource;
   gazetterinfo_displayColumns: any[] = []
+  pageIsLoading: boolean = true;
 
-  constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router) {}
+  constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router,
+    public dialog: MatDialog) {}
 
 
 
@@ -121,15 +125,29 @@ export class MuitiVillageResultsComponent implements OnInit {
     // console.log("this.userInput",this.userInput)
 
     this.searchResultData  = await this.multiVillageFilterService.onPostMultiVillages(this.userInput);
+
     console.log("this.searchResultData",this.searchResultData)
 
+    if(this.searchResultData.length > 0) this.pageIsLoading = false;
+    else this.pageIsLoading = true;
+
+    if(this.pageIsLoading) {
+      const dialogRef = this.dialog.open(PageLoadDialog, {
+        width: '250px',
+        data: this.pageIsLoading
+      });
+
+      console.log("dialogRef",dialogRef)
+    }
 
     if(this.searchResultData.code === 4001) {
       this.router.navigate(["/multi-village-search"]);
+      // this.pageIsLoading = false
     }
     if(this.searchResultData.data && this.searchResultData.data.length === 0) {
       alert(`后端返回报错 !  \n  error message: ${this.searchResultData.error}`);
       this.router.navigate(["/multi-village-search"]);
+      // this.pageIsLoading = false;
     }
 
 
@@ -155,7 +173,7 @@ export class MuitiVillageResultsComponent implements OnInit {
 
               //advance filter - display only user selected categories
               const each_res = this.userSelectionList[item].hasCategory === true ? this.searchResultData[index].data.filter(i => 
-                this.userSelectionList[item].category1List.indexOf(i.category1) !== -1) : this.searchResultData[index].data;
+                this.userSelectionList[item].category1List.indexOf(this.convertToChinese(i.category1)) !== -1) : this.searchResultData[index].data;
 
               this.displayResultsData.push({
                 topicName: this.searchResultData[index].tableNameChinese,
@@ -176,6 +194,17 @@ export class MuitiVillageResultsComponent implements OnInit {
         this.onlyGetSelectedCategoriesRow();
   }
 
+
+  convertToChinese(word) {
+    const getChineseWord = word
+        .split('')
+        .filter((char) => /\p{Script=Han}/u.test(char))
+        .join('');
+    
+    // console.log("getChineseWord",getChineseWord)
+    return getChineseWord;
+  }
+
   
     filterDataSource(event: Event, currentDataSource) {
       // console.log("currentDataSource",currentDataSource)
@@ -189,6 +218,27 @@ export class MuitiVillageResultsComponent implements OnInit {
     // console.log(topicName)
 
   }
+
+
+
+  exportAsExcel(topicName)
+    {
+      console.log("table",this.table)
+      console.log("topicName",topicName)
+      console.log("this.table.nativeElement",this.table.nativeElement)
+      const ws: XLSX.WorkSheet=XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, `${topicName}`);
+      /* save to file */
+      XLSX.writeFile(wb, `${topicName}.xlsx`);
+    }
+
+//   exportAsExcel(topicName, dataSource) {
+//     const workSheet = XLSX.utils.json_to_sheet(dataSource, {header:['dataprop1', 'dataprop2']});
+//     const workBook: XLSX.WorkBook = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(workBook, workSheet, 'SheetName');
+//     XLSX.writeFile(workBook, 'filename.xlsx');
+// }
 
   onlyGetSelectedCategoriesRow() {}
 
@@ -218,6 +268,24 @@ export class MuitiVillageResultsComponent implements OnInit {
     if (index >= 0) {
       this.fruits.splice(index, 1);
     }
+  }
+
+}
+
+
+
+@Component({
+  selector: 'PageLoadDialog',
+  templateUrl: 'PageLoadDialog.html',
+})
+export class PageLoadDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<PageLoadDialog>,
+    @Inject(MAT_DIALOG_DATA) public data) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }
