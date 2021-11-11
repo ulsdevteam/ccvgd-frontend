@@ -400,6 +400,10 @@ mat-list-option[aria-selected="true"] {
     /* background-color: #99c9ee; */
 }
 
+mat-list-option[aria-selected="true"] {
+    background: rgba(0, 139, 139, 0.7);
+}
+
 
 /* .selectList-Left:nth-child(odd) {
     background-color: #75b6e7;

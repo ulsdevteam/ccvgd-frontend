@@ -187,7 +187,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   category2Set = new Set();
   category3Set = new Set();
   //
-  category2Res;
+  category2Res = [];
 
   // name *******
   allNamesData: any[] = [];
@@ -231,6 +231,10 @@ export class SearchMultiVillagesComponent implements OnInit {
   selectedOptionsC2;
   C2_selected;
 
+  currentProvince: string;
+  currentCity: string;
+  currentCounty: string;
+
   constructor(
     private villageNameService: VillageNameService,
     private provinceCityCountyService: ProvinceCityCountyService,
@@ -250,8 +254,37 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   ngOnInit(): void {
     // this.getServerData(null);
-    this.fetchVillageData(this.currentPageNum);
+    //later use
+    // this.fetchVillageData(this.currentPageNum);
+    this.getAllProvince();
   }
+
+  getAllProvince() {
+    this.multiVillageFilterService.getAllProvinces().then((result) => {
+      this.provinceList = result
+    })
+  }
+
+  getCityFromProvince(selectProvince:string) {
+    this.currentProvince = selectProvince;
+    this.multiVillageFilterService.getAllCity(selectProvince).then((result) => {
+      this.cityList = result
+    })
+  }
+
+  getCountyFromCityProvince(selectedCity:string) {
+    this.currentCity = selectedCity;
+    this.multiVillageFilterService.getAllCounty(this.currentProvince, this.currentCity).then((result) => {
+      this.countyList = result;
+    })
+  }
+
+
+
+  // getAllCity() {
+  //   console.log("citySearch")
+  // }
+
   fetchVillageData(pageNum) {
     this.villageNameService.getVillages(pageNum).then((result) => {
       this.totalList = result.data;
@@ -323,37 +356,37 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
    //********************* for checkbox field ************************************* */
 
-   changeProvince(data: Event) {
-    this.options.filter = data;
+  //  changeProvince(data: Event) {
+  //   this.options.filter = data;
 
-    this.cityList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.cityList.includes(item.city)) {
-        this.cityList.push(item.city);
-      }
-    });
+  //   this.cityList = [];
+  //   this.options.filteredData.map((item) => {
+  //     if (!this.cityList.includes(item.city)) {
+  //       this.cityList.push(item.city);
+  //     }
+  //   });
 
-    this.countyList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.countyList.includes(item.county)) {
-        this.countyList.push(item.county);
-      }
-    });
+  //   this.countyList = [];
+  //   this.options.filteredData.map((item) => {
+  //     if (!this.countyList.includes(item.county)) {
+  //       this.countyList.push(item.county);
+  //     }
+  //   });
 
-    this.filteredData = this.options.filteredData;
-  }
+  //   this.filteredData = this.options.filteredData;
+  // }
 
-  changeCity(data: Event) {
-    this.options.filter = data;
+  // changeCity(data: Event) {
+  //   this.options.filter = data;
 
-    this.countyList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.countyList.includes(item.county)) {
-        this.countyList.push(item.county);
-      }
-    });
-    this.filteredData = this.options.filteredData;
-  }
+  //   this.countyList = [];
+  //   this.options.filteredData.map((item) => {
+  //     if (!this.countyList.includes(item.county)) {
+  //       this.countyList.push(item.county);
+  //     }
+  //   });
+  //   this.filteredData = this.options.filteredData;
+  // }
 
   changeCounty(data) {
     this.options.filter = data;
@@ -737,6 +770,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     // this.selectAll_list2();
     console.log("C2_selected",this.C2_selected)
 
+    let storeC2 = [];
 
     this.category2Set.clear();
     for(let i = 0; i < selectedCategory1List.length; i++) {
@@ -745,14 +779,16 @@ export class SearchMultiVillagesComponent implements OnInit {
         let eachC2 = this.currentTopicData.data[item].category2;
         if(eachC1 && this.convertToChinese(eachC1) === selectedCategory1List[i]) {
           if(this.currentTopicData.data[item].category2 && this.currentTopicData.data[item].category2 !== "null") {
-            let res_c2 = this.convertToChinese(this.currentTopicData.data[item].category2);
-              this.category2Set.add({
-                category2: this.convertToChinese(this.currentTopicData.data[item].category2),
-                isSelected: true
-              });
+            let c2_object = {
+              category2: this.convertToChinese(this.currentTopicData.data[item].category2),
+              isSelected: true
+            }
+            storeC2.push(c2_object);
         }}
       }
     }
+
+    this.category2Res = this.removeDuplicates(storeC2, "category2");
 
 
       this.displayTopicCategory.push({

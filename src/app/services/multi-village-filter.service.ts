@@ -18,6 +18,27 @@ export class MultiVillageFilterService {
     private http: HttpClient
   ) {}
 
+  async getAllProvinces():Promise<any> {
+    let response = await this.httpService
+    .get("utils/province")
+    .catch(err => console.log("cannot get province"));
+    return response;
+  }
+
+  async getAllCity(province):Promise<any> {
+    let response = await this.httpService
+    .get(`utils/city?province=${province}`)
+    .catch(err => console.log(`no such province of city ${province}`))
+    return response
+  }
+
+  async getAllCounty(province,city):Promise<any> {
+    let response = await this.httpService
+    .get(`utils/county?province=${province}&city=${city}`)
+    .catch(err => console.log(`no such province of city ${province}`))
+    return response
+  }
+
   async filterSelectedTopics(choose: Village): Promise<any> {
     const selectedTopic = "economy";
 
