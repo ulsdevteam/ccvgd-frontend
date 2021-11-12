@@ -90,6 +90,8 @@ export class MuitiVillageResultsComponent implements OnInit {
   gazetterinfo_displayColumns: any[] = []
   pageIsLoading: boolean = true;
 
+  downloadAllUrl: string;
+
   constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router,
     public dialog: MatDialog) {}
 

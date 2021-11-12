@@ -44,6 +44,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   @ViewChild('list2', {static: false}) private list2: MatSelectionList;
 
   comfirmDelete: boolean; 
+  allVillageData;
   options;
   //TODO this is fake data for province, need change later
   provinceList: string[] = [];
@@ -52,6 +53,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   countyList: string[] = [];
   displayedColumns: string[] = [
     "isSelected",
+    // "select",
     "village_name",
     "province",
     "city",
@@ -234,6 +236,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   currentProvince: string;
   currentCity: string;
   currentCounty: string;
+  selection = new SelectionModel<any>(true, []);
 
   constructor(
     private villageNameService: VillageNameService,
@@ -257,6 +260,26 @@ export class SearchMultiVillagesComponent implements OnInit {
     //later use
     // this.fetchVillageData(this.currentPageNum);
     this.getAllProvince();
+    this.getAll1500Villages();
+  }
+
+
+  getAll1500Villages() {
+    this.multiVillageFilterService.getAll1500Villages().then((result) => {
+      // this.allVillageData = result
+      this.allVillageData = new MatTableDataSource<any>(result);
+      result.map((item) => {
+        this.multiVillages_checkList.push({
+          village_id: item.id,
+          village_name: item.name,
+          province: item.province,
+          city: item.city,
+          county: item.county,
+          isSelected: false
+        });
+      });
+      console.log("this.multiVillages_checkList",this.multiVillages_checkList)
+    })
   }
 
   getAllProvince() {
@@ -980,6 +1003,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
 // import {Component} from '@angular/core';
 import {PageEvent} from '@angular/material/paginator';
+import { SelectionModel } from "@angular/cdk/collections";
 
 // /**
 //  * @title Configurable paginator

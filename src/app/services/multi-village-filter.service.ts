@@ -18,6 +18,13 @@ export class MultiVillageFilterService {
     private http: HttpClient
   ) {}
 
+  async getAll1500Villages(): Promise<any> {
+    let response = await this.httpService
+    .get("utils/getall")
+    .catch(err => console.log("unable get 1500 villages"))
+    return response
+  }
+
   async getAllProvinces():Promise<any> {
     let response = await this.httpService
     .get("utils/province")
