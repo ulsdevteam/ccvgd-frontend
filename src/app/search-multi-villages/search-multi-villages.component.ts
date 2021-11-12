@@ -113,7 +113,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   category1Map = new Map();
   cat1Cat2Map = new Map();
-
+  pageIsLoading: boolean = false;
   middleTabsMap = new Map([
     // ["村庄基本信息", "gazetteerinformation"],
     ["村庄基本信息", "village"],
@@ -470,7 +470,9 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
     //update checkLsit
     this.multiVillages_checkList = [];
-    this.filteredData.map(item => {
+    // this.filteredData.map(item => {
+      console.log(this.allVillageData)
+      this.allVillageData.filteredData.map(item => {
       this.multiVillages_checkList.push({
         village_id: item.id,
         village_name: item.name,
@@ -541,9 +543,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   // getDefaultTopics() 
 
   async processRequest() {
+    this.pageIsLoading = true
 
-
-    const response =
     await this.multiVillageFilterService.onPostMultiVillages(
       {
         villageid: this.checkedVillagesID,
@@ -553,9 +554,14 @@ export class SearchMultiVillagesComponent implements OnInit {
         topic: this.defaultTopicList,
         // year: []
       }
-    );
+    ).then((response) => {
+      console.log(response)
+      this.responseData = response;
+      this.pageIsLoading = false
 
-    this.responseData = response;
+    })
+
+    // this.responseData = response;
     console.log("this.responseData", this.responseData)
     this.getTopicWithCategories();
     this.getYearWithTopic();

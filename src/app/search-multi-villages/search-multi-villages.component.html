@@ -141,6 +141,7 @@
 
                     <div class="economy">
 
+                            
                         <div *ngIf="isNamesTab">
 
                             <div class="table">
@@ -170,6 +171,17 @@
                                     </ng-container>
                                 </mat-selection-list>
                             </div>
+
+                            <div class="twitter-like">
+                                <mat-spinner class="background" 
+                                    mode="indeterminate" 
+                                    value="100"
+                                    *ngIf="pageIsLoading"
+                                    [diameter]="70"
+                                    >
+                                </mat-spinner>
+                                </div>
+                            <p *ngIf="pageIsLoading">Page is loading, please wait ☺️ ... </p>
 
                             <!-- <p>
                                 Options selected: {{list1.selectedOptions.selected.length}}
