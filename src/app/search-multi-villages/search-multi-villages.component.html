@@ -28,7 +28,7 @@
 
                 <mat-form-field>
                     <mat-label>County 县</mat-label>
-                    <mat-select [(ngModel)]="countySearch" (ngModelChange)="changeCounty($event)">
+                    <mat-select [(ngModel)]="countySearch" (ngModelChange)="onSelectCounty($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let county of countyList" [value]="county">
                             {{ county }}

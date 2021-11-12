@@ -102,6 +102,7 @@ export class MuitiVillageResultsComponent implements OnInit {
   ngOnInit(): void {
     this.userSelectionList = JSON.parse(window.localStorage.getItem("user selection"));
     this.getData();
+
     // console.log("userSelectionList", this.userSelectionList)
   }
 
@@ -152,6 +153,8 @@ export class MuitiVillageResultsComponent implements OnInit {
       // this.pageIsLoading = false;
     }
 
+    this.downloadAllUrl = `${environment.API_ROOT}advancesearch/download/?village=${this.userInput.villageid.toString()}`
+
 
     // console.log("this.searchResultData[0].data",this.searchResultData[0].data)
     // console.log("1",this.searchResultData[1].data)
@@ -159,14 +162,14 @@ export class MuitiVillageResultsComponent implements OnInit {
     // this.gazetterinfo_displayColumns =  this.removeVillageId(this.searchResultData[0].field);
     // console.log("displayResultsData",this.displayResultsData)
     
-  
+    console.log(this.userSelectionList)
 
     console.log("data", this.searchResultData)
         for(let index in this.searchResultData) {
           this.dataSource = this.searchResultData[index].data;
 
-          console.log(this.userSelectionList)
-
+          // console.log(this.userSelectionList)
+          // console.log("console.log(this.userInput.villageid.toString())",this.userInput.villageid.toString())
           for(let item in this.userSelectionList) {
 
             if(this.userSelectionList[item].selectedTopic === this.searchResultData[index].tableNameChinese

@@ -11,6 +11,10 @@
     </mat-spinner>
     </div>
 
+<a mat-raised-button [href]="downloadAllUrl" target="_blank" class="downloadBtn" style="margin-top: 3%;">
+    <mat-icon color="primary">download</mat-icon>
+</a>
+
 <div *ngFor="let eachCategory of displayResultsData" style="margin: 5%; Box-shadow:0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
     <!-- <button (click)="downloadCurrentTopic($event, eachCategory.topicName)">download {{eachCategory.topicName}}</button> -->
     <a mat-raised-button [href]="eachCategory.downloadUrl" target="_blank" class="downloadBtn" style="margin-top: 3%;">

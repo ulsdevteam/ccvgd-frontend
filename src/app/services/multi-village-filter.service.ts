@@ -18,7 +18,18 @@ export class MultiVillageFilterService {
     private http: HttpClient
   ) {}
 
+  async updateSearch(searchInputObj) {
+    let response = await this.httpService
+    .post("utils/getall", 
+    searchInputObj
+    )
+    .catch(err => console.log(`${searchInputObj} has error for update search`))
+    return response;
+
+  }
+
   async getAll1500Villages(): Promise<any> {
+    console.log("call 1500")
     let response = await this.httpService
     .get("utils/getall")
     .catch(err => console.log("unable get 1500 villages"))

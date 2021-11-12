@@ -238,6 +238,13 @@ export class SearchMultiVillagesComponent implements OnInit {
   currentCounty: string;
   selection = new SelectionModel<any>(true, []);
 
+  searchInputObj = {
+    province: "",
+    city: "",
+    county:"",
+    villageName:""
+  }
+
   constructor(
     private villageNameService: VillageNameService,
     private provinceCityCountyService: ProvinceCityCountyService,
@@ -262,7 +269,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.getAllProvince();
     this.getAll1500Villages();
   }
-
 
   getAll1500Villages() {
     this.multiVillageFilterService.getAll1500Villages().then((result) => {
@@ -293,6 +299,11 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.multiVillageFilterService.getAllCity(selectProvince).then((result) => {
       this.cityList = result
     })
+
+    if(selectProvince === undefined || selectProvince === null) this.searchInputObj.province = ""
+    else this.searchInputObj.province = selectProvince
+
+    this.onCallUpdateSearch(this.searchInputObj);
   }
 
   getCountyFromCityProvince(selectedCity:string) {
@@ -300,9 +311,40 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.multiVillageFilterService.getAllCounty(this.currentProvince, this.currentCity).then((result) => {
       this.countyList = result;
     })
+
+    if(selectedCity === undefined || selectedCity === null) this.searchInputObj.city = ""
+    else this.searchInputObj.city = selectedCity
+
+    // this.searchInputObj.city = selectedCity
+    this.onCallUpdateSearch(this.searchInputObj);
   }
 
+  onSelectCounty(selectedCounty: string) {
+    this.currentCounty = selectedCounty;
 
+    if(selectedCounty === undefined || selectedCounty === null) this.searchInputObj.county = ""
+    else this.searchInputObj.county = selectedCounty
+
+    this.onCallUpdateSearch(this.searchInputObj);
+  }
+
+  onCallUpdateSearch(inputReq) {
+    let objectIsEmpty = Object.values(inputReq).every(v=>v == null || v == undefined || v == "");
+
+    if(objectIsEmpty) this.getAll1500Villages();
+
+    else {
+      this.multiVillageFilterService.updateSearch(inputReq)
+      .then((newRes: any[]) => {
+        this.allVillageData = new MatTableDataSource<any>(newRes);
+      })
+    }
+    // this.multiVillageFilterService.updateSearch(inputReq)
+    // .then((newRes: any[]) => {
+    //   this.allVillageData = new MatTableDataSource<any>(newRes);
+    // })
+
+  }
 
   // getAllCity() {
   //   console.log("citySearch")
@@ -353,16 +395,19 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
 
-  handleSearchInput(userInput) {
+  handleSearchInput(userInputName) {
+    if(userInputName === undefined || userInputName === null || userInputName == "") this.searchInputObj.villageName = ""
+    else this.searchInputObj.villageName = userInputName
+    this.onCallUpdateSearch(this.searchInputObj);
 
-    this.villageNameService.filterVillages(userInput).then((searchResult) => {
-      console.log(searchResult)
-      this.options = new MatTableDataSource(searchResult.data);
-      // this.filteredData = this.options.filteredData;
-      console.log("this.filteredData",this.filteredData)
-    }).catch((err: any) => {
-      console.log("err", err)
-    });
+    // this.villageNameService.filterVillages(userInput).then((searchResult) => {
+    //   console.log(searchResult)
+    //   this.options = new MatTableDataSource(searchResult.data);
+    //   // this.filteredData = this.options.filteredData;
+    //   console.log("this.filteredData",this.filteredData)
+    // }).catch((err: any) => {
+    //   console.log("err", err)
+    // });
     // console.log(event)
   }
 
