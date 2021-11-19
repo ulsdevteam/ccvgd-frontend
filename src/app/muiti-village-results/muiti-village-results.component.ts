@@ -8,6 +8,8 @@ import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import { environment } from '../../environments/environment';
 import * as XLSX from 'xlsx';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog'
+import { HttpServiceService } from "../services/http-service.service";
+import { HttpClient } from "@angular/common/http";
 
 //TODO
 export interface PeriodicElement {
@@ -91,9 +93,13 @@ export class MuitiVillageResultsComponent implements OnInit {
   pageIsLoading: boolean = true;
 
   downloadAllUrl: string;
+  // downloadInput: { village?: ; topic?: any; category? : any };
+  downloadInput: any;
+  currentURL: any;
+  disableDownload: boolean = false;
 
   constructor(private multiVillageFilterService: MultiVillageFilterService,private router: Router,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog, private httpService: HttpServiceService,private http: HttpClient) {}
 
 
 
@@ -134,14 +140,14 @@ export class MuitiVillageResultsComponent implements OnInit {
     if(this.searchResultData.length > 0) this.pageIsLoading = false;
     else this.pageIsLoading = true;
 
-    if(this.pageIsLoading) {
-      const dialogRef = this.dialog.open(PageLoadDialog, {
-        width: '250px',
-        data: this.pageIsLoading
-      });
+    // if(this.pageIsLoading) {
+    //   const dialogRef = this.dialog.open(PageLoadDialog, {
+    //     width: '250px',
+    //     data: this.pageIsLoading
+    //   });
 
-      console.log("dialogRef",dialogRef)
-    }
+    //   console.log("dialogRef",dialogRef)
+    // }
 
     if(this.searchResultData.code === 4001) {
       this.router.navigate(["/multi-village-search"]);
@@ -180,13 +186,59 @@ export class MuitiVillageResultsComponent implements OnInit {
               const each_res = this.userSelectionList[item].hasCategory === true ? this.searchResultData[index].data.filter(i => 
                 this.userSelectionList[item].category1List.indexOf(this.convertToChinese(i.category1)) !== -1) : this.searchResultData[index].data;
 
+              // this.downloadInput.village = this.userInput.villageid.toString();
+              // this.downloadInput.topic = this.mapFromCHToEN.get(this.searchResultData[index].tableNameChinese);
+              // console.log(this.userInput.villageid.toString())
+              console.log(this.searchResultData[index].tableNameChinese);
+              console.log(this.mapFromCHToEN.get(this.searchResultData[index].tableNameChinese));
+
+              let downloadtest =  { 
+                village: this.userInput.villageid.toString(),
+                topic: this.mapFromCHToEN.get(this.searchResultData[index].tableNameChinese),
+                category : this.userSelectionList[item]. hasCategory ? 
+                this.userSelectionList[item].category1List.toString() : null
+               }
+              
+               let downloadURL = ""
+               let preFix  = "http://ngrok.luozm.me:8395/ccvg/advancesearch/";
+
+              if(downloadtest.category !== null) {
+                let url = `download/?village=${downloadtest.village}&topic=${downloadtest.topic}&category=${downloadtest.category}`;
+                downloadURL = `${preFix}${url}`
+                this.currentURL = url;
+                // this.downloadOnGet(url);
+              }
+              else{
+                let url = `download/?village=${downloadtest.village}&topic=${downloadtest.topic}`;
+                downloadURL = `${preFix}${url}`;
+                this.currentURL = url
+                // this.downloadOnGet(url);
+              }
+
+              
+              console.log(downloadtest.category)
+
+              // this.multiVillageFilterService.downloadBySelections(downloadtest)
+              // .then(res => {
+              //   // downloadURL = res;
+              //   console.log(res)
+              //   if(res.code === 4003) alert(`后端报错 ！无法下载！${res.message}`)
+              // })
+              // alert(`后端报错 ！无法下载！\n get url ${downloadURL} \n ${err}`)
+              // .catch(err => console.log("err",err))
+              console.log("downloadURL",downloadURL)
+              // this.currentURL = downloadURL
+
+
               this.displayResultsData.push({
                 topicName: this.searchResultData[index].tableNameChinese,
                 dataSource: new MatTableDataSource(each_res),
                 displayedColumns: this.removeVillageId(this.searchResultData[index].field),
                 selected_Categories: this.userSelectionList[item]. hasCategory ? 
                 this.userSelectionList[item].category1List : null,
-                downloadUrl: `${environment.API_ROOT}advancesearch/download/?village=${this.userInput.villageid.toString()}&topic=${this.mapFromCHToEN.get(this.searchResultData[index].tableNameChinese)}`
+                // http://ngrok.luozm.me:8395/ccvg/advancesearch/download/?village=1137&topic=population&category=总人口
+                // downloadUrl: `${environment.API_ROOT}advancesearch/download/?village=${this.userInput.villageid.toString()}&topic=${this.mapFromCHToEN.get(this.searchResultData[index].tableNameChinese)}`
+                downloadUrl: `${downloadURL}`
               })
             }
           }
@@ -197,6 +249,26 @@ export class MuitiVillageResultsComponent implements OnInit {
         this.displayResultsData[index].dataSource.paginator = b));
 
         this.onlyGetSelectedCategoriesRow();
+  }
+  async downloadOnGet(inputURL) {
+    console.log("inputURL,",inputURL)
+    let res = await this.http.get(inputURL)
+    console.log("res htttp", res)
+
+    let response = await this.httpService
+    .get(this.currentURL)
+    .catch((err) => alert(`后端报错 ！无法下载！\n get url ${this.currentURL} \n ${err}`))
+    .then(res => {
+      console.log(res)
+      if(res["code"] === 4003) {
+        // alert(`后端报错 ！无法下载！${res["message"]} 
+        // \n download URL => ${this.currentURL}`)
+      //  this.disableDownload = true;
+      }
+    })
+    // console.log("download ",response)
+    // if(response.code === 4003) alert(`后端报错 ！无法下载！${res.message}`)
+  
   }
 
 

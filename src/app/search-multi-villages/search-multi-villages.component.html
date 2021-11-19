@@ -161,7 +161,7 @@
                             <div class="left">
 
 
-                                <button (click)="selectAll()">selectAll</button>
+                                <!-- <button (click)="selectAll()">selectAll</button> -->
                                 
                                 <mat-selection-list #list1 [(ngModel)]="category1_Option" (ngModelChange)="category1Selection($event)">
                                     <ng-container>
@@ -181,7 +181,7 @@
                                     >
                                 </mat-spinner>
                                 </div>
-                            <p *ngIf="pageIsLoading">Page is loading, please wait ☺️ ... </p>
+                            <!-- <p *ngIf="pageIsLoading">Page is loading, please wait ☺️ ... </p> -->
 
                             <!-- <p>
                                 Options selected: {{list1.selectedOptions.selected.length}}
@@ -236,7 +236,12 @@
             <mat-card class="example-card">
                 <mat-card-title-group>
                   <mat-card-subtitle>{{ eachList.selectedTopic }}下 -- 子类1</mat-card-subtitle>
-                  <mat-card-subtitle>{{selectedCategoriesDisplay}}</mat-card-subtitle>
+                  <!-- <mat-card-subtitle>{{selectedCategoriesDisplay}}</mat-card-subtitle> -->
+                  <mat-list *ngFor="let item of eachList.category1List">
+                    <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
+                        {{ item }}
+                    </mat-list-item>
+                </mat-list>
                 </mat-card-title-group>
                 <mat-card-content>
                 </mat-card-content>
@@ -245,14 +250,14 @@
 
 
 
-            <div *ngFor="let eachList of displayTopicCategory">
+            <!-- <div *ngFor="let eachList of displayTopicCategory">
                 <p>{{ eachList.selectedTopic }}下 -- 子类1</p>
                 <mat-list *ngFor="let item of eachList.category1List">
                     <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
                         {{ item }}
                     </mat-list-item>
                 </mat-list>
-            </div>
+            </div> -->
 
         </div>
     </mat-card>

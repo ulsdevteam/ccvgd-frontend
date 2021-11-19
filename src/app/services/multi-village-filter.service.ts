@@ -36,6 +36,19 @@ export class MultiVillageFilterService {
     return response
   }
 
+  async downloadBySelections(downloadInput: { village?: any; topic?: any; category? : any }): Promise<any> {
+    console.log("download of input", downloadInput);
+    // http://ngrok.luozm.me:8395/ccvg/advancesearch/download/?village=1137&topic=population&category=总人口
+    // &category=${downloadInput.category}
+    // let downloadURL = `http://ngrok.luozm.me:8395/ccvg/advancesearch/download/?village=${downloadInput.village}&topic=${downloadInput.topic}`
+    let downloadURL = `download/?village=${downloadInput.village}&topic=${downloadInput.topic}`
+    console.log("downloadURL service",downloadURL)
+    let response = await this.httpService
+    .get(downloadURL)
+    .catch((err) => alert(`后端报错 ！无法下载！\n get url ${downloadURL} \n ${err}`));
+    return response;
+  }
+
   async getAllProvinces():Promise<any> {
     let response = await this.httpService
     .get("utils/province")
