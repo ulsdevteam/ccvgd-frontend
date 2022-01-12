@@ -1,15 +1,13 @@
 <div class="flexcontainer">
     <!-- <div class="container1"> -->
     <mat-card class="container1">
-
         <p class="select-headers">Select Villages-选择村庄 </p>
-        <mat-card-header class="dropdown-header">
-
+            <div>
             <!-- <mat-card-title>Select Villages-选择村庄 </mat-card-title> -->
             <div class="geologyDropdownList">
                 <mat-form-field>
                     <mat-label>Province 省</mat-label>
-                    <mat-select [(ngModel)]="provinceSearch" (ngModelChange)="changeProvince($event)">
+                    <mat-select [(ngModel)]="provinceSearch" (ngModelChange)="getCityFromProvince($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let province of provinceList" [value]="province">
                             {{ province }}
@@ -20,7 +18,7 @@
 
                 <mat-form-field>
                     <mat-label>City 市</mat-label>
-                    <mat-select [(ngModel)]="citySearch" (ngModelChange)="changeCity($event)">
+                    <mat-select [(ngModel)]="citySearch" (ngModelChange)="getCountyFromCityProvince($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let city of cityList" [value]="city">
                             {{ city }}
@@ -30,7 +28,7 @@
 
                 <mat-form-field>
                     <mat-label>County 县</mat-label>
-                    <mat-select [(ngModel)]="countySearch" (ngModelChange)="changeCounty($event)">
+                    <mat-select [(ngModel)]="countySearch" (ngModelChange)="onSelectCounty($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let county of countyList" [value]="county">
                             {{ county }}
@@ -38,17 +36,17 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-        </mat-card-header>
 
-        <br /><br />
-        <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
-        <mat-form-field class="any-input-field">
-            <mat-label>按any筛选</mat-label>
-            <input matInput (keyup)="applyFilter($event)" #input />
-        </mat-form-field>
+            <mat-form-field class="any-input-field" appearance="fill">
+                <!-- <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon> -->
+                <mat-label><i class="fas fa-search"></i>Search Any Village Here</mat-label>
+                <input matInput type="text" [(ngModel)]="search_value" (ngModelChange)="handleSearchInput($event)">
+                <button *ngIf="search_value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchValue()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-        <br />
-
+        </div>
 
         <div class="title">
             <label>选择</label>
@@ -58,16 +56,13 @@
             <label>县</label>
         </div>
 
-
-
-
         <div>
             <mat-checkbox class="selectall" (change)="checkUncheckAll()" [(ngModel)]="masterSelected">选择所有-Select All</mat-checkbox>
         </div>
         <div class="villageselectionlist">
 
             <mat-card-content class="village-Content">
-                <table class="villagetable" mat-table [dataSource]="options">
+                <table class="villagetable" mat-table [dataSource]="allVillageData">
                     <!--  checkbox column  -->
                     <ng-container matColumnDef="isSelected">
                         <th mat-header-cell *matHeaderCellDef>选择</th>
@@ -99,10 +94,18 @@
                         <th mat-header-cell *matHeaderCellDef>县</th>
                         <td mat-cell *matCellDef="let element">{{ element.county }}</td>
                     </ng-container>
-                    <tr mat-row class="selectList" *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr mat-row class="selectList" *matRowDef="let row; columns: displayedColumns;"
+                    ></tr>
                 </table>
             </mat-card-content>
         </div>
+
+        <mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEvent = getServerData($event)"
+               aria-label="Select page">
+        </mat-paginator>
 
         <div class="villageselected">已选村庄-Selected Villages</div>
 
@@ -128,14 +131,17 @@
 
     <mat-card class="container2">
         <p class="select-headers">选择主题-Select Topics</p>
-
-        <!-- <mat-card-header class="topics"> -->
+        <mat-card *ngIf="topicHasYearSelection" style="background-color:rgb(129, 201, 195)">{{topicHasYearSelection}} has Year Data</mat-card>
         <div class="topics">
 
             <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabChanged($event)" #tabGroup>
                 <mat-tab label="{{ item }}" *ngFor="let item of displayedMiddleTabs">
+
+                    <mat-card *ngIf="noCategoryData" class="notes">{{noCategoryNote}}</mat-card>
+
                     <div class="economy">
 
+                            
                         <div *ngIf="isNamesTab">
 
                             <div class="table">
@@ -155,8 +161,8 @@
                             <div class="left">
 
 
-
-
+                                <!-- <button (click)="selectAll()">selectAll</button> -->
+                                
                                 <mat-selection-list #list1 [(ngModel)]="category1_Option" (ngModelChange)="category1Selection($event)">
                                     <ng-container>
                                         <mat-list-option class="selectList" *ngFor="let category1 of category1Set" checkboxPosition="before" style="font-size: 14px;" [value]="category1">
@@ -165,6 +171,17 @@
                                     </ng-container>
                                 </mat-selection-list>
                             </div>
+
+                            <div class="twitter-like">
+                                <mat-spinner class="background" 
+                                    mode="indeterminate" 
+                                    value="100"
+                                    *ngIf="pageIsLoading"
+                                    [diameter]="70"
+                                    >
+                                </mat-spinner>
+                                </div>
+                            <!-- <p *ngIf="pageIsLoading">Page is loading, please wait ☺️ ... </p> -->
 
                             <!-- <p>
                                 Options selected: {{list1.selectedOptions.selected.length}}
@@ -180,8 +197,12 @@
                                 <!-- <p>{{ item }} 下类别</p> -->
                                 <mat-selection-list #list2 [(ngModel)]="category2_Option" (ngModelChange)="category2Selection($event)">
                                     <ng-container>
-                                        <mat-list-option class="selectList" *ngFor="let item of category2Set" checkboxPosition="before" style="font-size: 14px">
-                                            {{ item }}
+                                        <mat-list-option class="selectList" *ngFor="let item of category2Res" 
+                                        checkboxPosition="before" 
+                                        style="font-size: 14px"
+                                        [selected]="item.isSelected"
+                                        >
+                                            {{ item.category2 }}
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list>
@@ -211,16 +232,32 @@
             <div class="topic-selected-header">已选主题-Selected Topics</div>
 
 
-
-
             <div *ngFor="let eachList of displayTopicCategory">
+            <mat-card class="example-card">
+                <mat-card-title-group>
+                  <mat-card-subtitle>{{ eachList.selectedTopic }}下 -- 子类1</mat-card-subtitle>
+                  <!-- <mat-card-subtitle>{{selectedCategoriesDisplay}}</mat-card-subtitle> -->
+                  <mat-list *ngFor="let item of eachList.category1List">
+                    <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
+                        {{ item }}
+                    </mat-list-item>
+                </mat-list>
+                </mat-card-title-group>
+                <mat-card-content>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+
+
+            <!-- <div *ngFor="let eachList of displayTopicCategory">
                 <p>{{ eachList.selectedTopic }}下 -- 子类1</p>
                 <mat-list *ngFor="let item of eachList.category1List">
                     <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
                         {{ item }}
                     </mat-list-item>
                 </mat-list>
-            </div>
+            </div> -->
 
         </div>
     </mat-card>
@@ -231,62 +268,21 @@
     <mat-card class="container3">
         <p class="select-headers">选择时间-Select Time</p>
 
-        <div class="yearselect">年份-Year</div>
-        <div class="singleyear">
-            <div class="yearselectionlist">
-                <mat-selection-list #listSingleYear>
-                    <ng-container *ngFor="let item of topicYear">
-                        <div *ngFor="let eachYear of item.total_year_only">
-                            <mat-list-option #option checkboxPosition="before" style="font-size: 14px;" (click)="checkboxYear($event, eachYear, option.selected)">
-                                {{eachYear}}
-                            </mat-list-option>
-                        </div>
-                    </ng-container>
-                </mat-selection-list>
-
-            </div>
-            <div class="yearselectedlist">
-                <div class="year-selected-header"> 已选年份-Selected Single Year</div>
-
-                <p>已选 {{listSingleYear.selectedOptions.selected.length}}</p>
-                <ng-container>
-                    <table>
-                        <div *ngFor="let eachCheckedYear of checked_year_only">
-                            <p>{{ eachCheckedYear }}</p>
-                        </div>
-                    </table>
-
-                </ng-container>
-
-            </div>
-        </div>
-
         <div class="yearrangeselect">年段-Year Range</div>
         <div class="yearrange">
 
-            <mat-form-field class="example-form-field" appearance="fill">
+            <mat-form-field class="example-form-field" appearance="fill" [matTooltip]="tooltip_start_year">
                 <mat-label>输入开始年份， 例如1949</mat-label>
-                <input matInput type="text" [(ngModel)]="startYearInput">
-                <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                <input matInput type="text" [(ngModel)]="startYearInput" [disabled]="closeYearRange">
+                <button *ngIf="startYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="startYearInput=''">
                   <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-
-            <!-- <input type="text" class="inputTearField" placeholder="输入开始年份， 例如1949" (keyup)="onInputStartYearField($event)" /> -->
-            <!-- <div>
-                <mat-icon>check_circle_outline </mat-icon><span class="aligned-with-icon">可选年份: 1949至2019</span>
-            </div> -->
             至
-            <!-- <input type="text" class="inputTearField" placeholder="输入结束年份， 晚于开始年份" (keyup)="onInputEndYearField($event)" #searchCollectorInput /> -->
-
-            <!-- <div>
-                <mat-icon>check_circle_outline </mat-icon><span class="aligned-with-icon">结束年份晚于开始年份</span>
-            </div> -->
-
-            <mat-form-field class="example-form-field" appearance="fill">
+            <mat-form-field class="example-form-field" appearance="fill" [matTooltip]="tooltip_end_year">
                 <mat-label>输入结束年份， 晚于开始年份</mat-label>
-                <input matInput type="text" [(ngModel)]="endYearInput">
-                <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                <input matInput type="text" [(ngModel)]="endYearInput" [disabled]="closeYearRange">
+                <button *ngIf="endYearInput" matSuffix mat-icon-button aria-label="Clear" (click)="endYearInput=''">
                   <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
@@ -295,18 +291,79 @@
         添加 - Add
       </button>
 
-            <div class="yearselectedlist" #myYearDiv>
+
+            <div class="year-selected-header"> 单年和多年不能一起选</div>
+            <!-- <p>单年和多年不能一起选</p> -->
+            <!-- <div class="yearselectedlist" #myYearDiv>
                 <div class="year-range-selected-header"> 已选年段-Selected Year Range</div>
+                <p>{{displayYearRange}}</p>
+            </div> -->
+        </div>
 
 
-                <p>{{ inputed_year_range }}</p>
+
+        <div class="yearselect">年份-Year</div>
+        <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">Please search directly. "Select Time" is not applicable for this topic.</mat-card>
+        <div class="singleyear">
+            <div class="yearselectionlist">
+                <mat-selection-list #listSingleYear>
+                    <ng-container *ngFor="let item of topicYear">
+                        <div *ngFor="let eachYear of item.total_year_only">
+                            <mat-list-option #option [disabled]="closeSingleYear" checkboxPosition="before" style="font-size: 14px;" (click)="checkboxYear($event, eachYear, option.selected)">
+                                {{eachYear}}
+                            </mat-list-option>
+                        </div>
+                    </ng-container>
+                </mat-selection-list>
+
+            </div>
+            <div class="yearselectedlist" >
+                <div class="year-selected-header"> 已选年份-Selected Single Year Or Year Range</div>
+                <!-- <mat-card *ngIf="closeYearRange && closeSingleYear" class="notes">Please search directly. "Select Time" is not applicable for this topic.</mat-card> -->
+                <p *ngIf="closeYearRange">已选single-year - 数量{{listSingleYear.selectedOptions.selected.length}}</p>
+
+                <div *ngIf="!closeYearRange">
+                    <p>已选年段</p>
+                    <p>{{displayYearRange}}</p>
+                </div>
+
+                <!-- <ng-container> -->
+
+                <div class="year-result-container">
+
+                    <!-- <div class="yearselectedlist" #myYearDiv>
+                            <div class="year-range-selected-header"> 已选年段-Selected Year Range</div>
+                            <p>{{displayYearRange}}</p>
+                        </div> -->
+
+                    <table>
+                        <div *ngFor="let eachCheckedYear of checked_year_only">
+                            <p>{{ eachCheckedYear }}</p>
+                        </div>
+                    </table>
+
+                </div>
+
+
+
+                <!-- </ng-container> -->
+
             </div>
         </div>
+
     </mat-card>
 
     <nav class="navbar fixed-bottom navbar-light bg-light" style="background-color: #e3f2fd;">
-        <a class="navbar-brand" href="#">CCVG.com</a>
-        <button mat-raised-button color="warn" (click)="resetAll()" class="resetBtn">
+        <a class="navbar-brand" href="#">CCVG project PITT
+            <img src="https://i.pinimg.com/originals/fe/fe/1b/fefe1b7d95c7a5ed3d707c6000b98a40.png" 
+            alt="pittlogo"
+            style="width: 30px;"
+            >
+        </a>
+        <button mat-raised-button color="warn" (click)="resetAll()" 
+        class="resetBtn"
+        style="padding: 0%;"
+        >
             重置所有筛选项 - Reset
           </button>
 

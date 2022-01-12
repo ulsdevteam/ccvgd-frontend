@@ -102,7 +102,7 @@ import { DialogComponent } from './search-multi-villages/dialog/dialog.component
         path: 'single-village-search-result',
         component: SingleVillageSearchResultComponent,
       },
-      { path: '', redirectTo: '/single-village-search', pathMatch: 'full' },
+      { path: '', redirectTo: '/multi-village-search', pathMatch: 'full' },
     ]),
     RouterModule.forRoot([
       {

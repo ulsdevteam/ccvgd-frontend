@@ -9,9 +9,11 @@ export class VillageNameService {
   constructor(private httpService: HttpServiceService) {}
 
   // auto-complete dropdown: only retrieve 100 village
-  async getVillages(): Promise<VillageNameDisplay> {
+  async getVillages(pageNumber): Promise<VillageNameDisplay> {
     //Village[]{
-    return this.httpService.get('namesearch');
+    // return this.httpService.get('namesearch');
+    // return this.httpService.get('namesearch?pageNumber=1');
+    return this.httpService.get(`namesearch?pageNumber=${pageNumber}`)
   }
 
   // async getMultiVillages(): Promise<BasicVillageInformation> {

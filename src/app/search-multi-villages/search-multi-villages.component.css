@@ -21,13 +21,13 @@
     border-width: 1px;
     border-color: lightgray;
     border-radius: 5px;
-    width: 30%;
+    /* width: 30%; */
     margin: 2px;
     margin-right: 3%;
-    /* margin-top: 2%; */
     border-radius: 2%;
     margin-left: 1%;
-    height: 95%;
+     height: 95%;
+
 }
 
 .dropdown-header {
@@ -366,7 +366,11 @@ mat-list-option[aria-selected="true"] {
 }
 
 .any-input-field {
-    width: 200px;
+    /* margin-top: 22%; */
+    text-align: left;
+    align-items: center;
+    position: relative;
+    display: contents;
 }
 
 .mat-checkbox {
@@ -388,12 +392,16 @@ mat-list-option[aria-selected="true"] {
 
 .selectList:nth-child(even),
 .row:nth-child(even) {
-    background-color: rgb(233, 230, 230);
+    /* background-color: rgb(233, 230, 230); */
 }
 
 .selectList:nth-child(odd),
 .row:nth-child(odd) {
-    background-color: #99c9ee;
+    /* background-color: #99c9ee; */
+}
+
+mat-list-option[aria-selected="true"] {
+    background: rgba(0, 139, 139, 0.7);
 }
 
 
@@ -412,4 +420,24 @@ mat-list-option[aria-selected="true"] {
 mat-card {
     margin: 5px;
     padding: 5px;
+}
+
+.example-form-field {
+    margin: 3%;
+}
+
+.year-result-container,
+.yearselectedlist {
+    /* display: flex; */
+    background: white;
+    color: black;
+    height: 140px;
+    /* height: auto; */
+    /* min-height: 300px;
+        max-height: 300px; */
+    overflow: scroll;
+}
+
+.notes{
+    background-color: rgb(238, 140, 28);
 }

@@ -1,10 +1,33 @@
-<div *ngFor="let eachCategory of displayResultsData" style="margin: 5%;">
+
+
+
+
+<div class="twitter-like">
+    <mat-spinner class="background" 
+        mode="indeterminate" 
+        value="100"
+        *ngIf="pageIsLoading"
+        >
+    </mat-spinner>
+    </div>
+
+    <!-- <a href="http://ngrok.luozm.me:8395/ccvg/advancesearch/download/?village=19,32&topic=naturalenvironment">hh</a> -->
+
+<a mat-raised-button [href]="downloadAllUrl" target="_blank" class="downloadBtn" style="margin-top: 3%;">
+    <mat-icon color="primary">download</mat-icon>
+    <!-- <p>Download All topic data</p> -->
+    Download All topic data</a>
+
+<div *ngFor="let eachCategory of displayResultsData" style="margin: 5%; Box-shadow:0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
     <!-- <button (click)="downloadCurrentTopic($event, eachCategory.topicName)">download {{eachCategory.topicName}}</button> -->
-    <a mat-raised-button [href]="eachCategory.downloadUrl" target="_blank" class="downloadBtn" style="margin-top: 3%;">
+    <a mat-raised-button [href]="eachCategory.downloadUrl" target="_blank" class="downloadBtn" 
+    style="margin-top: 3%;" (click)="downloadOnGet(eachCategory.downloadUrl)" [disabled]="disableDownload">
         <mat-icon color="primary">download</mat-icon>
         {{eachCategory.topicName}}</a>
 
-    <div>
+    <!-- <button mat-raised-button color="primary" (click)="exportAsExcel(eachCategory.topicName)">Export as Excel</button> -->
+
+    <div #TABLE>
         <!-- <h2 style="color: white; ">{{eachCategory.topicName}}</h2> -->
         <mat-chip-list #chipList aria-label="Category selection">
             <mat-chip *ngFor="let eachCategory of eachCategory.selected_Categories" [selectable]="selectable" [removable]="removable" (removed)="remove(eachCategory)">
@@ -18,7 +41,8 @@
             <mat-label style="color: white;">搜索🔍{{eachCategory.topicName}}</mat-label>
             <input matInput (keyup)="filterDataSource($event,eachCategory.dataSource)" placeholder="Ex. 类别" #inputSearchField>
         </mat-form-field> -->
-        <table mat-table #dataSource [dataSource]="eachCategory.dataSource" class="mat-elevation-z8" style="border-radius: 5%;">
+        <div #TABLE> 
+        <table mat-table #table [dataSource]="eachCategory.dataSource" class="mat-elevation-z8" style="border-radius: 5%;">
             <ng-container *ngFor="let col of eachCategory.displayedColumns" [matColumnDef]="col">
                 <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
                 <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
@@ -36,8 +60,11 @@
                     😟 No data matching the Search
                 </td>
             </tr>
+            
         </table>
+    </div>
 
         <mat-paginator #mainPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
+    
 </div>
