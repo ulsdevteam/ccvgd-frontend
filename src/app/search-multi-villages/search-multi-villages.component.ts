@@ -27,6 +27,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { DialogComponent } from './dialog/dialog.component';
 import { MatCardModule } from "@angular/material/card";
 import { FormControl } from "@angular/forms";
+import {MatSelectionList} from '@angular/material/list';
 
 
 @Component({
@@ -39,8 +40,11 @@ export class SearchMultiVillagesComponent implements OnInit {
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
   @Input() okIsClick;
   formControl = new FormControl(['angular']);
+  @ViewChild('list1', {static: false}) private list1: MatSelectionList;
+  @ViewChild('list2', {static: false}) private list2: MatSelectionList;
 
   comfirmDelete: boolean; 
+  allVillageData;
   options;
   //TODO this is fake data for province, need change later
   provinceList: string[] = [];
@@ -49,6 +53,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   countyList: string[] = [];
   displayedColumns: string[] = [
     "isSelected",
+    // "select",
     "village_name",
     "province",
     "city",
@@ -108,7 +113,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   category1Map = new Map();
   cat1Cat2Map = new Map();
-
+  pageIsLoading: boolean = false;
   middleTabsMap = new Map([
     // ["村庄基本信息", "gazetteerinformation"],
     ["村庄基本信息", "village"],
@@ -184,6 +189,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   category2Set = new Set();
   category3Set = new Set();
   //
+  category2Res = [];
 
   // name *******
   allNamesData: any[] = [];
@@ -224,6 +230,21 @@ export class SearchMultiVillagesComponent implements OnInit {
   form
   selectedCategoriesDisplay: string;
 
+  selectedOptionsC2;
+  C2_selected;
+
+  currentProvince: string;
+  currentCity: string;
+  currentCounty: string;
+  selection = new SelectionModel<any>(true, []);
+
+  searchInputObj = {
+    province: "",
+    city: "",
+    county:"",
+    villageName:""
+  }
+
   constructor(
     private villageNameService: VillageNameService,
     private provinceCityCountyService: ProvinceCityCountyService,
@@ -239,11 +260,96 @@ export class SearchMultiVillagesComponent implements OnInit {
     // console.log(this.filteredData);
     // this.provinceList = this.provinceCityCountyService.getProvince();
   }
+ 
 
   ngOnInit(): void {
     // this.getServerData(null);
-    this.fetchVillageData(this.currentPageNum);
+    //later use
+    // this.fetchVillageData(this.currentPageNum);
+    this.getAllProvince();
+    this.getAll1500Villages();
   }
+
+  getAll1500Villages() {
+    this.multiVillageFilterService.getAll1500Villages().then((result) => {
+      // this.allVillageData = result
+      this.allVillageData = new MatTableDataSource<any>(result);
+      result.map((item) => {
+        this.multiVillages_checkList.push({
+          village_id: item.id,
+          village_name: item.name,
+          province: item.province,
+          city: item.city,
+          county: item.county,
+          isSelected: false
+        });
+      });
+      console.log("this.multiVillages_checkList",this.multiVillages_checkList)
+    })
+  }
+
+  getAllProvince() {
+    this.multiVillageFilterService.getAllProvinces().then((result) => {
+      this.provinceList = result
+    })
+  }
+
+  getCityFromProvince(selectProvince:string) {
+    this.currentProvince = selectProvince;
+    this.multiVillageFilterService.getAllCity(selectProvince).then((result) => {
+      this.cityList = result
+    })
+
+    if(selectProvince === undefined || selectProvince === null) this.searchInputObj.province = ""
+    else this.searchInputObj.province = selectProvince
+
+    this.onCallUpdateSearch(this.searchInputObj);
+  }
+
+  getCountyFromCityProvince(selectedCity:string) {
+    this.currentCity = selectedCity;
+    this.multiVillageFilterService.getAllCounty(this.currentProvince, this.currentCity).then((result) => {
+      this.countyList = result;
+    })
+
+    if(selectedCity === undefined || selectedCity === null) this.searchInputObj.city = ""
+    else this.searchInputObj.city = selectedCity
+
+    // this.searchInputObj.city = selectedCity
+    this.onCallUpdateSearch(this.searchInputObj);
+  }
+
+  onSelectCounty(selectedCounty: string) {
+    this.currentCounty = selectedCounty;
+
+    if(selectedCounty === undefined || selectedCounty === null) this.searchInputObj.county = ""
+    else this.searchInputObj.county = selectedCounty
+
+    this.onCallUpdateSearch(this.searchInputObj);
+  }
+
+  onCallUpdateSearch(inputReq) {
+    let objectIsEmpty = Object.values(inputReq).every(v=>v == null || v == undefined || v == "");
+
+    if(objectIsEmpty) this.getAll1500Villages();
+
+    else {
+      this.multiVillageFilterService.updateSearch(inputReq)
+      .then((newRes: any[]) => {
+        this.allVillageData = new MatTableDataSource<any>(newRes);
+      })
+    }
+    // this.multiVillageFilterService.updateSearch(inputReq)
+    // .then((newRes: any[]) => {
+    //   this.allVillageData = new MatTableDataSource<any>(newRes);
+    // })
+
+  }
+
+  // getAllCity() {
+  //   console.log("citySearch")
+  // }
+
   fetchVillageData(pageNum) {
     this.villageNameService.getVillages(pageNum).then((result) => {
       this.totalList = result.data;
@@ -289,16 +395,19 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
 
-  handleSearchInput(userInput) {
+  handleSearchInput(userInputName) {
+    if(userInputName === undefined || userInputName === null || userInputName == "") this.searchInputObj.villageName = ""
+    else this.searchInputObj.villageName = userInputName
+    this.onCallUpdateSearch(this.searchInputObj);
 
-    this.villageNameService.filterVillages(userInput).then((searchResult) => {
-      console.log(searchResult)
-      this.options = new MatTableDataSource(searchResult.data);
-      // this.filteredData = this.options.filteredData;
-      console.log("this.filteredData",this.filteredData)
-    }).catch((err: any) => {
-      console.log("err", err)
-    });
+    // this.villageNameService.filterVillages(userInput).then((searchResult) => {
+    //   console.log(searchResult)
+    //   this.options = new MatTableDataSource(searchResult.data);
+    //   // this.filteredData = this.options.filteredData;
+    //   console.log("this.filteredData",this.filteredData)
+    // }).catch((err: any) => {
+    //   console.log("err", err)
+    // });
     // console.log(event)
   }
 
@@ -315,37 +424,37 @@ export class SearchMultiVillagesComponent implements OnInit {
   }
    //********************* for checkbox field ************************************* */
 
-   changeProvince(data: Event) {
-    this.options.filter = data;
+  //  changeProvince(data: Event) {
+  //   this.options.filter = data;
 
-    this.cityList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.cityList.includes(item.city)) {
-        this.cityList.push(item.city);
-      }
-    });
+  //   this.cityList = [];
+  //   this.options.filteredData.map((item) => {
+  //     if (!this.cityList.includes(item.city)) {
+  //       this.cityList.push(item.city);
+  //     }
+  //   });
 
-    this.countyList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.countyList.includes(item.county)) {
-        this.countyList.push(item.county);
-      }
-    });
+  //   this.countyList = [];
+  //   this.options.filteredData.map((item) => {
+  //     if (!this.countyList.includes(item.county)) {
+  //       this.countyList.push(item.county);
+  //     }
+  //   });
 
-    this.filteredData = this.options.filteredData;
-  }
+  //   this.filteredData = this.options.filteredData;
+  // }
 
-  changeCity(data: Event) {
-    this.options.filter = data;
+  // changeCity(data: Event) {
+  //   this.options.filter = data;
 
-    this.countyList = [];
-    this.options.filteredData.map((item) => {
-      if (!this.countyList.includes(item.county)) {
-        this.countyList.push(item.county);
-      }
-    });
-    this.filteredData = this.options.filteredData;
-  }
+  //   this.countyList = [];
+  //   this.options.filteredData.map((item) => {
+  //     if (!this.countyList.includes(item.county)) {
+  //       this.countyList.push(item.county);
+  //     }
+  //   });
+  //   this.filteredData = this.options.filteredData;
+  // }
 
   changeCounty(data) {
     this.options.filter = data;
@@ -361,7 +470,9 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
     //update checkLsit
     this.multiVillages_checkList = [];
-    this.filteredData.map(item => {
+    // this.filteredData.map(item => {
+      console.log(this.allVillageData)
+      this.allVillageData.filteredData.map(item => {
       this.multiVillages_checkList.push({
         village_id: item.id,
         village_name: item.name,
@@ -432,9 +543,8 @@ export class SearchMultiVillagesComponent implements OnInit {
   // getDefaultTopics() 
 
   async processRequest() {
+    this.pageIsLoading = true
 
-
-    const response =
     await this.multiVillageFilterService.onPostMultiVillages(
       {
         villageid: this.checkedVillagesID,
@@ -444,9 +554,14 @@ export class SearchMultiVillagesComponent implements OnInit {
         topic: this.defaultTopicList,
         // year: []
       }
-    );
+    ).then((response) => {
+      console.log(response)
+      this.responseData = response;
+      this.pageIsLoading = false
 
-    this.responseData = response;
+    })
+
+    // this.responseData = response;
     console.log("this.responseData", this.responseData)
     this.getTopicWithCategories();
     this.getYearWithTopic();
@@ -546,6 +661,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
   }
 
+  console.log("this.category1Set",this.category1Set)
   this.topicHasYearSelection = [...topicHasYearSelectionSet].join(" ");
   // console.log("this.topicHasYearSelection",this.topicHasYearSelection)
 }
@@ -628,6 +744,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       })
     }
   }
+
 
   //TODO
   checkboxYear(event, selectedYear, checked) {
@@ -716,17 +833,37 @@ export class SearchMultiVillagesComponent implements OnInit {
       
       this.router.navigate(["/multi-village-search-result"]);
     }
+
+    selectAll(){
+      this.list1.selectAll();
+      this.list2.selectAll();
+    }
   // options: MatListOption[] - call multi-times
   category1Selection(selectedCategory1List) {
+
+    // this.selectAll_list2();
+    console.log("C2_selected",this.C2_selected)
+
+    let storeC2 = [];
+
     this.category2Set.clear();
     for(let i = 0; i < selectedCategory1List.length; i++) {
       for(let item in this.currentTopicData.data) {
-        if(this.currentTopicData.data[item].category1 && this.currentTopicData.data[item].category1 === selectedCategory1List[i]) {
+        let eachC1 = this.currentTopicData.data[item].category1;
+        let eachC2 = this.currentTopicData.data[item].category2;
+        if(eachC1 && this.convertToChinese(eachC1) === selectedCategory1List[i]) {
           if(this.currentTopicData.data[item].category2 && this.currentTopicData.data[item].category2 !== "null") {
-          this.category2Set.add(this.convertToChinese(this.currentTopicData.data[item].category2));
+            let c2_object = {
+              category2: this.convertToChinese(this.currentTopicData.data[item].category2),
+              isSelected: true
+            }
+            storeC2.push(c2_object);
         }}
       }
     }
+
+    this.category2Res = this.removeDuplicates(storeC2, "category2");
+
 
       this.displayTopicCategory.push({
         selectedTopic: this.currentSelectedTopic,
@@ -742,8 +879,15 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.selectedCategoriesDisplay = [...item.category1List].join(",")
       }
 
+      this.list2.selectAll();
+      console.log("this.category2Set",this.category2Set)
+
       // console.log("this.selectedCategoriesDisplay",this.selectedCategoriesDisplay)
   }
+
+   getUniqueListBy(arr, key) {
+    return [...new Map(arr.map(item => [item[key], item])).values()]
+}
 
   storeUserSelection() {
     window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));
@@ -910,6 +1054,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
 // import {Component} from '@angular/core';
 import {PageEvent} from '@angular/material/paginator';
+import { SelectionModel } from "@angular/cdk/collections";
 
 // /**
 //  * @title Configurable paginator

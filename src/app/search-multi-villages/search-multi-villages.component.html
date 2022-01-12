@@ -7,7 +7,7 @@
             <div class="geologyDropdownList">
                 <mat-form-field>
                     <mat-label>Province 省</mat-label>
-                    <mat-select [(ngModel)]="provinceSearch" (ngModelChange)="changeProvince($event)">
+                    <mat-select [(ngModel)]="provinceSearch" (ngModelChange)="getCityFromProvince($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let province of provinceList" [value]="province">
                             {{ province }}
@@ -18,7 +18,7 @@
 
                 <mat-form-field>
                     <mat-label>City 市</mat-label>
-                    <mat-select [(ngModel)]="citySearch" (ngModelChange)="changeCity($event)">
+                    <mat-select [(ngModel)]="citySearch" (ngModelChange)="getCountyFromCityProvince($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let city of cityList" [value]="city">
                             {{ city }}
@@ -28,7 +28,7 @@
 
                 <mat-form-field>
                     <mat-label>County 县</mat-label>
-                    <mat-select [(ngModel)]="countySearch" (ngModelChange)="changeCounty($event)">
+                    <mat-select [(ngModel)]="countySearch" (ngModelChange)="onSelectCounty($event)">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let county of countyList" [value]="county">
                             {{ county }}
@@ -62,7 +62,7 @@
         <div class="villageselectionlist">
 
             <mat-card-content class="village-Content">
-                <table class="villagetable" mat-table [dataSource]="options">
+                <table class="villagetable" mat-table [dataSource]="allVillageData">
                     <!--  checkbox column  -->
                     <ng-container matColumnDef="isSelected">
                         <th mat-header-cell *matHeaderCellDef>选择</th>
@@ -141,6 +141,7 @@
 
                     <div class="economy">
 
+                            
                         <div *ngIf="isNamesTab">
 
                             <div class="table">
@@ -160,8 +161,8 @@
                             <div class="left">
 
 
-
-
+                                <!-- <button (click)="selectAll()">selectAll</button> -->
+                                
                                 <mat-selection-list #list1 [(ngModel)]="category1_Option" (ngModelChange)="category1Selection($event)">
                                     <ng-container>
                                         <mat-list-option class="selectList" *ngFor="let category1 of category1Set" checkboxPosition="before" style="font-size: 14px;" [value]="category1">
@@ -170,6 +171,17 @@
                                     </ng-container>
                                 </mat-selection-list>
                             </div>
+
+                            <div class="twitter-like">
+                                <mat-spinner class="background" 
+                                    mode="indeterminate" 
+                                    value="100"
+                                    *ngIf="pageIsLoading"
+                                    [diameter]="70"
+                                    >
+                                </mat-spinner>
+                                </div>
+                            <!-- <p *ngIf="pageIsLoading">Page is loading, please wait ☺️ ... </p> -->
 
                             <!-- <p>
                                 Options selected: {{list1.selectedOptions.selected.length}}
@@ -185,8 +197,12 @@
                                 <!-- <p>{{ item }} 下类别</p> -->
                                 <mat-selection-list #list2 [(ngModel)]="category2_Option" (ngModelChange)="category2Selection($event)">
                                     <ng-container>
-                                        <mat-list-option class="selectList" *ngFor="let item of category2Set" checkboxPosition="before" style="font-size: 14px">
-                                            {{ item }}
+                                        <mat-list-option class="selectList" *ngFor="let item of category2Res" 
+                                        checkboxPosition="before" 
+                                        style="font-size: 14px"
+                                        [selected]="item.isSelected"
+                                        >
+                                            {{ item.category2 }}
                                         </mat-list-option>
                                     </ng-container>
                                 </mat-selection-list>
@@ -220,7 +236,12 @@
             <mat-card class="example-card">
                 <mat-card-title-group>
                   <mat-card-subtitle>{{ eachList.selectedTopic }}下 -- 子类1</mat-card-subtitle>
-                  <mat-card-subtitle>{{selectedCategoriesDisplay}}</mat-card-subtitle>
+                  <!-- <mat-card-subtitle>{{selectedCategoriesDisplay}}</mat-card-subtitle> -->
+                  <mat-list *ngFor="let item of eachList.category1List">
+                    <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
+                        {{ item }}
+                    </mat-list-item>
+                </mat-list>
                 </mat-card-title-group>
                 <mat-card-content>
                 </mat-card-content>
@@ -229,14 +250,14 @@
 
 
 
-            <div *ngFor="let eachList of displayTopicCategory">
+            <!-- <div *ngFor="let eachList of displayTopicCategory">
                 <p>{{ eachList.selectedTopic }}下 -- 子类1</p>
                 <mat-list *ngFor="let item of eachList.category1List">
                     <mat-list-item style="font-size: 15px; padding: 0%; margin: 0%;">
                         {{ item }}
                     </mat-list-item>
                 </mat-list>
-            </div>
+            </div> -->
 
         </div>
     </mat-card>
@@ -333,8 +354,16 @@
     </mat-card>
 
     <nav class="navbar fixed-bottom navbar-light bg-light" style="background-color: #e3f2fd;">
-        <a class="navbar-brand" href="#">CCVG.com</a>
-        <button mat-raised-button color="warn" (click)="resetAll()" class="resetBtn">
+        <a class="navbar-brand" href="#">CCVG project PITT
+            <img src="https://i.pinimg.com/originals/fe/fe/1b/fefe1b7d95c7a5ed3d707c6000b98a40.png" 
+            alt="pittlogo"
+            style="width: 30px;"
+            >
+        </a>
+        <button mat-raised-button color="warn" (click)="resetAll()" 
+        class="resetBtn"
+        style="padding: 0%;"
+        >
             重置所有筛选项 - Reset
           </button>
 
