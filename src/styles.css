@@ -7,11 +7,12 @@ html {
 }
 
 body {
-    height: 100%;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    height: 110%;
+    font-family:"Helvetica Neue", "Times New Roman", sans-serif;
     position: relative;
-    /* margin: 0 10%; */
-    background-color: rgb(96, 157, 185);
+    /*background-color: white;*/
+    background-image: url("assets/CCVG-6.jpeg");
+    background-position: bottom;
 }
 
 .mat-checkbox-layout {
@@ -22,17 +23,6 @@ body {
     position: sticky;
 }
 
-
-/*.mat-list.mat-list.mat-list-base {*/
-
-
-/*  background: chocolate;*/
-
-
-/*  position: fixed;*/
-
-
-/*}*/
 
 .mat-tree.mat-tree.cdk-tree {
     position: sticky !important;

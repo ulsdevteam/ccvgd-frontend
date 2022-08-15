@@ -1,17 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpServiceService } from './http-service.service';
 import { environment } from '../../environments/environment';
+import {Observable, Subject, Subscription} from "rxjs";
 
 @Injectable({
   providedIn: 'root',
 })
 export class VillageNameService {
+  private subject = new Subject<any>();
   constructor(private httpService: HttpServiceService) {}
 
   // auto-complete dropdown: only retrieve 100 village
-  async getVillages(): Promise<VillageNameDisplay> {
+  async getVillages(lang:number=0): Promise<VillageNameDisplay[]> {
     //Village[]{
-    return this.httpService.get('namesearch');
+    const requestList = [];
+    const maxPageNumber = 40;
+    for(let i=0;i<=maxPageNumber;i++){
+      let pageNumber = i;
+      if(lang == 0) {
+        // Chinese
+        requestList.push(this.httpService.get('namesearch', {pageNumber}));
+      } else if(lang == 1) {
+        // English
+        requestList.push(this.httpService.get('en/namesearch', {pageNumber}));
+      } else {
+        requestList.push(this.httpService.get('en/namesearch', {pageNumber}));
+      }
+    }
+    return Promise.all(requestList);
   }
 
   // async getMultiVillages(): Promise<BasicVillageInformation> {
@@ -20,7 +36,17 @@ export class VillageNameService {
 
   // village name filter: by user input into post request
   async filterVillages(searchName: string): Promise<VillageNameDisplay> {
-    return this.httpService.post('namesearch', { namefilter: searchName });
+    return this.httpService.post('en/advancesearch', { namefilter: searchName });
+  }
+
+  sendMessage(type:number){
+    this.subject.next(type);
+  }
+  clearMessage(){
+    this.subject.next()
+  }
+  getMessage():Observable<any> {
+    return this.subject.asObservable();
   }
 }
 

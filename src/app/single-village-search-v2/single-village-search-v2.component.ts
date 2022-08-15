@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -18,11 +19,11 @@ import { StateServiceService } from '../services/state-service.service';
 export class SingleVillageSearchV2Component implements OnInit {
   myControl = new FormControl();
 
-  value = '输入村名，如‘太平店村’ ';
+  value = '输入村名，如‘太平店村’ ；Input Village Name: ‘Tai ping dian cun’';
 
   options: Village[] = [];
   filteredOptions: Village[] = [];
-  temp: VillageNameDisplay = {
+  temp: VillageNameDisplay[] = [{
     data: [
       {
         isSelected: false /*ui: backend dont need*/,
@@ -41,7 +42,7 @@ export class SingleVillageSearchV2Component implements OnInit {
         id: 'string2',
       },
     ],
-  };
+  }];
 
   choose: Village;
 
@@ -63,7 +64,7 @@ export class SingleVillageSearchV2Component implements OnInit {
 
   async init() {
     this.temp = await this.villageNameService.getVillages();
-    this.filteredOptions = this.temp.data;
+    this.filteredOptions = this.temp[0].data;
     this.options = this.filteredOptions;
     console.log('this.filteredOptions', this.filteredOptions);
   }
@@ -74,9 +75,9 @@ export class SingleVillageSearchV2Component implements OnInit {
     } else {
       const filterValue = value;
       console.log('filterValue', filterValue);
-      this.temp = await this.villageNameService.filterVillages(value);
+      this.temp = [await this.villageNameService.filterVillages(value)];
       console.log('this.temp', this.temp);
-      this.filteredOptions = this.temp.data;
+      this.filteredOptions = this.temp[0].data;
       this.filteredOptions = this.options.filter((option) =>
         option.name.includes(filterValue)
       );
@@ -112,7 +113,7 @@ export class SingleVillageSearchV2Component implements OnInit {
 
     window.localStorage.setItem('choose', JSON.stringify(choose));
 
-    this.router.navigate(['/single-village-search-result']);
+    this.router.navigate(['/multi-village-search-result']);
   }
 
   onSelect(table: TableData) {

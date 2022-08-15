@@ -7,7 +7,7 @@
   </mat-expansion-panel-header>
 
 <mat-form-field appearance="fill">
-  <mat-label>民族</mat-label>
+  <mat-label>民族 - Nationality</mat-label>
   <mat-select [formControl]="ethnicGroups" multiple>
     <mat-option *ngFor="let ethnicGroup of table.multiselectFilter" [value]="ethnicGroup">{{ethnicGroup}}</mat-option>
   </mat-select>

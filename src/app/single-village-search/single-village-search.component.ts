@@ -31,7 +31,6 @@ export class SingleVillageSearchComponent implements OnInit {
       },
     ],
   };
-
   choose: Village;
 
   searchResult: TableData[];

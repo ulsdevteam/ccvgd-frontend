@@ -1,29 +1,8 @@
-<form class="example-form">
-  <mat-form-field class="example-full-width">
-    <input type="text"
-           (input)="filter($event.target.value)"
-           matInput
-           [matAutocomplete]=auto
-           [formControl]="myControl"
-           />
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="search($event.option.value)">
-      <mat-option *ngFor="let option of filteredOptions" [value]="option"  >
-          {{option.name}} {{option.province}} {{option.city}} {{option.county}}
-      </mat-option>
-    </mat-autocomplete>
-
-  </mat-form-field>
-</form>
-
-
-<div *ngFor="let table of searchResult">
-  <div *ngIf="table.treeFilter">
-    <app-table-display-V2 [tabledata]="table"></app-table-display-V2>
-  </div>
-  <div *ngIf="table.multiselectFilter">
-    <app-table-display-v22 [tabledata]="table"></app-table-display-v22>
-  </div>
-  <div *ngIf="table.lastnameFilter">
-    <app-table-display-v23 [tabledata]="table"></app-table-display-v23>
-  </div>
+<div class="flex-container-single-village">
+    <div class="backgroundImagePlaceHolder"></div>
+    <h1>Contemporary Chinese Village Gazetteer Data</h1>
+    <div class="chinese-container">
+        <h1>数 字 村 庄 </h1>
+        <h1>&nbsp;&nbsp;&nbsp;&nbsp;數 字 村 莊</h1>
+    </div>
 </div>

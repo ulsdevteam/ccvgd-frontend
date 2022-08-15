@@ -1,5 +1,5 @@
 import { MatTableDataSource } from "@angular/material/table";
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
 import { MultiVillageFilterService } from "../services/multi-village-filter.service";
 import { MatPaginator } from "@angular/material/paginator";
 import { Router } from "@angular/router";
@@ -36,12 +36,14 @@ export interface Fruit {
   selector: "app-muiti-village-results",
   templateUrl: "./muiti-village-results.component.html",
   styleUrls: ["./muiti-village-results.component.css"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MuitiVillageResultsComponent implements OnInit {
   @ViewChildren(MatPaginator) mainPaginator = new QueryList<MatPaginator>();
   // @Input() dataSource;
   // @ViewChild("mainPaginator") mainPaginator: MatPaginator;
 
+  loading: boolean = false;
   userInput: any = {};
   getAllResponses: any = {};
 
@@ -67,8 +69,8 @@ export class MuitiVillageResultsComponent implements OnInit {
   ];
 
   mapFromCHToEN = new Map([
-    // ["村庄基本信息", "gazetteerinformation"],
     ["村庄基本信息", "village"],
+    ["村志基本信息", "gazetteerinformation"],
     ["自然环境", "naturalenvironment"],
     ["自然灾害", "naturaldisasters"],
     ["姓氏", "fourthlastNames"],
@@ -76,7 +78,8 @@ export class MuitiVillageResultsComponent implements OnInit {
     ["民族", "ethnicgroups"],
     ["人口", "population"],
     ["军事政治", "military"],
-    ["经济", "economy"],
+    ["经济原始数据", "economy"],
+    ["统一单位经济", "economyunity"],
     ["计划生育", "familyplanning"],
     ["教育", "education"]
   ]);
@@ -87,14 +90,32 @@ export class MuitiVillageResultsComponent implements OnInit {
 
 
 
-
+  getUrlParams (key): string {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    return urlParams.get(key)
+  }
 
   ngOnInit(): void {
-    this.userSelectionList = JSON.parse(window.localStorage.getItem("user selection"));
+    this.loading = true;
+    const userSelection = window.localStorage.getItem('userSelection');
+    // const userValue = this.getUrlParams('userValue');
+    // [TODO] decode userValue and return it
+    // const userValuePlainText = decode(userValue);
+    this.userSelectionList = JSON.parse(userSelection);
+
+    const userList = window.localStorage.getItem('userList');
+    // const userList = this.getUrlParams('userList');
+    // [TODO] decode userList and return it
+    // const userListPlainText = decode(userList);
+    this.userInput = JSON.parse(userList);
+
+    // const userValueEncoded = encode(userValue);
+    console.log('[debug]', this.userSelectionList)
+    console.log("[debug] this.userInput",this.userInput)
     this.getData();
     // console.log("userSelectionList", this.userSelectionList)
   }
-
   removeGazetteerId(rawArray) {
     let resultsDisplay = [];
     for(let item in rawArray) {
@@ -109,20 +130,25 @@ export class MuitiVillageResultsComponent implements OnInit {
   
 
   async getData() {
-    //TODO POST TO MUCH
     // console.log('get it !', await this.multiVillageFilterService.getUserList);
-    this.userInput = await this.multiVillageFilterService.getUserList;
-    console.log("this.userInput",this.userInput)
+    // this.userInput = await this.multiVillageFilterService.getUserList;
+
+    console.log("[debug] this.userInput",this.userInput)
 
     this.searchResultData  = await this.multiVillageFilterService.onPostMultiVillages(this.userInput);
-
-
+    console.log('[debug] result data', this.searchResultData);
+    this.loading = false;
     if(this.searchResultData.code === 4001) {
-      this.router.navigate(["/multi-village-search"]);
+      alert("Result is invalid, will navigate to search page");
+      setTimeout(async ()=>{
+        // await this.router.navigate(["/multi-village-search"]);
+      }, 3000);
     }
     if(this.searchResultData.data && this.searchResultData.data.length === 0) {
       alert(`后端返回报错 !  \n  error message: ${this.searchResultData.error}`);
-      this.router.navigate(["/multi-village-search"]);
+      setTimeout(async ()=>{
+        // await this.router.navigate(["/multi-village-search"]);
+      }, 3000);
     }
   
         for(let index in this.searchResultData) {
@@ -148,7 +174,6 @@ export class MuitiVillageResultsComponent implements OnInit {
           }
         }
 
-        console.log(this.displayResultsData)
         this.mainPaginator.changes.subscribe(a => a.forEach((b, index) => 
         this.displayResultsData[index].dataSource.paginator = b));
 
@@ -164,8 +189,7 @@ export class MuitiVillageResultsComponent implements OnInit {
   }
 
   downloadCurrentTopic(event, topicName) {
-    // console.log("this.userInput",this.userInput)
-    // console.log(topicName)
+
 
   }
 

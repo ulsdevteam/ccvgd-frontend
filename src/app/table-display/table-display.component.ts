@@ -28,7 +28,7 @@ export class TableDisplayComponent implements OnInit {
       console.log('here is the table from table-display',this.table);
       this.fullList = this.table.data;
       this.filteredList = this.table.data;
-      console.log('table',this.table);
+      console.log('table:',this.table);
 
       // 优化：这里可以用map
       // 动态产生filter fields

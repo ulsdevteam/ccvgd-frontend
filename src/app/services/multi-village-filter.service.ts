@@ -12,7 +12,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 })
 export class MultiVillageFilterService {
   getResults: VillageSearchResult;
-  getUserList: any = {};
+  getUserList: any = {};//{ villageid: ["1"], topic: ["population"] }; // debug
   constructor(
     private httpService: HttpServiceService,
     private http: HttpClient
@@ -46,7 +46,13 @@ export class MultiVillageFilterService {
   }
 
   async onPostMultiVillages(postData: { villageid: any; topic: any; year? : any; year_range?: any }) {
-    this.getUserList = postData;
+    if(postData.year && postData.year.length == 0){
+      delete postData.year;
+    }
+    if(postData.year_range && postData.year_range.length == 0){
+      delete postData.year_range;
+    }
+
     console.log("post", postData);
     // this.getYearBySelectedVillagesAndTopics(postData);
     let response = await this.httpService
@@ -64,20 +70,6 @@ export class MultiVillageFilterService {
     year: any;
     year_range: any;
   }) {
-    // let test = {
-    //   villageid: ["3"],
-    //   topic: ["population"],
-    //   year: [2011],
-    //   year_range: [2009, 2012],
-    // // };
-    // console.log("this.getUserList", this.getUserList);
-
-    // let convertYearFormat = {
-    //   villageid: [this.getUserList.villageid],
-    //   topic: this.getUserList.topic,
-    // };
-    // console.log(test);
-    // console.log("😦", convertYearFormat);
     let yearResponse = await this.httpService
       .post("advancesearch", postYearData)
       .catch((err: HttpErrorResponse) => {
