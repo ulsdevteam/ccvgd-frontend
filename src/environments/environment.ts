@@ -3,8 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  // production: false,
+  // API_ROOT: 'http://ngrok.luozm.me:8395/ccvg/',
+  // API_ROOT: 'API_ROOT_REPLACE',
   production: false,
-  API_ROOT: 'http://ngrok.luozm.me:8395/ccvg/',
+  API_ROOT: window["env"]["API_ROOT"] || "default",
+  // debug: window["env"]["debug"] || false
 };
 
 /*
