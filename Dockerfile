@@ -1,6 +1,9 @@
 # Use official node image as the base image
 FROM node:16 as build
 
+ARG API_ROOT=http://ngrok.luozm.me:8395/ccvg/
+ARG PRODUCTION=false
+
 # Set the working directory
 #ADD . /ccvgd-frontend
 #WORKDIR /ccvgd-frontend
@@ -9,6 +12,8 @@ FROM node:16 as build
 WORKDIR /ccvgd-frontend
 
 COPY . /ccvgd-frontend
+RUN sed "s/ENV_API_ROOT/${API_ROOT}/" -i src/environments/environment.ts
+RUN sed "s/ENV_PRODUCTION/${PRODUCTION}/" -i src/environments/environment.ts
 
 # Install all the dependencies
 RUN npm install --legacy-peer-deps
