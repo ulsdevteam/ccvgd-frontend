@@ -29,7 +29,7 @@ FROM nginx:latest
 
 # Expose port 80
 EXPOSE 80
-
+EXPOSE 433
 
 WORKDIR /usr/share/nginx/html
 
@@ -38,3 +38,5 @@ WORKDIR /usr/share/nginx/html
 COPY --from=build /ccvgd-frontend/dist /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
+
+CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/CCVGproject/assets/env.template.js > /usr/share/nginx/html/CCVGproject/assets/env.js && exec nginx -g 'daemon off;'"]
