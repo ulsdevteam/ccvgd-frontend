@@ -29,7 +29,6 @@ FROM nginx:latest
 
 # Expose port 80
 EXPOSE 80
-EXPOSE 433
 
 WORKDIR /usr/share/nginx/html
 
