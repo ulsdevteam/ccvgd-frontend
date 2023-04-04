@@ -1,0 +1,26 @@
+#chartWrap {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chart {
+  width: 80%;
+  height: 66%;
+  margin: 2% auto;
+  background-color: white;
+}
+
+#footer-space {
+  width: 100%;
+  height: 60px;
+}
+
+.title {
+  margin: 50px auto 0;
+  width: fit-content;
+  height: 50px;
+}
