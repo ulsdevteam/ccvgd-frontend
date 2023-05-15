@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NaturalDisaster, TableData} from '../services/village-name.service';
-import {FormBuilder, FormGroup, } from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
 
 @Component({
   selector: 'app-table-display',
@@ -13,29 +13,29 @@ export class TableDisplayComponent implements OnInit {
     // 所有的非数据以外的数据这里来
     @Input('table') table: TableData;
 
-    filterFormGroup: FormGroup;
+    filterFormGroup: UntypedFormGroup;
 
     // fullList: 复制server拿过来的整个table的信息里面只复制data的部分
     fullList = [];
     // filteredList：最后展示的数据
     filteredList = [];
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: UntypedFormBuilder) {
 
     }
 
     ngOnInit(): void {
-      console.log('here is the table from table-display',this.table);
+      // console.log('here is the table from table-display',this.table);
       this.fullList = this.table.data;
       this.filteredList = this.table.data;
-      console.log('table:',this.table);
+      // console.log('table:',this.table);
 
       // 优化：这里可以用map
       // 动态产生filter fields
       this.filterFormGroup = this.fb.group(this.formFields());
 
       this.filterFormGroup.valueChanges.subscribe((value)=> {
-        console.log(value);
+        // console.log(value);
 
         this.filteredList = this.fullList.filter( row => {
           for(let checkbox of Object.keys(value)) {

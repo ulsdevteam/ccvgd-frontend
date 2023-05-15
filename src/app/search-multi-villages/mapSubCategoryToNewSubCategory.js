@@ -26,3 +26,4 @@ const mapSubCategoryToNewSubCategory = {
 }
 
 export default mapSubCategoryToNewSubCategory;
+

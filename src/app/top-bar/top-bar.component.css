@@ -1,7 +1,7 @@
 .pitt-logo {
     width: 130px;
     height: 43px;
-    margin-left: -15px;
+    /*margin-right: 2%;*/
 }
 .matButton {
     color: #004f9e;
@@ -37,7 +37,7 @@
 }
 
 .contact-us {
-    /*margin-left: 22%;*/
+    margin-left: 1%;
     font-family: "Times New Roman";
 }
 .contact-us:hover {

@@ -10,8 +10,20 @@
     <div *ngFor="let eachCategory of displayResultsData" style="margin-left: 5%; margin-right: 5%">
 
         <a mat-raised-button [href]="eachCategory.downloadUrl" target="_blank" class="downloadBtn" style="margin-top: 3%;">
-            <mat-icon>cloud_download</mat-icon>&nbsp;&nbsp;{{eachCategory.topicName}}</a>
-        <span class="moreicon" matTooltip="scfnidnviow" matTooltipPosition="right" matTooltipClass="maticon"><mat-icon aria-hidden="false">&nbsp;remove_red_eye</mat-icon></span>
+            <mat-icon>cloud_download</mat-icon>&nbsp;&nbsp;{{eachCategory.topicName}}
+        </a>
+        <span *ngIf="chartVillageData.length <= 9 && eachCategory.showChart">
+            <!-- <span *ngFor="let item of chartGroupData; let i = index" class="moreicon" matTooltip="Only 'Population Basic Infor', 'Natural Population Change Data', 'Cultivated Area' and 'Per Capital Income' have Data Visualization." matTooltipPosition="below" matTooltipClass="maticon"> -->
+            <span class="trueicon" matTooltip="Show Data Visualization" matTooltipPosition="right" matTooltipClass="trueicon">
+                <span (click)="openChart()"><mat-icon aria-hidden="false">show_chart</mat-icon>Show Charts</span>
+            </span>
+            <!-- </span> -->
+        </span>
+        <span *ngIf="chartVillageData.length > 9">
+            <span class="falseicon" matTooltip="Data Visualization can be only shown no more than 9 villages, please go back and reselect." matTooltipPosition="right" matTooltipClass="fasleicon">
+                <span><mat-icon aria-hidden="false">show_chart</mat-icon>No Charts</span>
+            </span>
+        </span>
 
         <div style="margin-top: 20px">
             <!-- <h2 style="color: white; ">{{eachCategory.topicName}}</h2> -->
@@ -39,7 +51,7 @@
 
                 <tr class="mat-row" *matNoDataRow>
                     <td class="mat-cell" colspan="9999">
-                        😟😟😟😟Sorry, no matching😟😟😟😟
+                        Sorry, No Data Showing.
                     </td>
                 </tr>
             </table>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 import {
   VillageNameService,
@@ -15,7 +15,7 @@ import { SingleVillageSearchResultService } from '../services/single-village-sea
   styleUrls: ['./single-village-search.component.css'],
 })
 export class SingleVillageSearchComponent implements OnInit {
-  myControl = new FormControl();
+  myControl = new UntypedFormControl();
 
   options: Village[] = [];
   filteredOptions: Village[];
@@ -49,7 +49,7 @@ export class SingleVillageSearchComponent implements OnInit {
     // this.temp = await this.villageNameService.getVillages();
     this.filteredOptions = this.temp.data;
     this.options = this.filteredOptions;
-    console.log('this.filteredOptions', this.filteredOptions);
+    // console.log('this.filteredOptions', this.filteredOptions);
   }
 
   async filter(value: string) {
@@ -57,9 +57,9 @@ export class SingleVillageSearchComponent implements OnInit {
       await this.init();
     } else {
       const filterValue = value;
-      console.log('filterValue', filterValue);
+      // console.log('filterValue', filterValue);
       // this.temp = await this.villageNameService.filterVillages(value);
-      console.log('this.temp', this.temp);
+      // console.log('this.temp', this.temp);
       this.filteredOptions = this.temp.data;
       //this.filteredOptions = this.options.filter(option => option.name.includes(filterValue));
     }
@@ -70,13 +70,6 @@ export class SingleVillageSearchComponent implements OnInit {
   }
 
   async search(choose: Village): Promise<void> {
-    // console.log("onkeyup");
-    console.log('choose ', choose);
-    // this.searchResult = (
-    //   await this.villageSearchResultService.searchEncap(choose)
-    // ).tables;
-    //console.log("here is the this.searcResult[0].data");
-    console.log('this is the searchResult', this.searchResult);
 
     this.display = true;
   }

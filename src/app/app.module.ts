@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
+
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -67,7 +68,7 @@ import { SearchMultiVillagesComponent } from './search-multi-villages/search-mul
 import { VillagesearchPipe } from './search-multi-villages/villagesearch.pipe';
 import { MuitiVillageResultsComponent } from './muiti-village-results/muiti-village-results.component';
 import { DialogComponent } from './search-multi-villages/dialog/dialog.component';
-
+import { Chart } from './muiti-village-results-chart/chart.component'
 @NgModule({
   declarations: [
     AppComponent,
@@ -84,13 +85,13 @@ import { DialogComponent } from './search-multi-villages/dialog/dialog.component
     VillagesearchPipe,
     MuitiVillageResultsComponent,
     DialogComponent,
+    Chart
   ],
   imports: [
     HttpClientModule,
     MatCardModule,
     BrowserModule,
     BrowserAnimationsModule,
-
     FormsModule,
     ReactiveFormsModule,
 // =========禁用首页==========
@@ -105,6 +106,7 @@ import { DialogComponent } from './search-multi-villages/dialog/dialog.component
     //   },
     //   { path: '', redirectTo: '/single-village-search', pathMatch: 'full' },
     // ]),
+// ==========================
     RouterModule.forRoot([
       {
         path: 'multi-village-search',
@@ -113,6 +115,10 @@ import { DialogComponent } from './search-multi-villages/dialog/dialog.component
       {
         path: 'multi-village-search-result',
         component: MuitiVillageResultsComponent,
+      },
+      {
+        path: 'multi-village-search-result-chart',
+        component: Chart,
       },
       { path: '', redirectTo: '/multi-village-search', pathMatch: 'full' },
     ]),

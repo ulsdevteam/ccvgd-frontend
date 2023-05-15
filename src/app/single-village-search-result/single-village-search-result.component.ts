@@ -717,7 +717,7 @@ export class SingleVillageSearchResultComponent implements OnInit {
 
   onSelect(table: TableData) {
     this.selectedTable = table;
-    console.log('selected table: ', this.selectedTable);
+    // console.log('selected table: ', this.selectedTable);
     //past code
     // this.downloadLink =
     //   'http://ngrok.luozm.me:8395/ccvg/download' +
@@ -738,7 +738,7 @@ export class SingleVillageSearchResultComponent implements OnInit {
   }
 
   checktables(topic: string, checked: MatCheckboxChange) {
-    console.log('1235435', checked);
+    // console.log('1235435', checked);
 
     if (checked) {
       this.checkedTables.push(topic);
@@ -748,6 +748,6 @@ export class SingleVillageSearchResultComponent implements OnInit {
         this.checkedTables.splice(index, 1);
       }
     }
-    console.log('this.checkedTables', this.checkedTables);
+    // console.log('this.checkedTables', this.checkedTables);
   }
 }

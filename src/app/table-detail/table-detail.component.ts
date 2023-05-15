@@ -48,7 +48,7 @@ export class TableDetailComponent implements OnInit {
 
   @Input('tabledata') set table(table: TableData) {
     if (table === undefined) return;
-    console.log(this);
+    // console.log(this);
     this._table = table;
 
     this.filteredList = table.data;
@@ -59,7 +59,7 @@ export class TableDetailComponent implements OnInit {
 
     this.downloadVillageId = table?.id;
     this.downloadTopic = table?.topic;
-    console.log('this.downloadVillageId', this.downloadVillageId);
+    // console.log('this.downloadVillageId', this.downloadVillageId);
     //BUG 
     // this.downloadLink =
     //   'http://ngrok.luozm.me:8395/ccvg/download' +
@@ -228,7 +228,7 @@ export class TableDetailComponent implements OnInit {
   buildFileTree(obj: { [key: string]: any }, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
       const value = obj[key];
-      console.log('value', value);
+      // console.log('value', value);
       const node = new TodoItemNode();
       node.description = key;
 
@@ -245,7 +245,7 @@ export class TableDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('this.table from table-detail', this.table);
+    // console.log('this.table from table-detail', this.table);
     //this.downloadLink = "http://ngrok.luozm.me:8395/ccvg/download/"+
     // this.dataChange = this.buildFileTree(this.table.treeFilter, 0);
     // this.dataSource.data = this.dataChange;

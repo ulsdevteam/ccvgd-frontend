@@ -46,7 +46,7 @@
             <div [style]="{width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}">
                 <mat-icon [style]="{ width: '32px', height: '0px'}" matTooltip="Enter any village related word that matches the database to return all villages information." matTooltipClass="tooltips">search</mat-icon>
                 <mat-form-field class="any-input-field" [style]="{width: '95%', height: '30px'}">
-                    <mat-label style="color: gray">Please input any related word.</mat-label>
+                    <mat-label style="color: gray">Please input any related word for places.</mat-label>
 
                     <input matInput (keyup)="applyFilter($event)" #input />
 
@@ -104,7 +104,7 @@
                     </ng-container>
                     <tr mat-row class="selectList" *matRowDef="let row; columns: displayedColumns"></tr>
                 </table>
-                <mat-paginator #villagePaginator [pageSizeOptions]="[6,15]"
+                <mat-paginator #villagePaginator [pageSizeOptions]="[20,30]"
                                showFirstLastButtons>
                 </mat-paginator>
             </mat-card-content>
@@ -133,14 +133,14 @@
     <!-- </div> -->
 
     <mat-card class="container2">
-        <p class="select-headers" matTooltip="Subject categories displayed or not are depending on the availability of retrieval results." matTooltipClass="tooltips">Select Subject(s)</p>
+        <p class="select-headers" matTooltip="Subject categories displayed depend on the availability of retrieved results." matTooltipClass="tooltips">Select Subject(s)</p>
         <!-- <mat-card-header class="topics"> -->
         <div class="topics">
             <div>
                 <mat-checkbox class="selectall3" (change)="checkAllTopics()" [checked]="allTopicChecked" matTooltip="Refer to particular subject(s)." matTooltipClass="tooltips">选择所有 - Select All</mat-checkbox>
             </div>
 
-            <mat-tab-group animationDuration="500ms" (selectedTabChange)="tabChanged($event)" #tabGroup>
+            <mat-tab-group animationDuration="1000ms" (selectedTabChange)="tabChanged($event)" preserveContent #tabGroup>
                 <mat-tab *ngFor="let item of displayedMiddleTabsFiltered">
                     <ng-template mat-tab-label> <span [matTooltip]="displayedMiddleTabsFilteredToolTip.get(item)" matTooltipPosition="below" matTooltipClass="tooltips">{{ item }} </span> </ng-template>
 <!--                    ========右侧上选择框====-->

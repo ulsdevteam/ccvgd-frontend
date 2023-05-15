@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import {
   VillageNameService,
@@ -17,7 +17,7 @@ import { StateServiceService } from '../services/state-service.service';
   styleUrls: ['./single-village-search-v2.component.css'],
 })
 export class SingleVillageSearchV2Component implements OnInit {
-  myControl = new FormControl();
+  myControl = new UntypedFormControl();
 
   value = '输入村名，如‘太平店村’ ；Input Village Name: ‘Tai ping dian cun’';
 
@@ -66,7 +66,7 @@ export class SingleVillageSearchV2Component implements OnInit {
     this.temp = await this.villageNameService.getVillages();
     this.filteredOptions = this.temp[0].data;
     this.options = this.filteredOptions;
-    console.log('this.filteredOptions', this.filteredOptions);
+    // console.log('this.filteredOptions', this.filteredOptions);
   }
 
   async filter(value: string) {
@@ -74,9 +74,9 @@ export class SingleVillageSearchV2Component implements OnInit {
       await this.init();
     } else {
       const filterValue = value;
-      console.log('filterValue', filterValue);
+      // console.log('filterValue', filterValue);
       this.temp = [await this.villageNameService.filterVillages(value)];
-      console.log('this.temp', this.temp);
+      // console.log('this.temp', this.temp);
       this.filteredOptions = this.temp[0].data;
       this.filteredOptions = this.options.filter((option) =>
         option.name.includes(filterValue)
@@ -90,7 +90,7 @@ export class SingleVillageSearchV2Component implements OnInit {
 
   // async search(choose: Village): Promise<void>
   search(choose: Village) {
-    console.log('choose ', choose);
+    // console.log('choose ', choose);
     // this.searchResult = (
     //   await this.villageSearchResultService.searchEncap(choose)
     // ).tables;
@@ -118,7 +118,7 @@ export class SingleVillageSearchV2Component implements OnInit {
 
   onSelect(table: TableData) {
     this.selectedTable = table;
-    console.log('selected table: ', this.selectedTable);
+    // console.log('selected table: ', this.selectedTable);
   }
 
   async goToComponentB(): Promise<void> {}

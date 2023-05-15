@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  API_ROOT: window["env"]["API_ROOT"],
+  API_ROOT: 'http://ngrok.luozm.me:8395/ccvg/',
+  // API_ROOT: 'http://0.0.0.0:5050/advancesearch/',
 };
 
 /*
@@ -14,4 +15,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

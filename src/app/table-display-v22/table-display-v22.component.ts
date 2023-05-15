@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { OneLevelResult, TableData } from '../services/village-name.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { OneLevelResult, TableData } from '../services/village-name.service';
   styleUrls: ['./table-display-v22.component.css'],
 })
 export class TableDisplayV22Component implements OnInit {
-  ethnicGroups = new FormControl();
+  ethnicGroups = new UntypedFormControl();
   @Input('tabledata') table: TableData;
 
   fullList;
@@ -17,19 +17,19 @@ export class TableDisplayV22Component implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log('this', this);
+    // console.log('this', this);
     this.fullList = this.table.data;
     this.filteredList = this.fullList;
 
-    console.log('this.filteredList', this.filteredList.length);
+    // console.log('this.filteredList', this.filteredList.length);
 
     this.ethnicGroups.valueChanges.subscribe((value) => {
-      console.log('value', value);
+      // console.log('value', value);
 
       this.filteredList = this.fullList.filter((row) => {
         for (let v of value) {
           // 这个checkbox
-          console.log('v', v);
+          // console.log('v', v);
           if (row.category1.includes(v)) {
             return true;
           }

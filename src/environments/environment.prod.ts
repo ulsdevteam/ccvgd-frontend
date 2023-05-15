@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  API_ROOT: window["env"]["API_ROOT"] || "default",
+  //backend service will run on this API ROOT, which points to the server
+  API_ROOT: "http://ngrok.luozm.me:8395/ccvg/",
 };

@@ -164,7 +164,7 @@ export class TableDisplayV2Component implements OnInit {
   buildFileTree(obj: {[key: string]: any}, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
       const value = obj[key];
-      console.log("value",value);
+      // console.log("value",value);
       const node = new TodoItemNode();
       node.description = key;
 
@@ -187,7 +187,7 @@ export class TableDisplayV2Component implements OnInit {
 
     this.filteredList = this.table.data;
     this.fulllist = this.table.data;
-    console.log("tble display V2 this.table",this.table);
+    // console.log("tble display V2 this.table",this.table);
 
     this.checklistSelection.changed.pipe(
       debounceTime(10)

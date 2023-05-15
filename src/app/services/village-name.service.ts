@@ -14,7 +14,7 @@ export class VillageNameService {
   async getVillages(lang:number=0): Promise<VillageNameDisplay[]> {
     //Village[]{
     const requestList = [];
-    const maxPageNumber = 40;
+    const maxPageNumber = 85;
     for(let i=0;i<=maxPageNumber;i++){
       let pageNumber = i;
       if(lang == 0) {

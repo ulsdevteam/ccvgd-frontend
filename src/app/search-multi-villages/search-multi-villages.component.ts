@@ -25,6 +25,7 @@ import { Category, CheckList, PostDataToSearch, Year, DisplayTopicCategory } fro
 import { HttpServiceService } from '../services/http-service.service';
 import categoryConfig from './mapMainCategoryToSubCategoryConfig';
 import mapSubCategoryToNewSubCategory from './mapSubCategoryToNewSubCategory';
+import mapOldMainCategoryToItsSubCategory from './mapSubCategoryToNewSubCategory';
 import displayedMiddleTabsFilteredToolTip from './displayedMiddleTabsFilteredToolTip';
 import mapCategory1ToTooltips from './mapCategory1ToTooltips';
 
@@ -161,6 +162,8 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   mapSubCategoryToNewSubCategory:StringMap = {}
 
+  mapOldMainCategoryToItsSubCategory = {}
+
   displayedMiddleTabsFilteredToolTip = new Map();
 
 
@@ -198,6 +201,7 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   category2_checkedList: any[];
   displayTopicCategory: DisplayTopicCategory[] = [];
+  selectedSubject: {};
   resultSelectedTopics: any[];
 
   //
@@ -255,9 +259,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.masterSelected = false;
-    // console.log(this.filteredData);
-    // this.provinceList = this.provinceCityCountyService.getProvince();
-    // filter some main categories in mapMainCategoryToSubCategoryConfig
+
     this.mapMainCategoryToSubCategoryConfig = mapMainCategoryToSubCategoryConfig;
     this.mapSubCategoryToNewSubCategory = mapSubCategoryToNewSubCategory;
     this.displayedMiddleTabsFilteredToolTip = displayedMiddleTabsFilteredToolTip;
@@ -388,7 +390,7 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.multiVillages_checkList = [].concat(this.oldVilliagesChecklist);
 
 
-    console.log('[debug] select all', this.filteredData);
+    // console.log('[debug] select all', this.filteredData);
     this.filteredData.map(item => {
       this.multiVillages_checkList.push({
         village_id: item.id,
@@ -496,14 +498,8 @@ export class SearchMultiVillagesComponent implements OnInit {
     // const arr = [];
     
     for(let i = 0; i < this.allNamesData.length; i++) {
-      console.log(this.allNamesData[i])
+      // console.log(this.allNamesData[i])
 
-      // village_info.villageId = this.allNamesData[i].villageId;
-      // village_info.name = this.allNamesData[i].gazetteerName;
-      // village_info.num = this.allNamesData[i].totalNumberOfLastNameInVillage;
-      // village_info.fiveLastNames = `${this.allNamesData[i].firstLastNameId}${this.allNamesData[i].secondLastNameId}
-      // ${this.allNamesData[i].thirdLastNameId}${this.allNamesData[i].fourthLastNameId}
-      // ${this.allNamesData[i].fifthLastNameId}`
       this.showAllNamesDataList.push({
         name: this.allNamesData[i].gazetteerName,
         num: this.allNamesData[i].totalNumberOfLastNameInVillage,
@@ -527,8 +523,8 @@ export class SearchMultiVillagesComponent implements OnInit {
     let totalResults = [];
     //
     this.category1Set.clear();
-    this.category2Set.clear();
-    this.category3Set.clear();
+    // this.category2Set.clear();
+    // this.category3Set.clear();
     // clear mapMainCategoryToSubCategoryConfig data
     for(let each in this.mapMainCategoryToSubCategoryConfig) {
       this.mapMainCategoryToSubCategoryConfig[each].data = [];
@@ -559,10 +555,7 @@ export class SearchMultiVillagesComponent implements OnInit {
           for(let item in this.responseData[index].data){
             // category1
             this.responseData[index].data[item].category1 && this.category1Set.add(this.responseData[index].data[item].category1);
-            // category2
-            // this.responseData[index].data[item].category2 && this.category2Set.add(this.responseData[index].data[item].category2);
-            // category3
-            // this.responseData[index].data[item].category3 && this.category2Set.add(this.responseData[index].data[item].category3);
+
           }
         }
     }
@@ -580,6 +573,7 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.category1Set.add(displayNameFormapMainCategoryToSubCategoryConfig); // add this selection with display name
       }
     }
+
     if(this.allTopicChecked) {
       // automatically checked
       this.displayTopicCategory.push({
@@ -589,12 +583,12 @@ export class SearchMultiVillagesComponent implements OnInit {
       })
       this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
     }
-
     // merge some sub-categorys to new sub-category based on mapSubCategoryToNewSubCategory
     const getChinesePart = (v) => {
       return v.split(" ")[0]
     }
 
+    // map multi-subcategory to one subcategory based on mapSubCategoryToNewSubCategory
     const newCategory1Set = new Set();
     for (let category of this.category1Set) {
       if(this.mapSubCategoryToNewSubCategory[category as string]) {
@@ -621,12 +615,16 @@ export class SearchMultiVillagesComponent implements OnInit {
     }
 
   tabChanged(event) {
-    console.log("this response", this.responseData)
+
+    // console.log("this response", this.responseData)
+    this.selectedSubject = {}
     this.allTopicChecked = false;
     this.currentSelectedTopic = this.displayedMiddleTabsFiltered[event.index].split('-')[0]
     this.getTopicWithCategories();
-    // this.getYearWithTopic();
-    //clear name sets
+    // copy displayTopicCategory
+    this.displayTopicCategory.forEach(item => {
+      this.selectedSubject[item.selectedTopic] = Array.from(item.category1List)
+    })
   }
 
   //TODO
@@ -680,20 +678,32 @@ export class SearchMultiVillagesComponent implements OnInit {
 
   async postFinalRequest() {
 
-    let resnew = await this.multiVillageFilterService.onPostMultiVillages(
-      {
-        //BUG 1.checkedall 2. fourthlastNames -- ask backend
-          villageid: this.checkedVillagesID,
-          // topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
-          //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy",
-          //   "familyplanning", "education"],
-          topic: this.finalPostTopicList.length > 0 ? this.finalPostTopicList : this.defaultTopicList,
-          year: this.checked_year_only,
-          year_range: this.inputed_year_range
-          // year_range: [2009, 2012],
-      }
-    );
+    // let resnew = await this.multiVillageFilterService.onPostMultiVillages(
+    //   {
+    //     //BUG 1.checkedall 2. fourthlastNames -- ask backend
+    //       villageid: this.checkedVillagesID,
+    //       // topic: ["gazetteerinformation","naturalenvironment","naturaldisasters", "fourthlastNames",
+    //       //   "firstavailabilityorpurchase","ethnicgroups","population", "military", "economy",
+    //       //   "familyplanning", "education"],
+    //       topic: this.finalPostTopicList.length > 0 ? this.finalPostTopicList : this.defaultTopicList,
+    //       year: this.checked_year_only,
+    //       year_range: this.inputed_year_range
+    //       // year_range: [2009, 2012],
+    //   }
+    // );
   }
+    isSubCategorySelected(name) {
+    // console.log('[isSelected] ', name)
+    let res = false;
+    // console.log(name, this.displayTopicCategory)
+      this.displayTopicCategory.forEach(item => {
+        if(res) return;
+        if(item.category1List.includes(name)) {
+          res = true
+        }
+      })
+      return res
+    }
 
     //if search button is clicked, go to results page
     async goToPage() {
@@ -701,13 +711,19 @@ export class SearchMultiVillagesComponent implements OnInit {
       if(!categoryList || categoryList.length == 0){
         return [];
       }
+      // console.log('[debug] category', categoryList);
       const newCategory = new Set();
       for (let category of categoryList){
         let flag = false;
+        // console.log('[debug]', category, this.mapSubCategoryToNewSubCategory)
         for (let mapsubcategory in this.mapSubCategoryToNewSubCategory){
           if(this.mapSubCategoryToNewSubCategory[mapsubcategory] == category) {
+            // console.log('[debug] map sub to main,', mapsubcategory, this.mapOldMainCategoryToItsSubCategory[mapsubcategory])
             flag = true;
             newCategory.add(mapsubcategory)
+            // this.mapOldMainCategoryToItsSubCategory[mapsubcategory].forEach(item => {
+            //   newCategory.add(item);
+            // })
           }
         }
         if(!flag) {
@@ -717,13 +733,15 @@ export class SearchMultiVillagesComponent implements OnInit {
       return newCategory;
     }
 
+    let originalCategory1List = JSON.parse(JSON.stringify(this.displayTopicCategory));
+      // console.log('before map', originalCategory1List)
       // map newSubCategory to original sub categories
       this.displayTopicCategory.forEach(item => {
         item.category1List = Array.from(mapToOriginalSubCategory(item.category1List));
       });
       this.displayTopicCategory = this.displayTopicCategory.filter(item => item.category1List.length>0)
 
-      console.log('[debug] before send', this.displayTopicCategory);
+      // console.log('[debug] before send', this.displayTopicCategory);
 
       for(let item in this.displayTopicCategory) {
         // for mapMainCategoryToSubCategoryConfig
@@ -780,11 +798,11 @@ export class SearchMultiVillagesComponent implements OnInit {
         this.loading = false;
       }
 
-      if(this.displayTopicCategory.length < 1) {
+      if(this.displayTopicCategory.length === 0) {
         for(let i = 0; i < this.defaultTopics_InCh.length; i++) {    
         this.displayTopicCategory.push({
-        selectedTopic: this.defaultTopics_InCh[i],
-        hasCategory: false
+          selectedTopic: this.defaultTopics_InCh[i],
+          hasCategory: false
         }) 
       }
 
@@ -794,8 +812,10 @@ export class SearchMultiVillagesComponent implements OnInit {
       const userList = this.storeUserList();
       let baseUrl = window.location.href.replace(this.router.url, '');
       const url = baseUrl + this.router.createUrlTree(['/multi-village-search-result']);
-      console.log('[debug] url:', baseUrl, url);
+      // console.log('[debug] url:', baseUrl, url);
       window.open(url, '_blank');
+      // recover the date before mapping
+      this.displayTopicCategory = originalCategory1List
       // this.router.navigate(["/multi-village-search-result"]);
     }
   checkAllTopics() {
@@ -822,7 +842,7 @@ export class SearchMultiVillagesComponent implements OnInit {
   // options: MatListOption[] - call multi-times
   category1Selection(selectedCategory1List) {
     this.category2Set.clear();
-
+    // console.log('selection',  selectedCategory1List, this.currentSelectedTopic);
     // generate targetSet
     const targetSet = new Set();
     for(let key in this.mapMainCategoryToSubCategoryConfig){
@@ -833,9 +853,9 @@ export class SearchMultiVillagesComponent implements OnInit {
     for(let i = 0; i < selectedCategory1List.length; i++) {
       for(let item in this.currentTopicData.data) {
         if(this.currentTopicData.data[item].category1 && this.currentTopicData.data[item].category1 === selectedCategory1List[i]) {
-        //   if(this.currentTopicData.data[item].category2 && this.currentTopicData.data[item].category2 !== "null") {
-        //   this.category2Set.add(this.currentTopicData.data[item].category2);
-        // }
+          //   if(this.currentTopicData.data[item].category2 && this.currentTopicData.data[item].category2 !== "null") {
+          //   this.category2Set.add(this.currentTopicData.data[item].category2);
+          // }
         }
       }
     }
@@ -851,42 +871,80 @@ export class SearchMultiVillagesComponent implements OnInit {
         }
       }
     }
-      this.displayTopicCategory.push({
-        selectedTopic: this.currentSelectedTopic,
-        category1List: selectedCategory1List,
-        hasCategory: true
-      })  
-      this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
-
-
-
-
-    // let results_c1 = [];
-    // //BUG
-    // // this.displayTopicCategory = [];
-    // for(let index in this.topicCategory) {
-    //   for(let item in checkedList) { 
-    //     checkedList[item].isSelected = true; 
-    //     if(results_c1.indexOf(checkedList[item].category1) === -1) {
-    //       results_c1.push(checkedList[item].category1);
-    //     }
-    //   }
-    //   this.category2_checkedList = checkedList;
-    // }
-
-    // if(results_c1.length > 0) {
-    //   this.displayTopicCategory.push({
-    //     selectedTopic: this.currentSelectedTopic,
-    //     selectedCategoryList: results_c1
-    //   })  
-    // }
-
-    // this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
-    //     // console.log("topic select",this.displayTopicCategory);
+    this.displayTopicCategory.push({
+      selectedTopic: this.currentSelectedTopic,
+      category1List: selectedCategory1List,
+      hasCategory: true
+    })
+    this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
 
   }
 
   storeUserSelection(): string {
+    const detectNameInMap = (name) => {
+      for(let item in mapMainCategoryToSubCategoryConfig) {
+        // console.log('[debug] check name', name, item, name.indexOf(item))
+        if(name.indexOf(item)!=-1){
+          return item;
+        }
+      }
+      return "";
+    }
+    /*
+    *
+    * [
+    {
+        "selectedTopic": "村庄基本信息",
+        "category1List": [
+            "第一次拥有或购买年份-Year of First Availability/Purchase",
+            "人口 Population",
+            "农转非 Agricultural to Non-Agricultural Hukou / Change of Residency Status",
+            "户数 Number of Households",
+            "流动人口/暂住人口 Migratory/Temporary Population",
+            "迁入 Migration In",
+            "迁出 Migration Out"
+        ],
+        "hasCategory": true
+    },
+    {
+        "selectedTopic": "人口",
+        "category1List": [
+            "计划生育-Family Planning"
+        ],
+        "hasCategory": true
+    }
+]
+    * */
+    // console.log('[debug] display topic category', this.displayTopicCategory);
+    const newDisplayTopicCategory = [];
+    // for mapMainCategoryToSubCategoryConfig, we map it back.
+    this.displayTopicCategory.forEach(item => {
+      let moved = 0
+      for(const each of item.category1List) {
+        let feild = detectNameInMap(each)
+        if(feild) {
+
+          this.displayTopicCategory.push({
+            selectedTopic: feild,
+            category1List: [each],
+            hasCategory: false,
+          });
+          newDisplayTopicCategory.push({
+            selectedTopic: feild,
+            category1List: [],
+            hasCategory: false,
+          })
+          moved += 1
+        }
+      }
+      if(moved < item.category1List.length) {
+        newDisplayTopicCategory.push(item)
+      }
+    })
+
+
+    this.displayTopicCategory = newDisplayTopicCategory;
+    // console.log('[debug] display topic category', this.displayTopicCategory);
     const userSelection = JSON.stringify(this.displayTopicCategory);
     // [TODO] encode userValue and return it
     // const userValueEncoded = encode(userValue);
@@ -911,42 +969,13 @@ export class SearchMultiVillagesComponent implements OnInit {
         }}
       }
     }
-    // window.localStorage.setItem("user selection", JSON.stringify(this.displayTopicCategory));
 
-    // this.displayTopicCategory.push({
-    //   selectedTopic: this.currentSelectedTopic,
-    //   category1List: selectedCategory1List
-    // })  
-    // this.displayTopicCategory = this.removeDuplicates(this.displayTopicCategory, "selectedTopic");
-
-    // console.log("this.category3Set",this.category3Set)
   }
     //TODO  use dynamic db data - Later
     middleCheckBox(event: MatCheckboxChange) {
       const selectedText = event.source._elementRef.nativeElement.innerText;
       // console.log(this.responseData);
     }
-
-  //       //TODO
-  //       //   const getChineseWordCategory1 = item.category1
-  //       //     .split('')
-  //       //     .filter((char) => /\p{Script=Han}/u.test(char))
-  //       //     .join('');
-  //       //   if (
-  //       //     this.middleBoxCategory1.indexOf(getChineseWordCategory1) == -1
-  //       //   ) {
-  //       //     this.middleBoxCategory1.push(getChineseWordCategory1);
-  //       //     this.cat1Cat2Map.set(item.category1, item.category2);
-  //       //     // console.log('trigger');
-  //       //     // this.category1Map.set(element.id, this.middleBoxCategory1);
-  //       //   }
-  //       // });
-  //       // console.log('filter category 1 result ', this.middleBoxCategory1);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }
 
   //TODO
   onCreatePost(postData: { villageid: any; topic: any }) {
@@ -955,15 +984,6 @@ export class SearchMultiVillagesComponent implements OnInit {
         // console.log("responseData", responseData);
       });
   }
-
-  // onInputStartYearField(event: any) {
-  //   this.startYearInput = event.target.value;
-  //   console.log(event.target.value);
-  // }
-  // onInputEndYearField(event: any) {
-  //   this.endYearInput = event.target.value;
-  //   // console.log(event.target.value);
-  // }
 
   async onPostInputYear() {
     // console.log("value", this.value1)
@@ -977,7 +997,6 @@ export class SearchMultiVillagesComponent implements OnInit {
     this.singleYearSelected = event.source._elementRef.nativeElement.innerText;
     //IMPORTANT
     if (event.checked) {
-      // m;
       // console.log("singleYearSelected", this.singleYearSelected);
       this.postYearData.year.push(parseInt(this.singleYearSelected));
       this.rightToptempcheckItems.push(event.source.name);
@@ -986,7 +1005,7 @@ export class SearchMultiVillagesComponent implements OnInit {
       this.postYearData.year.splice(
         this.postYearData.year.indexOf(this.singleYearSelected)
       );
-      var index = this.rightToptempcheckItems.indexOf(event.source.name);
+      let index = this.rightToptempcheckItems.indexOf(event.source.name);
       if (index > -1) {
         this.rightToptempcheckItems.splice(index, 1);
       }

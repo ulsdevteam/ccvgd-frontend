@@ -115,8 +115,8 @@
 .selectall {
     display: flex;
     justify-content: flex-start;
-    background: #004f9e;
-    color: white;
+    background: #dddddd;
+    color: black;
     padding-left: 10px;
     padding-top: 2px;
     height: 25px;

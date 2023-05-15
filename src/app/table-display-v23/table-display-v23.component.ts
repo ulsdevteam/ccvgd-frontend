@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LastName, TableData } from '../services/village-name.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-table-display-v23',
@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 export class TableDisplayV23Component implements OnInit {
   fullList;
   filteredList;
-  lastname = new FormControl();
+  lastname = new UntypedFormControl();
   @Input('tabledata') table: TableData;
 
   constructor() {}
@@ -25,7 +25,7 @@ export class TableDisplayV23Component implements OnInit {
       this.filteredList = this.fullList.filter((row) => {
         for (let v of value) {
           // 这个checkbox
-          console.log('v', v);
+          // console.log('v', v);
 
           if (row.firstLastNameId.includes(v)) {
             return true;
