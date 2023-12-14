@@ -1,6 +1,8 @@
 # Use official node image as the base image
 FROM node:16 as build
 
+ARG API_URL
+
 # Set the working directory
 #ADD . /ccvgd-frontend
 #WORKDIR /ccvgd-frontend
@@ -13,8 +15,11 @@ COPY . /ccvgd-frontend
 # Install all the dependencies
 RUN npm install --legacy-peer-deps
 
+RUN sed "s|ENV_API_ROOT|$API_URL|" -i environment.prod.ts
+RUN sed "s|ENV_API_ROOT|$API_URL|" -i src/environments/environment.prod.ts
+
 # Generate the build of the application
-RUN npm run build --prod
+RUN npm run build --omit=dev
 
 
 # Stage 2: Serve app with nginx server
@@ -38,4 +43,4 @@ COPY --from=build /ccvgd-frontend/dist /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
-CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/CCVGproject/assets/env.template.js > /usr/share/nginx/html/CCVGproject/assets/env.js && exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh",  "-c",  "exec nginx -g 'daemon off;'"]
